@@ -27,7 +27,9 @@ import { isPositive } from 'class-validator';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
-
+  //
+  //
+  //
   @Get('google')
   @UseGuards(AuthGuard('google'))
   async googleAuth(@Req() req: Request) {}
@@ -51,7 +53,6 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    console.log(req.cookies);
     return this.authService.login(dto, res);
   }
 
@@ -69,9 +70,8 @@ export class AuthController {
   //
   //
   @Get(':link')
-  @Redirect('http://localhost:3000')
+  @Redirect(process.env.FRONTEND_URL)
   async activatedLink(@Param('link') link: string) {
-    console.log(link);
     return this.authService.activate(link);
   }
   //
@@ -82,7 +82,6 @@ export class AuthController {
   @HttpCode(200)
   async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const user = req.user['id'];
-    console.log(user);
     return this.authService.logout(user, res);
   }
   //
@@ -94,16 +93,7 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    console.log('1');
-    const { toket, token } = req.cookies;
-    console.log(req.cookies);
-    console.log(token);
-    console.log('2');
-    console.log(process.env.SMTP_PASSWORD);
-
-    // const id = req.user['id'];
-    // const tokens = req.user['refreshToken'];
-
+    const { token } = req.cookies;
     return this.authService.refreshToken(1, token, res);
   }
 }
