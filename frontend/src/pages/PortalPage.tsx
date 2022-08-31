@@ -6,7 +6,8 @@ import SideBar from 'components/sideBar/SideBar';
 import { ReactComponent as DashboardIcon } from 'assets/icons/dashboard.svg';
 import { ReactComponent as SettingsIcon } from 'assets/icons/settings.svg';
 import { ReactComponent as TransactionIcon } from 'assets/icons/transaction.svg';
-import { ReactComponent as InvoiceIcon } from 'assets/icons/invoices.svg';
+import { ReactComponent as MoneyBoxIcon } from 'assets/icons/money-box.svg';
+import { ReactComponent as PluginIcon } from 'assets/icons/plugins.svg';
 import { ReactComponent as WalletIcon } from 'assets/icons/wallet.svg';
 import { ReactComponent as ChatIcon } from 'assets/icons/chat.svg';
 import { Layout } from 'components/common/Layout/Layout';
@@ -30,12 +31,12 @@ const menuStructure = [
   {
     title: 'Widgets',
     link: AppRoute.WIDGETS,
-    icon: <InvoiceIcon />,
+    icon: <PluginIcon />,
   },
   {
     title: 'Moneybox',
     link: AppRoute.MONEY_BOX,
-    icon: <InvoiceIcon />,
+    icon: <MoneyBoxIcon />,
   },
   {
     title: 'Chats',
@@ -51,7 +52,7 @@ const menuStructure = [
 
 const PortalPage: React.FC = () => {
   return (
-    <div className="flex ">
+    <div className="flex">
       <SideBar logoLink={AppRoute.DASHBOARD} structure={menuStructure} />
       <div className="w-full">
         <Header />
