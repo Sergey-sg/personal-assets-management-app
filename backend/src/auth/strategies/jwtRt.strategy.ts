@@ -18,7 +18,7 @@ export class JwtRtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
         JwtRtStrategy.extractJwt,
         ExtractJwt.fromAuthHeaderAsBearerToken(),
       ]),
-      secretOrKey: 'fintechR' || process.env.JWT_SECRET,
+      secretOrKey: process.env.JWT_SECRET,
       passReqToCallback: true,
     });
   }
