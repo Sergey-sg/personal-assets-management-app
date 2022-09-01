@@ -94,6 +94,8 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const { token } = req.cookies;
-    return this.authService.refreshToken(1, token, res);
+    const user = req.user['id'];
+
+    return this.authService.refreshToken(user, token, res);
   }
 }
