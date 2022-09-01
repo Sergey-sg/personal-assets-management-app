@@ -51,7 +51,7 @@ export class AuthService {
     const tokens = await this.getTokens(user.id, user.email);
     this.updateRt(user.id, tokens.refresh_token);
     res.cookie('token', tokens.refresh_token, {
-      maxAge: 60 * 60 * 24 * 20,
+      maxAge: 60 * 60 * 24 * 15 * 1000,
     });
 
     return {
@@ -138,7 +138,7 @@ export class AuthService {
     this.updateRt(user.id, tokens.refresh_token);
     res.cookie('token', tokens.refresh_token, {
       httpOnly: true,
-      maxAge: 60 * 60 * 24 * 20 * 1000,
+      maxAge: 60 * 60 * 24 * 15 * 1000,
     });
 
     return {
@@ -178,12 +178,12 @@ export class AuthService {
 
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(data, {
-        expiresIn: 60 * 60,
+        expiresIn: 60 * 60 * 1000,
         secret: process.env.JWT_SECRET,
       }),
 
       this.jwtService.signAsync(data, {
-        expiresIn: 60 * 60 * 24 * 14,
+        expiresIn: 60 * 60 * 24 * 14 * 1000,
         secret: process.env.JWT_REFRESH_SECRET,
       }),
     ]);
