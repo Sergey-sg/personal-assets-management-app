@@ -53,27 +53,7 @@ export class AuthService {
     res.cookie('token', tokens.refresh_token, {
       maxAge: 60 * 60 * 24 * 20,
     });
-    // await this.mailerService
-    //   .sendMail({
-    //     to: dto.email,
-    //     from: 'dream.ffindor@gmail.com',
-    //     subject: 'Register',
-    //     text: '=)',
-    //     html: `
-    //     <div>
-    //     <h1>Hello World =) </h1>
-    //     <h1>Click   </h1>
-    //     <a href=''>Click Me</a>
 
-    //     </div>
-    //   `,
-    //   })
-    // .catch((e) => {
-    //   throw new HttpException(
-    //     `Error: ${JSON.stringify(e)}`,
-    //     HttpStatus.UNPROCESSABLE_ENTITY,
-    //   );
-    // });
     return {
       user: this.returnUser(user),
       tokens: tokens,
@@ -97,11 +77,9 @@ export class AuthService {
     });
 
     const tokens = await this.getTokens(newUser.id, newUser.email);
-    // await this.mailService.sendActivationMail(dto.email, activationLink);
     await this.mailerService
       .sendMail({
         to: dto.email,
-        from: 'dream.ffindor@gmail.com',
         subject: 'Register',
         text: '=)',
         html: `
@@ -201,12 +179,12 @@ export class AuthService {
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(data, {
         expiresIn: 60 * 60,
-        secret: 'fintech' || process.env.JWT_SECRET,
+        secret: process.env.JWT_SECRET,
       }),
 
       this.jwtService.signAsync(data, {
         expiresIn: 60 * 60 * 24 * 14,
-        secret: 'fintechR' || process.env.JWT_REFRESH_SECRET,
+        secret: process.env.JWT_REFRESH_SECRET,
       }),
     ]);
 

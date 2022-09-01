@@ -5,7 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { getMailConfig } from './config/mailer.config';
 //
 import { getTypeOrmConfig } from './config/typeorm.config';
 import { UserModule } from './user/user.module';
@@ -14,16 +13,16 @@ import { WalletModule } from './wallet/wallet.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true
+      isGlobal: true,
     }),
     MailerModule.forRoot({
       transport: {
-        host: process.env.SMTP_HOST || 'smtp.gmail.com',
-        port: process.env.SMTP_PORT || '587',
+        host: process.env.SMTP_HOST,
+        port: process.env.SMTP_PORT,
         secure: false,
         auth: {
-          user: 'fitechmate@gmail.com' || process.env.SMTP_USER,
-          pass: 'skwpccmthynpkjtq' || process.env.SMTP_PASSWORD,
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASSWORD,
         },
       },
     }),

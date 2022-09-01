@@ -6,8 +6,7 @@ import { JwtAtStrategy } from './strategies/jwtAt.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { getJwtConfig } from 'src/config/jwt.config';
-import { sendMail } from './servise/mail.service';
+
 import { JwtRtStrategy } from './strategies/jwtRt.strategy';
 import { UserModule } from 'src/user/user.module';
 import { GoogleStrategy } from './strategies/google.strategt';
