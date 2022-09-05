@@ -1,7 +1,7 @@
-import React from 'react';
-import { Typography } from 'components/common/Typography';
-import { InputProps } from './types/input-props.interface';
-import clsx from 'clsx';
+import React from 'react'
+import { Typography } from 'components/common/Typography'
+import { InputProps } from './types/input-props.interface'
+import clsx from 'clsx'
 
 export const Input: React.FC<InputProps> = ({
   label,
@@ -12,11 +12,11 @@ export const Input: React.FC<InputProps> = ({
   className,
   ...inputProps
 }) => {
-  const borderStyle = isInvalid ? 'border-error' : '';
+  const borderStyle = isInvalid ? 'border-error' : ''
   return (
     <div className={clsx('flex flex-col gap-1', className)}>
       <label htmlFor={name}>
-        <Typography type={'Ag-14-regular'} children={label} />
+        <Typography type={'Ag-14-regular'}>{label}</Typography>
       </label>
 
       <input
@@ -32,5 +32,5 @@ export const Input: React.FC<InputProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+}
