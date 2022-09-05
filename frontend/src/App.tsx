@@ -1,6 +1,7 @@
-import { Route, Routes } from 'react-router-dom';
-import { AppRoute } from 'common/enums/app-route.enum';
-import PortalPage from 'pages/PortalPage';
+import React from 'react'
+import { Route, Routes } from 'react-router-dom'
+import { AppRoute } from 'common/enums/app-route.enum'
+import PortalPage from 'pages/PortalPage'
 import {
   Chats,
   Dashboard,
@@ -9,8 +10,8 @@ import {
   MyWallet,
   Transactions,
   Widgets,
-} from 'pages/portalPages';
-import NotFoundPage from 'pages/NotFoundPage';
+} from 'pages/portalPages'
+import NotFoundPage from 'pages/NotFoundPage'
 
 export default function App() {
   return (
@@ -30,5 +31,5 @@ export default function App() {
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </div>
-  );
+  )
 }

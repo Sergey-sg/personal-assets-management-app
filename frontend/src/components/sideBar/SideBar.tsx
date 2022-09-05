@@ -28,7 +28,7 @@ const SideBar: React.FC<SideBarProps> = ({ logoLink, structure }) => {
             <MenuItem key={link} link={link} label={title} icon={icon} />
           ))}
         </div>
-        <div className="  text-gray  hover:text-gray-dark fill-gray hover:fill-gray-dark transition">
+        <div className="pl-4 text-gray  hover:text-gray-dark fill-gray hover:fill-gray-dark transition">
           <LogoutButton />
         </div>
       </nav>

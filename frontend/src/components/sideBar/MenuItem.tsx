@@ -23,7 +23,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ link, icon, label }) => {
           .join(' ')
       }
     >
-      <div className="w-6 h-6 mr-2">{icon}</div>
+      <div className="w-5 h-5 mr-2">{icon}</div>
       <Typography type="Ag-16-semibold" children={label} />
     </NavLink>
   );
