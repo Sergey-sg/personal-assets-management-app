@@ -6,7 +6,7 @@ import {
 
 export abstract class Base {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: bigint;
 
   @CreateDateColumn({ name: 'create_at' })
   createdAt: Date;

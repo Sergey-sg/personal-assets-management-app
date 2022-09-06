@@ -18,13 +18,13 @@ export class JwtRtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
         JwtRtStrategy.extractJwt,
         ExtractJwt.fromAuthHeaderAsBearerToken(),
       ]),
-      secretOrKey: process.env.JWT_SECRET,
+      secretOrKey: process.env.JWT_REFRESH_SECRET,
       passReqToCallback: true,
     });
   }
   private static extractJwt(req: Request): string | null {
-    if (req.cookies && 'token' in req.cookies) {
-      return req.cookies.token;
+    if (req.cookies && 'tokenRefresh' in req.cookies) {
+      return req.cookies.tokenRefresh;
     }
     return null;
   }

@@ -6,20 +6,24 @@ import { Column, Entity, OneToMany } from 'typeorm';
 @Entity('user')
 export class UserEntity extends Base {
   @ApiProperty()
-  @Column({ unique: true })
+  @Column()
   email: string;
 
   @ApiProperty()
   @Column({ select: false })
-  password: string;
+  password?: string;
 
   @ApiProperty()
   @Column({ default: '' })
-  name?: string;
+  lastName?: string;
 
   @ApiProperty()
   @Column({ default: '' })
-  refreshTokenHash: string;
+  firstName?: string;
+
+  @ApiProperty()
+  @Column({ default: '' })
+  refreshTokenHash?: string;
 
   @ApiProperty()
   @Column({ default: '' })

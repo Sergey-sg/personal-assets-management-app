@@ -1,3 +1,4 @@
+import { OAuth2Client } from 'google-auth-library';
 import { AuthDto } from './dto/auth.dto';
 import {
   BadRequestException,
@@ -20,6 +21,7 @@ import { sendMail } from './servise/mail.service';
 import { MailerService } from '@nestjs-modules/mailer';
 import { join } from 'path';
 import { Request, Response } from 'express';
+import { UserGoogle, Tokens } from './types/tokens.type';
 
 @Injectable()
 export class AuthService {
@@ -33,14 +35,87 @@ export class AuthService {
   //
   //
 
-  async authGoogle(req: Request) {
-    if (!req.user) {
+  async authGoogle(token: string, req: Request, res: Response) {
+    const verifyUser = await this.verifyGoogleUser(token);
+
+    if (!verifyUser) {
       throw new BadRequestException('No user from google');
+    }
+
+    console.log('start');
+
+    const userData = await this.userRepository.findOneBy({
+      email: verifyUser['email'],
+    });
+
+    if (userData) {
+      const tokens = await this.getTokens(userData.id, userData.email);
+      this.updateRt(userData.id, tokens.refresh_token);
+
+      res.cookie('tokenRefresh', tokens.refresh_token, {
+        maxAge: 60 * 60 * 24 * 15 * 1000,
+        httpOnly: true,
+      });
+
+      console.log(tokens);
 
       return {
-        user: req.user,
+        user: userData,
+        tokens: tokens,
       };
     }
+    if (!userData) {
+      console.log('register');
+
+      const newUser = await this.userRepository.create({
+        email: verifyUser.email,
+        firstName: verifyUser.firstName,
+        lastName: verifyUser.lastName,
+        avatarPath: verifyUser.avatarPath,
+        password: 'mail',
+        refreshTokenHash: '',
+        isVerified: true,
+      });
+
+      const tokens = await this.getTokens(newUser['id'], newUser['email']);
+
+      this.updateRt(newUser.id, tokens.refresh_token);
+
+      res.cookie('tokenRefresh', tokens.refresh_token, {
+        maxAge: 60 * 60 * 24 * 15 * 1000,
+        httpOnly: true,
+      });
+      const userCreate = await this.userRepository.save(newUser);
+
+      // const userCreate = await this.userRepository.save(newUser);
+      console.log(userCreate, tokens);
+
+      return {
+        userCreate,
+        tokens,
+      };
+    }
+  }
+
+  async verifyGoogleUser(token: string) {
+    const client = new OAuth2Client(
+      process.env.GOOGLE_CLIENT_ID,
+      process.env.GOOGLE_CLIENT_SECRET,
+    );
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const { email, name, picture } = ticket.getPayload();
+
+    const user = {
+      email: email,
+      firstName: name['givenName'],
+      lastName: name['familyName'],
+      avatarPath: picture,
+    };
+    return user;
   }
 
   //
@@ -50,8 +125,9 @@ export class AuthService {
     const user = await this.validateUser(dto);
     const tokens = await this.getTokens(user.id, user.email);
     this.updateRt(user.id, tokens.refresh_token);
-    res.cookie('token', tokens.refresh_token, {
+    res.cookie('tokenRefresh', tokens.refresh_token, {
       maxAge: 60 * 60 * 24 * 15 * 1000,
+      httpOnly: true,
     });
 
     return {
@@ -117,7 +193,7 @@ export class AuthService {
       console.log(e);
       return new NotFoundException('Error with logout');
     }
-    res.clearCookie('token');
+    res.clearCookie('tokenRefresh');
     return { mesage: 'good' };
   }
   //
@@ -136,7 +212,7 @@ export class AuthService {
 
     const tokens = await this.getTokens(user.id, user.email);
     this.updateRt(user.id, tokens.refresh_token);
-    res.cookie('token', tokens.refresh_token, {
+    res.cookie('tokenRefresh', tokens.refresh_token, {
       httpOnly: true,
       maxAge: 60 * 60 * 24 * 15 * 1000,
     });
@@ -202,6 +278,7 @@ export class AuthService {
     const user = await this.userRepository.findOne({ where: { id: userId } });
     user.refreshTokenHash = rtHash;
     await this.userRepository.save(user);
+
     return user.refreshTokenHash;
   }
 

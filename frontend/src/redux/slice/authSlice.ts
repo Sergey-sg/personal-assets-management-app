@@ -51,6 +51,19 @@ export const checkAuth = createAsyncThunk('users/check', async () => {
   return data;
 });
 
+export const authWithGoogle = createAsyncThunk(
+  'users/google',
+  async (credentialResponse: object) => {
+    const { data } = await apiCreden.post(
+      'http://localhost:3001/api/auth/google/test',
+      {
+        token: credentialResponse,
+      },
+    );
+    return data;
+  },
+);
+
 interface typeInfo {
   users: object;
   status: string;
@@ -123,6 +136,22 @@ const authSlice = createSlice({
       state.isAuth = true;
     });
     builder.addCase(checkAuth.rejected, (state, action) => {
+      state.status = 'ERROR';
+    });
+    //
+    //
+    //
+    builder.addCase(authWithGoogle.pending, (state, action) => {
+      state.status = 'LOADING';
+    });
+    builder.addCase(authWithGoogle.fulfilled, (state, action) => {
+      state.status = 'SUCCESS';
+      state.users = action.payload;
+      localStorage.setItem('token', action.payload.tokens.access_token);
+
+      state.isAuth = true;
+    });
+    builder.addCase(authWithGoogle.rejected, (state, action) => {
       state.status = 'ERROR';
     });
   },
