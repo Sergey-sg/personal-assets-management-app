@@ -1,9 +1,10 @@
-import React from 'react'
-import { Typography } from 'components/common/Typography'
+import React, { useState } from 'react'
 import { Button } from 'components/common/buttons/Button'
 import { Field, Form, Formik, FormikProps } from 'formik'
 import { PasswordInput } from 'components/common/inputs/PasswordInput'
 import { deleteAccountSchema } from './schemas/deleteAccountSchema'
+import { SectionTitle } from './SectionTitle'
+import { ReactComponent as PenIcon } from 'assets/icons/pen.svg'
 
 interface DeleteAccountProps {
   current_password: string
@@ -16,6 +17,8 @@ const InitialValues: DeleteAccountProps = {
 }
 
 const DeleteAccountForm = () => {
+  const [isVisible, setIsVisible] = useState(false)
+
   const handleSubmit = (values: typeof InitialValues) => {
     console.log(values)
   }
@@ -32,53 +35,57 @@ const DeleteAccountForm = () => {
           props
         return (
           <>
-            <div>
-              <Typography type={'h4'}>{'Delete Account'}</Typography>
-              <Typography type={'Ag-14-regular'}>
-                {
-                  'To delete your profile, enter your current password and confirm it.'
-                }
-              </Typography>
-            </div>
-            <Form className="flex flex-col gap-8 mb-5">
-              <div className="flex flex-col gap-5 sm:flex-row">
-                <Field
-                  label={'New Password'}
-                  name={'current_password'}
-                  id={'current_password'}
-                  placeholder={'e.g. *******'}
-                  values={values.current_password}
-                  error={errors.current_password}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  component={PasswordInput}
-                  className="sm:w-1/2"
-                />
+            <SectionTitle
+              title={'Delete Account'}
+              subTitle={
+                'To delete your account, enter your password and confirm it.'
+              }
+              icon={<PenIcon />}
+              iconLabel={'Edit'}
+              onClick={() => setIsVisible(!isVisible)}
+            />
 
-                <Field
-                  label={'Confirm Password'}
-                  name={'confirm_current_password'}
-                  id={'confirm_current_password'}
-                  placeholder={'e.g. *******'}
-                  values={values.confirm_current_password}
-                  error={errors.confirm_current_password}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  className="sm:w-1/2"
-                  component={PasswordInput}
-                />
-              </div>
-              <div className="flex justify-center lg:justify-end">
-                <div className="w-full lg:w-1/2">
-                  <Button
-                    label={'Delete Account'}
-                    type={'submit'}
-                    btnName={'primary'}
-                    disabled={!(isValid && dirty)}
+            {isVisible && (
+              <Form className="flex flex-col gap-8 mb-5">
+                <div className="flex flex-col gap-5 sm:flex-row">
+                  <Field
+                    label={'New Password'}
+                    name={'current_password'}
+                    id={'current_password'}
+                    placeholder={'e.g. *******'}
+                    values={values.current_password}
+                    error={errors.current_password}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    component={PasswordInput}
+                    className="sm:w-1/2"
+                  />
+
+                  <Field
+                    label={'Confirm Password'}
+                    name={'confirm_current_password'}
+                    id={'confirm_current_password'}
+                    placeholder={'e.g. *******'}
+                    values={values.confirm_current_password}
+                    error={errors.confirm_current_password}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    className="sm:w-1/2"
+                    component={PasswordInput}
                   />
                 </div>
-              </div>
-            </Form>
+                <div className="flex justify-center lg:justify-end">
+                  <div className="w-full lg:w-1/2">
+                    <Button
+                      label={'Delete Account'}
+                      type={'submit'}
+                      btnName={'primary'}
+                      disabled={!(isValid && dirty)}
+                    />
+                  </div>
+                </div>
+              </Form>
+            )}
           </>
         )
       }}
@@ -87,33 +94,3 @@ const DeleteAccountForm = () => {
 }
 
 export default DeleteAccountForm
-
-//  <div>
-//         <Typography type={'h4'} children={'Delete Account'} />
-//         <Typography
-//           type={'Ag-14-regular'}
-//           children={
-//             'To delete your profile, enter your current password and confirm it.'
-//           }
-//         />
-//       </div>
-//       <div className="flex flex-col sm:flex-row gap-5">
-//         <div className="sm:w-1/2">
-//           <Input
-//             label={'Current password'}
-//             type={'password'}
-//             name={'cur-password-input'}
-//             placeholder={'e.g. *******'}
-//             // onChange={(e) => console.log(e.target.value)}
-//           />
-//         </div>
-//         <div className="sm:w-1/2">
-//           <Input
-//             label={'Confirm current password'}
-//             type={'password'}
-//             name={'confirm-cur-password-input'}
-//             placeholder={'e.g. *******'}
-//             // onChange={(e) => console.log(e.target.value)}
-//           />
-//         </div>
-//       </div>

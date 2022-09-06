@@ -1,17 +1,17 @@
-import React from 'react';
-import { Typography } from 'components/common/Typography';
-import { ReactComponent as GoogleIcon } from 'assets/icons/google.svg';
-import clsx from 'clsx';
+import React from 'react'
+import { Typography } from 'components/common/Typography'
+import { ReactComponent as GoogleIcon } from 'assets/icons/google.svg'
+import clsx from 'clsx'
 
 interface ButtonProps {
-  label?: string;
-  type: 'button' | 'submit' | 'reset';
-  btnName: 'primary' | 'secondary' | 'tertiary' | 'google';
-  className?: string;
-  disabled?: boolean;
-  children?: React.ReactNode | React.ReactNode[];
-  icon?: React.ReactNode;
-  onClick?: () => void;
+  label?: string
+  type: 'button' | 'submit' | 'reset'
+  btnName: 'primary' | 'secondary' | 'tertiary' | 'tertiary2' | 'google'
+  className?: string
+  disabled?: boolean
+  children?: React.ReactNode | React.ReactNode[]
+  icon?: React.ReactNode
+  onClick?: () => void
 }
 
 const STYLES = {
@@ -24,9 +24,11 @@ const STYLES = {
   tertiary:
     'p-4 rounded-lg text-green bg-gray-ultralight hover:bg-green focus:bg-green hover:text-white focus:text-white w-full',
 
+  tertiary2: 'p-4 rounded-lg text-green w-full',
+
   google:
     'p-4 rounded-lg border text-text-light hover:bg-gray-ultralight w-full',
-};
+}
 
 export const Button: React.FC<ButtonProps> = ({
   label,
@@ -35,6 +37,7 @@ export const Button: React.FC<ButtonProps> = ({
   disabled = false,
   icon,
   className,
+  onClick,
 }) => {
   return (
     <button
@@ -45,6 +48,7 @@ export const Button: React.FC<ButtonProps> = ({
         STYLES[btnName],
         className,
       )}
+      onClick={onClick}
     >
       {btnName === 'google' ? (
         <GoogleIcon className="w-5 h-5 mr-2" />
@@ -53,7 +57,7 @@ export const Button: React.FC<ButtonProps> = ({
       ) : (
         <span className="w-5 h-5 fill-current">{icon}</span>
       )}
-      <Typography type={'Ag-16-semibold'} children={label} />
+      <Typography type={'Ag-16-semibold'}>{label}</Typography>
     </button>
-  );
-};
+  )
+}

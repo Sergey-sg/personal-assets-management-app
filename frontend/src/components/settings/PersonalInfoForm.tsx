@@ -4,6 +4,7 @@ import { PersonalInfoSchema } from './schemas/personalInfoSchemes'
 import { InputField } from 'components/common/inputs/InputField'
 import { Button } from 'components/common/buttons/Button'
 import { Typography } from 'components/common/Typography'
+import { SectionTitle } from './SectionTitle'
 
 interface PersonalInfoFormProps {
   user_id: string | number
@@ -40,7 +41,8 @@ const PersonalInfoForm: React.FC = () => {
         const { dirty, isValid } = props
         return (
           <>
-            <Typography type={'h4'}>{'Personal Information'} </Typography>
+            <SectionTitle title={'Personal Information'} />
+
             <Form className="flex flex-col gap-8 mb-5">
               <div className="flex flex-col gap-5">
                 <div className="flex flex-col gap-5 sm:flex-row">
