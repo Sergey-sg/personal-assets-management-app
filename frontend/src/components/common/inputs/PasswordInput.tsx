@@ -1,6 +1,7 @@
+import clsx from 'clsx'
 import React, { useState } from 'react'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
-// import './input.css'
+import { Typography } from '../Typography'
 
 export type PasswordInputProps = {
   id: string
@@ -22,20 +23,23 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
   const borderStyle = error ? 'border-error' : 'border-green-light'
 
   return (
-    <div className={className}>
-      <label htmlFor={id}>{label}</label>
+    <div className={clsx('flex flex-col gap-1', className)}>
+      <label htmlFor={id}>
+        <Typography type={'Ag-14-regular'}>{label}</Typography>
+      </label>
+
       <div className="relative">
         <span className="absolute inset-y-0 right-0 flex items-center pr-2 z-10">
           {visible === true ? (
             <FaEye
               className="Icon opacity-60"
-              size={27}
+              size={22}
               onClick={() => setVisible(false)}
             />
           ) : (
             <FaEyeSlash
               className="Icon opacity-60"
-              size={27}
+              size={22}
               onClick={() => setVisible(true)}
             />
           )}

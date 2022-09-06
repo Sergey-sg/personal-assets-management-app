@@ -32,7 +32,14 @@ const ChangePasswordForm: React.FC = () => {
           props
         return (
           <>
-            <Typography type={'h4'}>{'Change Password'}</Typography>
+            <div>
+              <Typography type={'h4'}>{'Change Password'}</Typography>
+              <Typography type={'Ag-14-regular'}>
+                {
+                  'To change your password, enter your new password and confirm it.'
+                }
+              </Typography>
+            </div>
             <Form className="flex flex-col gap-8 mb-5">
               <div className="flex flex-col gap-5 sm:flex-row">
                 <Field
