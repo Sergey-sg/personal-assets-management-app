@@ -1,18 +1,18 @@
-import React from 'react';
-import { Form, Formik, FormikProps } from 'formik';
-import { PersonalInfoSchema } from './schemas/personalInfoSchemes';
-import { InputField } from 'components/common/inputs/InputField';
-import { Button } from 'components/common/buttons/Button';
-import { Typography } from 'components/common/Typography';
+import React from 'react'
+import { Form, Formik, FormikProps } from 'formik'
+import { PersonalInfoSchema } from './schemas/personalInfoSchemes'
+import { InputField } from 'components/common/inputs/InputField'
+import { Button } from 'components/common/buttons/Button'
+import { Typography } from 'components/common/Typography'
 
 interface PersonalInfoFormProps {
-  user_id: string | number;
-  first_name: string;
-  last_name: string;
-  email: string;
-  address: string;
-  birthdate: string;
-  phone: string;
+  user_id: string | number
+  first_name: string
+  last_name: string
+  email: string
+  address: string
+  birthdate: string
+  phone: string
 }
 
 const InitialValues: PersonalInfoFormProps = {
@@ -23,12 +23,12 @@ const InitialValues: PersonalInfoFormProps = {
   address: '',
   birthdate: '',
   phone: '',
-};
+}
 
 const PersonalInfoForm: React.FC = () => {
   const handleSubmit = (values: typeof InitialValues) => {
-    console.log(values);
-  };
+    console.log(values)
+  }
 
   return (
     <Formik
@@ -37,10 +37,10 @@ const PersonalInfoForm: React.FC = () => {
       onSubmit={handleSubmit}
     >
       {(props: FormikProps<PersonalInfoFormProps>) => {
-        const { dirty, setFieldValue, errors, isValid } = props;
+        const { dirty, isValid } = props
         return (
           <>
-            <Typography type={'h4'} children={'Personal Information'} />
+            <Typography type={'h4'}>{'Personal Information'} </Typography>
             <Form className="flex flex-col gap-8 mb-5">
               <div className="flex flex-col gap-5">
                 <div className="flex flex-col gap-5 sm:flex-row">
@@ -94,20 +94,18 @@ const PersonalInfoForm: React.FC = () => {
                   />
                 </div>
               </div>
-              <div>
-                <Button
-                  label={'Edit Personal Information'}
-                  type={'submit'}
-                  btnName={'primary'}
-                  disabled={!(isValid && dirty)}
-                />
-              </div>
+              <Button
+                label={'Edit Personal Information'}
+                type={'submit'}
+                btnName={'primary'}
+                disabled={!(isValid && dirty)}
+              />
             </Form>
           </>
-        );
+        )
       }}
     </Formik>
-  );
-};
+  )
+}
 
-export default PersonalInfoForm;
+export default PersonalInfoForm
