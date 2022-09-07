@@ -3,7 +3,6 @@ import { Form, Formik, FormikProps } from 'formik'
 import { PersonalInfoSchema } from './schemas/personalInfoSchemes'
 import { InputField } from 'components/common/inputs/InputField'
 import { Button } from 'components/common/buttons/Button'
-import { Typography } from 'components/common/Typography'
 import { SectionTitle } from './SectionTitle'
 
 interface PersonalInfoFormProps {

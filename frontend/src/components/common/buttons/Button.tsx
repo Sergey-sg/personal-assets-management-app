@@ -50,14 +50,24 @@ export const Button: React.FC<ButtonProps> = ({
       )}
       onClick={onClick}
     >
-      {btnName === 'google' ? (
-        <GoogleIcon className="w-5 h-5 mr-2" />
-      ) : label ? (
-        <span className="w-5 h-5 mr-2 fill-current">{icon}</span>
-      ) : (
+      {btnName === 'google' && (
+        <>
+          <GoogleIcon className="w-5 h-5 mr-2" />
+          <Typography type={'Ag-16-semibold'}>{label}</Typography>
+        </>
+      )}
+      {btnName !== 'google' && label && icon && (
+        <>
+          <span className="w-5 h-5 mr-2 fill-current">{icon}</span>
+          <Typography type={'Ag-16-semibold'}>{label}</Typography>
+        </>
+      )}
+      {btnName !== 'google' && label && !icon && (
+        <Typography type={'Ag-16-semibold'}>{label}</Typography>
+      )}
+      {btnName !== 'google' && !label && icon && (
         <span className="w-5 h-5 fill-current">{icon}</span>
       )}
-      <Typography type={'Ag-16-semibold'}>{label}</Typography>
     </button>
   )
 }

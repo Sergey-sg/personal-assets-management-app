@@ -46,6 +46,10 @@ export const config = {
     className: 'text-Ag-14 font-normal',
     defaultTagName: 'p',
   },
+  'Ag-14-medium': {
+    className: 'text-Ag-14 font-medium',
+    defaultTagName: 'p',
+  },
   'Ag-13-medium': {
     className: 'text-Ag-13 font-medium',
     defaultTagName: 'p',
@@ -66,4 +70,4 @@ export const config = {
     className: 'text-Ag-12 font-medium sm:text-Ag-12 sm:font-medium',
     defaultTagName: 'p',
   },
-};
+}
