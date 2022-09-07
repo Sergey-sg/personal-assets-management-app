@@ -1,10 +1,10 @@
-import React from 'react';
-import style from './ButtonUI.module.scss';
+import React from 'react'
+import style from './ButtonUI.module.scss'
 
 type buttonProps = {
-  onClick: any;
-  children: any;
-};
+  onClick: React.MouseEventHandler<HTMLDivElement> | undefined
+  children: any
+}
 
 const ButtonUI: React.FC<buttonProps> = ({ onClick, children }) => {
   return (
@@ -13,7 +13,7 @@ const ButtonUI: React.FC<buttonProps> = ({ onClick, children }) => {
         {children}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ButtonUI;
+export default ButtonUI

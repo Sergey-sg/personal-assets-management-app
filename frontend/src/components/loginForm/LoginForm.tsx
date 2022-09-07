@@ -1,28 +1,31 @@
-import React from 'react';
-import { useAppDispatch } from '../../hooks/useAppDispatch';
-import { fetchLogin, Registration } from '../../redux/slice/authSlice';
-import ButtonUI from '../../ui/button/ButtonUI';
-import InputUI from '../../ui/input/InputUI';
-import GoogleButton from './googleButton/GoogleButton';
-import style from './LoginForm.module.scss';
+import React, { useCallback } from 'react'
+import { useAppDispatch } from '../../hooks/useAppDispatch'
+import { fetchLogin, Registration } from '../../redux/slice/authSlice'
+import ButtonUI from '../../ui/button/ButtonUI'
+import InputUI from '../../ui/input/InputUI'
+import GoogleButton from './googleButton/GoogleButton'
+import style from './LoginForm.module.scss'
 
-type Props = {};
+type Props = {}
 
 const LoginForm: React.FC = (props: Props) => {
-  const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch()
 
-  const [email, setEmail] = React.useState<string>('');
-  const [password, setPassword] = React.useState<string>('');
+  const [email, setEmail] = React.useState<string>('')
+  const [password, setPassword] = React.useState<string>('')
   //
   //
   const params = {
     email,
     password,
-  };
+  }
 
-  const fetchAdd = (el: any) => {
-    dispatch(el(params));
-  };
+  const clickButton = useCallback(
+    (el: any) => {
+      dispatch(el(params))
+    },
+    [params, dispatch],
+  )
 
   return (
     <div className={style.container}>
@@ -61,8 +64,10 @@ const LoginForm: React.FC = (props: Props) => {
           </p>
         </div>
         <div className="flex items-center justify-between">
-          <ButtonUI onClick={() => fetchAdd(Registration)}>Register</ButtonUI>
-          <ButtonUI onClick={() => fetchAdd(fetchLogin)}>Login</ButtonUI>
+          <ButtonUI onClick={() => clickButton(Registration)}>
+            Register
+          </ButtonUI>
+          <ButtonUI onClick={() => clickButton(fetchLogin)}>Login</ButtonUI>
         </div>
         <a
           className="inline-block align-baseline font-bold text-sm mt-4 text-blue-500 hover:text-blue-800"
@@ -76,7 +81,7 @@ const LoginForm: React.FC = (props: Props) => {
         </div>
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default LoginForm;
+export default LoginForm

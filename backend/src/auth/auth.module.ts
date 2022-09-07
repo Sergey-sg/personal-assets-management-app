@@ -9,11 +9,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { JwtRtStrategy } from './strategies/jwtRt.strategy';
 import { UserModule } from 'src/user/user.module';
-import { GoogleStrategy } from './strategies/google.strategt';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, JwtAtStrategy, JwtRtStrategy, GoogleStrategy],
+  providers: [AuthService, JwtAtStrategy, JwtRtStrategy],
   imports: [
     UserModule,
     ConfigModule,

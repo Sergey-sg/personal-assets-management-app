@@ -15,11 +15,11 @@ export class UserEntity extends Base {
 
   @ApiProperty()
   @Column({ default: '' })
-  lastName?: string;
+  lastName: string;
 
   @ApiProperty()
   @Column({ default: '' })
-  firstName?: string;
+  firstName: string;
 
   @ApiProperty()
   @Column({ default: '' })

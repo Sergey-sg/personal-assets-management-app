@@ -3,6 +3,7 @@ import { AuthDto } from './dto/auth.dto';
 import {
   BadRequestException,
   ForbiddenException,
+  HttpCode,
   HttpException,
   HttpStatus,
   Injectable,
@@ -17,7 +18,6 @@ import { compare, genSalt, hash } from 'bcryptjs';
 import { isHalfWidth } from 'class-validator';
 // import { Auth, google } from 'googleapis';
 import { v4 } from 'uuid';
-import { sendMail } from './servise/mail.service';
 import { MailerService } from '@nestjs-modules/mailer';
 import { join } from 'path';
 import { Request, Response } from 'express';
@@ -53,11 +53,9 @@ export class AuthService {
       this.updateRt(userData.id, tokens.refresh_token);
 
       res.cookie('tokenRefresh', tokens.refresh_token, {
-        maxAge: 60 * 60 * 24 * 15 * 1000,
+        maxAge: Number(process.env.MAX_AGE_COOKIE_TOKEN),
         httpOnly: true,
       });
-
-      console.log(tokens);
 
       return {
         user: userData,
@@ -65,14 +63,11 @@ export class AuthService {
       };
     }
     if (!userData) {
-      console.log('register');
-
       const newUser = await this.userRepository.create({
         email: verifyUser.email,
         firstName: verifyUser.firstName,
         lastName: verifyUser.lastName,
         avatarPath: verifyUser.avatarPath,
-        password: 'mail',
         refreshTokenHash: '',
         isVerified: true,
       });
@@ -82,13 +77,10 @@ export class AuthService {
       this.updateRt(newUser.id, tokens.refresh_token);
 
       res.cookie('tokenRefresh', tokens.refresh_token, {
-        maxAge: 60 * 60 * 24 * 15 * 1000,
+        maxAge: Number(process.env.MAX_AGE_COOKIE_TOKEN),
         httpOnly: true,
       });
       const userCreate = await this.userRepository.save(newUser);
-
-      // const userCreate = await this.userRepository.save(newUser);
-      console.log(userCreate, tokens);
 
       return {
         userCreate,
@@ -107,12 +99,13 @@ export class AuthService {
       audience: process.env.GOOGLE_CLIENT_ID,
     });
 
-    const { email, name, picture } = ticket.getPayload();
+    const { email, name, picture, given_name, family_name } =
+      ticket.getPayload();
 
     const user = {
       email: email,
-      firstName: name['givenName'],
-      lastName: name['familyName'],
+      firstName: given_name,
+      lastName: family_name,
       avatarPath: picture,
     };
     return user;
@@ -126,7 +119,7 @@ export class AuthService {
     const tokens = await this.getTokens(user.id, user.email);
     this.updateRt(user.id, tokens.refresh_token);
     res.cookie('tokenRefresh', tokens.refresh_token, {
-      maxAge: 60 * 60 * 24 * 15 * 1000,
+      maxAge: Number(process.env.MAX_AGE_COOKIE_TOKEN),
       httpOnly: true,
     });
 
@@ -194,7 +187,7 @@ export class AuthService {
       return new NotFoundException('Error with logout');
     }
     res.clearCookie('tokenRefresh');
-    return { mesage: 'good' };
+    return HttpCode(200);
   }
   //
   //
@@ -214,11 +207,11 @@ export class AuthService {
     this.updateRt(user.id, tokens.refresh_token);
     res.cookie('tokenRefresh', tokens.refresh_token, {
       httpOnly: true,
-      maxAge: 60 * 60 * 24 * 15 * 1000,
+      maxAge: Number(process.env.MAX_AGE_COOKIE_TOKEN),
     });
 
     return {
-      user: this.returnUser(user),
+      user: user,
       tokens: tokens,
     };
   }
@@ -238,7 +231,9 @@ export class AuthService {
     const isValidPassword = await compare(dto.password, user.password);
 
     if (!isValidPassword) {
-      throw new UnauthorizedException('Wrong password');
+      throw new UnauthorizedException(
+        'Your password or email is wrong, try again please',
+      );
     }
 
     return user;
@@ -254,12 +249,12 @@ export class AuthService {
 
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(data, {
-        expiresIn: 60 * 60 * 1000,
+        expiresIn: process.env.MAX_AGE_ACCESS_TOKEN,
         secret: process.env.JWT_SECRET,
       }),
 
       this.jwtService.signAsync(data, {
-        expiresIn: 60 * 60 * 24 * 14 * 1000,
+        expiresIn: process.env.MAX_AGE_COOKIE_REFRESH_TOKEN,
         secret: process.env.JWT_REFRESH_SECRET,
       }),
     ]);
@@ -297,7 +292,7 @@ export class AuthService {
 
     await this.userRepository.save(user);
 
-    return 'true';
+    return HttpCode(200);
   }
 
   returnUser(user: UserEntity) {

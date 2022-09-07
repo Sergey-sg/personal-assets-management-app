@@ -63,7 +63,7 @@ export class AuthController {
   //
   //
 
-  @UsePipes(new ValidationPipe())
+  // @UsePipes(new ValidationPipe())
   @Post('login')
   async login(
     @Body() dto: AuthDto,
