@@ -15,11 +15,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/user/user.entity';
 import { Repository } from 'typeorm';
 import { compare, genSalt, hash } from 'bcryptjs';
-import { isHalfWidth } from 'class-validator';
-// import { Auth, google } from 'googleapis';
 import { v4 } from 'uuid';
 import { MailerService } from '@nestjs-modules/mailer';
-import { join } from 'path';
 import { Request, Response } from 'express';
 import { UserGoogle, Tokens } from './types/tokens.type';
 
@@ -31,9 +28,6 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly mailerService: MailerService,
   ) {}
-  //
-  //
-  //
 
   async authGoogle(token: string, req: Request, res: Response) {
     const verifyUser = await this.verifyGoogleUser(token);
@@ -111,9 +105,6 @@ export class AuthService {
     return user;
   }
 
-  //
-  //
-  //
   async login(dto: AuthDto, res: Response) {
     const user = await this.validateUser(dto);
     const tokens = await this.getTokens(user.id, user.email);
@@ -128,9 +119,7 @@ export class AuthService {
       tokens: tokens,
     };
   }
-  //
-  //
-  //
+
   async register(dto: AuthDto) {
     const oldUser = await this.userRepository.findOneBy({ email: dto.email });
 
@@ -174,9 +163,7 @@ export class AuthService {
       tokens,
     };
   }
-  //
-  //
-  //
+
   async logout(userId: number, res: Response) {
     const user = await this.userRepository.findOneBy({ id: userId });
     user.refreshTokenHash = '';
@@ -189,9 +176,7 @@ export class AuthService {
     res.clearCookie('tokenRefresh');
     return HttpCode(200);
   }
-  //
-  //
-  //
+
   async refreshToken(userId: number, rt: string, res: Response) {
     const user = await this.userRepository.findOneBy({ id: userId });
     if (!user) {
@@ -216,9 +201,6 @@ export class AuthService {
     };
   }
 
-  //
-  //
-  //
   async validateUser(dto: AuthDto) {
     const user = await this.userRepository.findOne({
       where: {
@@ -238,9 +220,7 @@ export class AuthService {
 
     return user;
   }
-  //
-  //
-  //
+
   async getTokens(userId: number, email: string) {
     const data = {
       id: userId,
@@ -264,9 +244,7 @@ export class AuthService {
       refresh_token: rt,
     };
   }
-  //
-  //
-  //
+
   async updateRt(userId: number, rt: string) {
     const salt = await genSalt(3);
     const rtHash = await hash(rt, salt);
@@ -276,10 +254,6 @@ export class AuthService {
 
     return user.refreshTokenHash;
   }
-
-  //
-  //
-  //
 
   async activate(activationLink: string) {
     const user = await this.userRepository.findOneBy({ activationLink });

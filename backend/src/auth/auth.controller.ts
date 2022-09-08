@@ -30,18 +30,13 @@ import { OAuth2Client } from 'google-auth-library';
 export class AuthController {
   [x: string]: any;
   constructor(private readonly authService: AuthService) {}
-  //
-  //
-  //
+
   @UseGuards(GoogleOauthGuard)
   @Get('google')
   @UseGuards(AuthGuard('google'))
   async googleAuth(@Req() req: Request) {
     console.log('Done');
   }
-  //
-  //
-  //
 
   @Redirect(process.env.FRONTEND_URL)
   @Get('google/callback')
@@ -59,11 +54,6 @@ export class AuthController {
     return this.authService.authGoogle(token, req, res);
   }
 
-  //
-  //
-  //
-
-  // @UsePipes(new ValidationPipe())
   @Post('login')
   async login(
     @Body() dto: AuthDto,
@@ -73,9 +63,6 @@ export class AuthController {
     return this.authService.login(dto, res);
   }
 
-  //
-  //
-  //
   @ApiOperation({ summary: 'Create new User' })
   @ApiResponse({ status: 201, type: UserEntity })
   @UsePipes(new ValidationPipe())
@@ -83,17 +70,13 @@ export class AuthController {
   async register(@Body() dto: AuthDto) {
     return this.authService.register(dto);
   }
-  //
-  //
-  //
+
   @Get(':link')
   @Redirect(process.env.FRONTEND_URL)
   async activatedLink(@Param('link') link: string) {
     return this.authService.activate(link);
   }
-  //
-  //
-  //
+
   @UseGuards(AccessTokenGuard)
   @Post('logout')
   @HttpCode(200)
@@ -101,7 +84,6 @@ export class AuthController {
     const user = req.user['id'];
     return this.authService.logout(user, res);
   }
-  //
 
   @UseGuards(RefreshTokenGuard)
   @Post('refresh')
