@@ -135,25 +135,6 @@ export class AuthService {
     });
 
     const tokens = await this.getTokens(newUser.id, newUser.email);
-    await this.mailerService
-      .sendMail({
-        to: dto.email,
-        subject: 'Register',
-        text: '=)',
-        html: `
-          <div>
-          <h1>Hello World =) </h1>
-          <a href='http://localhost:3001/api/auth/${activationLink}'>Click Me</a>
-
-          </div>
-        `,
-      })
-      .catch((e) => {
-        throw new HttpException(
-          `Error: ${JSON.stringify(e)}`,
-          HttpStatus.UNPROCESSABLE_ENTITY,
-        );
-      });
 
     this.updateRt(newUser.id, tokens.refresh_token);
     const user = await this.userRepository.save(newUser);
