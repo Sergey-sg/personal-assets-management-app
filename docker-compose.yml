@@ -2,6 +2,7 @@ version: "3.8"
 
 services:
   backend:
+    container_name: backend
     build:
       context: ./backend
       dockerfile: Dockerfile.dev
@@ -17,6 +18,7 @@ services:
       - redis-server
 
   frontend:
+    container_name: frontend
     build:
       context: ./frontend
       dockerfile: Dockerfile.dev
@@ -30,6 +32,7 @@ services:
       - backend
 
   db:
+    container_name: db
     image: postgres:14.2-alpine
     restart: on-failure
     environment:
@@ -40,6 +43,7 @@ services:
       - ${DB_PORT}:${DB_PORT}
 
   redis-server:
+    container_name: redis-server
     image: redis:latest
     restart: on-failure
     ports:

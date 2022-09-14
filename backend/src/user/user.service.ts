@@ -1,12 +1,17 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { REPOSITORY } from 'src/constants';
+import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
-  constructor(@Inject(REPOSITORY.USER) private userRepository: typeof User) {}
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    private readonly dataSource: DataSource,
+  ) {}
 
   create(createUserDto: CreateUserDto) {
     console.log(createUserDto);

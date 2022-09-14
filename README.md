@@ -43,3 +43,13 @@ Project description
 - To build (rebuild) `docker-compose --env-file=.env.dev up -d --build`
 - To start without building `docker-compose --env-file=.env.dev up -d`
 - To stop `docker-compose --env-file=.env.dev down`
+
+Migrations
+
+- To run in docker `docker exec -it backend bash`
+
+- To generate migration `npx typeorm migration:generate src/migrations/NewMigrationName -d dist/typeorm-cli.config`
+- To run migrations `npx typeorm migration:run -d dist/typeorm-cli.config`
+- To revert migrations `npx typeorm migration:revert -d dist/typeorm-cli.config`
+
+- To exit docker `exit`
