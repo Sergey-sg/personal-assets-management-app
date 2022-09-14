@@ -48,8 +48,10 @@ Migrations
 
 - To run in docker `docker exec -it backend bash`
 
-- To generate migration `npx typeorm migration:generate src/migrations/NewMigrationName -d dist/typeorm-cli.config`
-- To run migrations `npx typeorm migration:run -d dist/typeorm-cli.config`
-- To revert migrations `npx typeorm migration:revert -d dist/typeorm-cli.config`
+- To show all migrations `npm run migration:show`
+- To create migration `npm run migration:create`
+- To generate migration `npm run migration:generate`
+- To run migrations `npm run migration:run`
+- To revert migrations `npm run migration:revert`
 
 - To exit docker `exit`
