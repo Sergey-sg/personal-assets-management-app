@@ -7,13 +7,13 @@ import { SectionTitle } from './SectionTitle'
 import { ReactComponent as PenIcon } from 'assets/icons/pen.svg'
 
 interface DeleteAccountProps {
-  current_password: string
-  confirm_current_password: string
+  currentPassword: string
+  confirmCurrentPassword: string
 }
 
 const InitialValues: DeleteAccountProps = {
-  current_password: '',
-  confirm_current_password: '',
+  currentPassword: '',
+  confirmCurrentPassword: '',
 }
 
 const DeleteAccountForm = () => {
@@ -49,12 +49,12 @@ const DeleteAccountForm = () => {
               <Form className="flex flex-col gap-8 mb-5">
                 <div className="flex flex-col gap-5 sm:flex-row">
                   <Field
-                    label={'New Password'}
-                    name={'current_password'}
-                    id={'current_password'}
+                    label={'Current Password'}
+                    name={'currentPassword'}
+                    id={'currentPassword'}
                     placeholder={'e.g. *******'}
-                    values={values.current_password}
-                    error={errors.current_password}
+                    values={values.currentPassword}
+                    error={errors.currentPassword}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     component={PasswordInput}
@@ -63,11 +63,11 @@ const DeleteAccountForm = () => {
 
                   <Field
                     label={'Confirm Password'}
-                    name={'confirm_current_password'}
-                    id={'confirm_current_password'}
+                    name={'confirmCurrentPassword'}
+                    id={'confirmCurrentPassword'}
                     placeholder={'e.g. *******'}
-                    values={values.confirm_current_password}
-                    error={errors.confirm_current_password}
+                    values={values.confirmCurrentPassword}
+                    error={errors.confirmCurrentPassword}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     className="sm:w-1/2"

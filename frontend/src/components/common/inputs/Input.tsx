@@ -1,7 +1,17 @@
 import React from 'react'
 import { Typography } from 'components/common/Typography'
-import { InputProps } from './types/input-props.interface'
 import clsx from 'clsx'
+
+export interface InputProps extends React.HTMLProps<HTMLInputElement> {
+  className?: string
+  label?: string
+  type: 'text' | 'email' | 'password' | 'number' | 'tel' | 'date'
+  name: string
+  placeholder?: string
+  disabled?: boolean
+  isInvalid?: boolean
+  error?: string
+}
 
 export const Input: React.FC<InputProps> = ({
   label,

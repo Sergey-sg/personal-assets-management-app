@@ -1,14 +1,14 @@
 import React from 'react'
-import { Form, Formik, FormikProps } from 'formik'
+import { Form, Formik } from 'formik'
 import { PersonalInfoSchema } from './schemas/personalInfoSchemes'
 import { InputField } from 'components/common/inputs/InputField'
 import { Button } from 'components/common/buttons/Button'
 import { SectionTitle } from './SectionTitle'
 
 interface PersonalInfoFormProps {
-  user_id: string | number
-  first_name: string
-  last_name: string
+  userId: string | number
+  firstName: string
+  lastName: string
   email: string
   address: string
   birthdate: string
@@ -16,9 +16,9 @@ interface PersonalInfoFormProps {
 }
 
 const InitialValues: PersonalInfoFormProps = {
-  user_id: '',
-  first_name: '',
-  last_name: '',
+  userId: '',
+  firstName: '',
+  lastName: '',
   email: '',
   address: '',
   birthdate: '',
@@ -36,8 +36,7 @@ const PersonalInfoForm: React.FC = () => {
       validationSchema={PersonalInfoSchema}
       onSubmit={handleSubmit}
     >
-      {(props: FormikProps<PersonalInfoFormProps>) => {
-        const { dirty, isValid } = props
+      {({ dirty, isValid }) => {
         return (
           <>
             <SectionTitle title={'Personal Information'} />
@@ -48,14 +47,14 @@ const PersonalInfoForm: React.FC = () => {
                   <InputField
                     label={'First Name'}
                     type={'text'}
-                    name={'first_name'}
+                    name={'firstName'}
                     placeholder={'e.g. John'}
                     className="sm:w-1/2"
                   />
                   <InputField
                     label={'Last Name'}
                     type={'text'}
-                    name={'last_name'}
+                    name={'lastName'}
                     placeholder={'e.g. Doe'}
                     className="sm:w-1/2"
                   />

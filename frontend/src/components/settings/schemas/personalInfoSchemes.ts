@@ -1,7 +1,7 @@
-import * as Yup from 'yup';
+import * as Yup from 'yup'
 
 export const PersonalInfoSchema = Yup.object({
-  first_name: Yup.string()
+  firstName: Yup.string()
     .max(64, 'Must be 64 characters or less')
     .matches(
       /^[a-zA-ZА-ЯҐЄІЇа-яієїґ0-9\s'-]+$/,
@@ -9,7 +9,7 @@ export const PersonalInfoSchema = Yup.object({
     )
     .required('Required'),
 
-  last_name: Yup.string()
+  lastName: Yup.string()
     .max(64, 'Must be 64 characters or less')
     .matches(
       /^[a-zA-ZА-ЯҐЄІЇа-яієїґ0-9\s'-]+$/,
@@ -27,16 +27,9 @@ export const PersonalInfoSchema = Yup.object({
     .notOneOf(['<', '>'])
     .required('Required'),
 
-  // birthdate: Yup.string()
-  //   .required('Birthdate cannot be empty')
-  //   .matches(
-  //     /\d{4}[-]\d{1,2}[-]\d{1,2}/,
-  //     'Incorrect date. Should be YYYY-MM-DD',
-  //   ),
-
   birthdate: Yup.string().required('Birthdate cannot be empty'),
 
   phone: Yup.string()
     .matches(/^\+?3?8?(0\d{9})$/, 'Phone number is not valid')
     .required('Required'),
-});
+})

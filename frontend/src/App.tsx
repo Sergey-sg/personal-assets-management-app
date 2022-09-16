@@ -22,13 +22,13 @@ export default function App() {
         <Route path={AppRoute.HOME} element={<PortalPage />} />
         <Route path={AppRoute.PORTAL} element={<PortalPage />}>
           <Route index element={<Dashboard />} />
-          <Route path={'dashboard'} element={<Dashboard />} />
-          <Route path={'transactions'} element={<Transactions />} />
-          <Route path={'my-wallets'} element={<MyWallet />} />
-          <Route path={'widgets'} element={<Widgets />} />
-          <Route path={'money-box'} element={<MoneyBox />} />
-          <Route path={'chats'} element={<Chats />} />
-          <Route path={'settings'} element={<Settings />} />
+          <Route path={AppRoute.DASHBOARD} element={<Dashboard />} />
+          <Route path={AppRoute.TRANSACTIONS} element={<Transactions />} />
+          <Route path={AppRoute.MY_WALLETS} element={<MyWallet />} />
+          <Route path={AppRoute.WIDGETS} element={<Widgets />} />
+          <Route path={AppRoute.MONEY_BOX} element={<MoneyBox />} />
+          <Route path={AppRoute.CHATS} element={<Chats />} />
+          <Route path={AppRoute.SETTINGS} element={<Settings />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Field, Form, Formik, FormikProps } from 'formik'
+import { Field, Form, Formik } from 'formik'
 import { Button } from 'components/common/buttons/Button'
 import { PasswordInput } from 'components/common/inputs/PasswordInput'
 import { changePasswordSchema } from './schemas/changePasswordSchema'
@@ -7,13 +7,13 @@ import { SectionTitle } from './SectionTitle'
 import { ReactComponent as PenIcon } from 'assets/icons/pen.svg'
 
 interface ChangePasswordFormProps {
-  new_password: string
-  confirm_password: string
+  newPassword: string
+  confirmPassword: string
 }
 
 const InitialValues: ChangePasswordFormProps = {
-  new_password: '',
-  confirm_password: '',
+  newPassword: '',
+  confirmPassword: '',
 }
 
 const ChangePasswordForm: React.FC = () => {
@@ -30,9 +30,7 @@ const ChangePasswordForm: React.FC = () => {
       validationSchema={changePasswordSchema}
       onSubmit={handleSubmit}
     >
-      {(props: FormikProps<ChangePasswordFormProps>) => {
-        const { dirty, isValid, errors, handleBlur, handleChange, values } =
-          props
+      {({ dirty, isValid, errors, handleBlur, handleChange, values }) => {
         return (
           <>
             <SectionTitle
@@ -50,11 +48,11 @@ const ChangePasswordForm: React.FC = () => {
                 <div className="flex flex-col gap-5 sm:flex-row">
                   <Field
                     label={'New Password'}
-                    name={'new_password'}
-                    id={'new_password'}
+                    name={'newPassword'}
+                    id={'newPassword'}
                     placeholder={'e.g. *******'}
-                    values={values.new_password}
-                    error={errors.new_password}
+                    values={values.newPassword}
+                    error={errors.newPassword}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     component={PasswordInput}
@@ -63,11 +61,11 @@ const ChangePasswordForm: React.FC = () => {
 
                   <Field
                     label={'Confirm Password'}
-                    name={'confirm_password'}
-                    id={'confirm_password'}
+                    name={'confirmPassword'}
+                    id={'confirmPassword'}
                     placeholder={'e.g. *******'}
-                    values={values.confirm_password}
-                    error={errors.confirm_password}
+                    values={values.confirmPassword}
+                    error={errors.confirmPassword}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     className="sm:w-1/2"

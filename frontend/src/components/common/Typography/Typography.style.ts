@@ -1,4 +1,4 @@
-export const config = {
+export const TypographyStyle = {
   h1: {
     className: 'text-h1 font-bold',
     defaultTagName: 'h1',
