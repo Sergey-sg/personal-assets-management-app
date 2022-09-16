@@ -13,9 +13,11 @@ import {
 } from 'pages/portalPages'
 import NotFoundPage from 'pages/NotFoundPage'
 
+import './index.css'
+
 export default function App() {
   return (
-    <div className="">
+    <div>
       <Routes>
         <Route path={AppRoute.HOME} element={<PortalPage />} />
         <Route path={AppRoute.PORTAL} element={<PortalPage />}>

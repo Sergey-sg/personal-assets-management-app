@@ -1,11 +1,11 @@
-import React, { ReactNode } from 'react';
-import { NavLink } from 'react-router-dom';
-import { Typography } from '../common/Typography';
+import React, { ReactNode } from 'react'
+import { NavLink } from 'react-router-dom'
+import { Typography } from '../common/Typography'
 
 interface MenuItemProps {
-  link: string;
-  icon: ReactNode;
-  label: string;
+  link: string
+  icon: ReactNode
+  label: string
 }
 
 const MenuItem: React.FC<MenuItemProps> = ({ link, icon, label }) => {
@@ -24,9 +24,9 @@ const MenuItem: React.FC<MenuItemProps> = ({ link, icon, label }) => {
       }
     >
       <div className="w-5 h-5 mr-2">{icon}</div>
-      <Typography type="Ag-16-semibold" children={label} />
+      <Typography type="Ag-16-semibold">{label}</Typography>
     </NavLink>
-  );
-};
+  )
+}
 
-export default MenuItem;
+export default MenuItem
