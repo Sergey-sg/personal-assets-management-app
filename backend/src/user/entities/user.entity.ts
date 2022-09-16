@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Base } from 'src/utils/DB/base';
-import { WalletEntity } from 'src/wallet/entities/wallet.entity';
+import { Base } from '../../utils/DB/base';
+import { WalletEntity } from '../../wallet/entities/wallet.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
 
 @Entity('user')

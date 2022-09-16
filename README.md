@@ -43,3 +43,15 @@ Project description
 - To build (rebuild) `docker-compose --env-file=.env.dev up -d --build`
 - To start without building `docker-compose --env-file=.env.dev up -d`
 - To stop `docker-compose --env-file=.env.dev down`
+
+Migrations
+
+- To run in docker `docker exec -it backend bash`
+
+- To show all migrations `npm run migration:show`
+- To create migration `npm run migration:create`
+- To generate migration `npm run migration:generate`
+- To run migrations `npm run migration:run`
+- To revert migrations `npm run migration:revert`
+
+- To exit docker `exit`

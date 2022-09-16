@@ -17,7 +17,7 @@ import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { threadId } from 'worker_threads';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
-import { UserEntity } from 'src/user/user.entity';
+import { UserEntity } from 'src/user/entities/user.entity';
 import { Request, Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { AccessTokenGuard } from './guards/accessToken.guard';

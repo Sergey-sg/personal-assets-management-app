@@ -1,13 +1,12 @@
 import { MailerModule } from '@nestjs-modules/mailer';
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { typeOrmAsyncConfig } from './config/typeorm.config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthModule } from './auth/auth.module';
-//
-import { getTypeOrmConfig } from './config/typeorm.config';
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 import { WalletModule } from './wallet/wallet.module';
 
 @Module({
@@ -15,6 +14,7 @@ import { WalletModule } from './wallet/wallet.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
     MailerModule.forRoot({
       transport: {
         host: process.env.SMTP_HOST,
@@ -26,12 +26,7 @@ import { WalletModule } from './wallet/wallet.module';
         },
       },
     }),
-
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: getTypeOrmConfig,
-    }),
+    UserModule,
     AuthModule,
     WalletModule,
   ],
