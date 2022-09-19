@@ -1,6 +1,6 @@
-import React from 'react';
-import { AppRoute } from 'common/enums/app-route.enum';
-import { Link } from 'react-router-dom';
+import React from 'react'
+import { AppRoute } from 'common/enums/app-route.enum'
+import { Link } from 'react-router-dom'
 
 const NotFoundPage: React.FC = () => {
   return (
@@ -17,7 +17,7 @@ const NotFoundPage: React.FC = () => {
       </div>
       <button className="mt-5">
         <Link
-          to={AppRoute.HOME}
+          to={AppRoute.PORTAL}
           className="relative inline-block text-sm font-medium text-error group active:text-orange-500 focus:outline-none focus:ring"
         >
           <span className="absolute inset-0 transition-transform translate-x-0.5 translate-y-0.5 bg-error group-hover:translate-y-0 group-hover:translate-x-0"></span>
@@ -28,7 +28,7 @@ const NotFoundPage: React.FC = () => {
         </Link>
       </button>
     </main>
-  );
-};
+  )
+}
 
-export default NotFoundPage;
+export default NotFoundPage

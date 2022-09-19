@@ -20,6 +20,7 @@ export const Typography: React.FC<TypographyProps> = ({
   const Tag = (tagName ||
     TypographyStyle[type].defaultTagName) as keyof JSX.IntrinsicElements
   const predefinedClassName = TypographyStyle[type].className
+
   return (
     <Tag className={clsx(predefinedClassName, className)} onClick={onClick}>
       {children}

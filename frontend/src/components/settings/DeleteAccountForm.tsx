@@ -22,6 +22,7 @@ const DeleteAccountForm = () => {
   const handleSubmit = (values: typeof InitialValues) => {
     console.log(values)
   }
+
   return (
     <Formik
       initialValues={InitialValues}
@@ -33,6 +34,7 @@ const DeleteAccountForm = () => {
       {(props: FormikProps<DeleteAccountProps>) => {
         const { dirty, isValid, errors, handleBlur, handleChange, values } =
           props
+
         return (
           <>
             <SectionTitle

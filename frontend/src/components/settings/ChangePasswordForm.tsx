@@ -22,6 +22,7 @@ const ChangePasswordForm: React.FC = () => {
   const handleSubmit = (values: typeof InitialValues) => {
     console.log(values)
   }
+
   return (
     <Formik
       initialValues={InitialValues}

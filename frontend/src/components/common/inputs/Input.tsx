@@ -23,6 +23,7 @@ export const Input: React.FC<InputProps> = ({
   ...inputProps
 }) => {
   const borderStyle = isInvalid ? 'border-error' : 'border-green-light'
+
   return (
     <div className={clsx('flex flex-col gap-1', className)}>
       <label htmlFor={name}>
