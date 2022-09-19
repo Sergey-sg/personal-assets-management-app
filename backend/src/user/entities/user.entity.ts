@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Base } from '../../utils/DB/base';
 import { WalletEntity } from '../../wallet/entities/wallet.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
+import { InvoicesEntity } from 'src/invoices/entities/invoices.entity';
 
 @Entity('user')
 export class UserEntity extends Base {
@@ -39,4 +40,7 @@ export class UserEntity extends Base {
 
   @OneToMany(() => WalletEntity, (wallet) => wallet.userWallet)
   wallet?: WalletEntity[];
+
+  @OneToMany(() => InvoicesEntity, (invoice) => invoice.id)
+  invoice: InvoicesEntity;
 }
