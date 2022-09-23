@@ -165,7 +165,7 @@ function InvoiceItemForm() {
     <div>
       <div className="text-base font-bold mb-3.5">Item Details</div>
       <ReactTextareaAutosize
-        className="w-full border-[#F5F5F5] rounded-xl"
+        className="w-full border-none rounded-xl"
         name="detail"
         placeholder="Details item with more info"
         onChange={(e) => setInvoiceDetail(e.target.value)}
@@ -222,29 +222,25 @@ const BasicInfo: React.FC = () => {
       <div className="columns-1 px-5">
         <div className="font-medium pb-4">
           <span className="text-[#78778B]">Invoice Date</span>
-          <div className="border border-[#F5F5F5] rounded-xl p-3.5">
-            <input
-              name="invoice-date"
-              className="w-full"
-              type={'date'}
-              onChange={(e) => {
-                setInvoiceDate(e.target.value)
-              }}
-            />
-          </div>
+          <input
+            name="invoice-date"
+            className="w-full border border-[#F5F5F5] rounded-xl p-3.5"
+            type={'date'}
+            onChange={(e) => {
+              setInvoiceDate(e.target.value)
+            }}
+          />
         </div>
         <div className="font-medium pb-4">
           <span className="text-[#78778B]">Due Date</span>
-          <div className="border border-[#F5F5F5] rounded-xl p-3.5">
-            <input
-              name="due-date"
-              className="w-full"
-              type={'date'}
-              onChange={(e) => {
-                setDueDate(e.target.value)
-              }}
-            />
-          </div>
+          <input
+            name="due-date"
+            className="w-full border border-[#F5F5F5] rounded-xl p-3.5"
+            type={'date'}
+            onChange={(e) => {
+              setDueDate(e.target.value)
+            }}
+          />
         </div>
         <button className="bg-[#C8EE44] rounded-xl w-full font-semibold text-base py-4 my-4">
           Send Invoice
