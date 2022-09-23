@@ -1,10 +1,4 @@
 enum AppRoute {
-<<<<<<< HEAD
-  HOME = "/",
-  SIGN_IN = "/sign-in",
-  SIGN_UP = "/sign-up",
-  INVOICE_CREATE = "/invoice/create",
-=======
   HOME = '/',
   SIGN_IN = 'sign-in',
   SIGN_UP = 'sign-up',
@@ -17,7 +11,6 @@ enum AppRoute {
   MY_WALLETS = 'my-wallets',
   CHATS = 'chats',
   SETTINGS = 'settings',
->>>>>>> master
 }
 
 export { AppRoute }

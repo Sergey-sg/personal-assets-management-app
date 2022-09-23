@@ -14,21 +14,18 @@ import {
 import NotFoundPage from 'pages/NotFoundPage'
 
 import './index.css'
-import InvoiceCreatePage from 'pages/InvoiceCreatePage'
+import InvoiceCreatePage from 'pages/portalPages/InvoiceCreatePage'
 
 export default function App() {
   return (
     <div>
       <Routes>
-<<<<<<< HEAD
-        <Route path={AppRoute.HOME} element={<HomePage />} />
-        <Route path={AppRoute.INVOICE_CREATE} element={<InvoiceCreatePage />} />
-=======
         <Route path={AppRoute.HOME} element={<PortalPage />} />
         <Route path={AppRoute.PORTAL} element={<PortalPage />}>
           <Route index element={<Dashboard />} />
           <Route path={AppRoute.DASHBOARD} element={<Dashboard />} />
           <Route path={AppRoute.TRANSACTIONS} element={<Transactions />} />
+          <Route path={AppRoute.INVOICES} element={<InvoiceCreatePage />} />
           <Route path={AppRoute.MY_WALLETS} element={<MyWallet />} />
           <Route path={AppRoute.WIDGETS} element={<Widgets />} />
           <Route path={AppRoute.MONEY_BOX} element={<MoneyBox />} />
@@ -36,7 +33,6 @@ export default function App() {
           <Route path={AppRoute.SETTINGS} element={<Settings />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
->>>>>>> master
       </Routes>
     </div>
   )
