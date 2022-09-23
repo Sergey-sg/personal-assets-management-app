@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+<<<<<<< HEAD
 
 * {
   margin: 0;
@@ -12,3 +13,5 @@ input {
   outline: none;
   border: none;
 }
+=======
+>>>>>>> master
