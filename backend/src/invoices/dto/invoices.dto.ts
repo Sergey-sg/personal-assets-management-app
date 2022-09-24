@@ -1,17 +1,26 @@
-import { IsString, IsDate, } from 'class-validator';
+import { IsString, IsDateString } from 'class-validator';
 import { UserEntity } from '../../user/entities/user.entity';
 import { ItemDto } from './item.dto';
 
 export class InvoicesDto {
-    createdBy: UserEntity;
-    
-    billedTo: UserEntity;
+  createdBy: UserEntity;
 
-    items: ItemDto[];
+  billedTo: UserEntity;
 
-    @IsDate()
-    dueDate: Date;
+  items: ItemDto[];
 
-    @IsString()
-    invoiceDetail: string;
+  paid: boolean;
+
+  discount: number;
+
+  @IsDateString()
+  dueDate: Date;
+
+  @IsDateString()
+  invoiceDate: Date;
+
+  @IsString()
+  invoiceDetail: string;
+
+  total: number;
 }
