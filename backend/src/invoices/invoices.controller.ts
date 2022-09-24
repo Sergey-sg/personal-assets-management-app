@@ -3,11 +3,9 @@ import {
   Body,
   Param,
 } from '@nestjs/common/decorators/http/route-params.decorator';
-import { ApiHeader } from '@nestjs/swagger';
 import { InvoicesDto } from './dto/invoices.dto';
 import { InvoicesService } from './invoices.service';
 
-@ApiHeader({ name: 'authorization', description: 'must be token' })
 @Controller('invoices')
 export class InvoicesController {
   constructor(private invoicesService: InvoicesService) {}
@@ -33,7 +31,7 @@ export class InvoicesController {
   }
 
   @Get()
-  async getAll() {
+  async getAll(): Promise<InvoicesDto[]> {
     return this.invoicesService.getAllInvoices();
   }
 
