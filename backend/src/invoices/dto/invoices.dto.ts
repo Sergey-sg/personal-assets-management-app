@@ -1,4 +1,4 @@
-import { IsString, IsDateString } from 'class-validator';
+import { IsString, IsDateString, IsNumber } from 'class-validator';
 import { UserEntity } from '../../user/entities/user.entity';
 import { ItemDto } from './item.dto';
 
@@ -15,6 +15,7 @@ export class InvoicesDto {
 
   paid: boolean;
 
+  @IsNumber()
   discount: number;
 
   @IsDateString()
@@ -26,5 +27,6 @@ export class InvoicesDto {
   @IsString()
   invoiceDetail: string;
 
+  @IsNumber()
   total: number;
 }

@@ -13,5 +13,6 @@ export class ItemDto {
   @IsDecimal()
   price: number;
 
+  @IsNumber()
   subTotal: number;
 }
