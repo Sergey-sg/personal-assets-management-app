@@ -1,4 +1,11 @@
-import { Controller, Get, ParseIntPipe, Post, Put } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  ParseIntPipe,
+  Post,
+  Put,
+} from '@nestjs/common';
 import {
   Body,
   Param,
@@ -11,16 +18,32 @@ export class InvoicesController {
   constructor(private invoicesService: InvoicesService) {}
 
   @Post()
-  create(@Body() invoice: InvoicesDto): Promise<InvoicesDto> {
+  async create(@Body() invoice: InvoicesDto): Promise<InvoicesDto> {
     return this.invoicesService.createInvoice(invoice);
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param('id') id: number,
     @Body() invoice: InvoicesDto,
   ): Promise<InvoicesDto> {
     return this.invoicesService.updateInvoice(id, invoice);
+  }
+
+  @Delete(':invoiceId/created-by/:id')
+  async removeForCreatedUser(
+    @Param('id') id: number,
+    @Param('invoiceId') invoiceId: number,
+  ): Promise<void> {
+    return this.invoicesService.removeForCreatedUserInvoice(invoiceId, id);
+  }
+
+  @Delete(':invoiceId/billed-to/:id')
+  async removeForBilledToUser(
+    @Param('id') id: number,
+    @Param('invoiceId') invoiceId: number,
+  ): Promise<void> {
+    return this.invoicesService.removeForBilledToUserInvoice(invoiceId, id);
   }
 
   @Get(':id')

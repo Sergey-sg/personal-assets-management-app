@@ -5,7 +5,11 @@ import { ItemDto } from './item.dto';
 export class InvoicesDto {
   createdBy: UserEntity;
 
+  createdByRemove: boolean;
+
   billedTo: UserEntity;
+
+  billedToRemove: boolean;
 
   items: ItemDto[];
 

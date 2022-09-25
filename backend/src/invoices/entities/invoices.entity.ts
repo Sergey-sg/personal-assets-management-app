@@ -9,13 +9,20 @@ export class InvoicesEntity extends Base {
   @JoinColumn()
   createdBy: UserEntity;
 
+  @Column({ type: 'boolean', default: false })
+  createdByRemove: boolean;
+
   @ManyToOne(() => UserEntity, (user) => user.id)
   @JoinColumn()
   billedTo: UserEntity;
 
+  @Column({ type: 'boolean', default: false })
+  billedToRemove: boolean;
+
   @OneToMany(() => ItemEntity, (item) => item.invoice, {
-    cascade: true,
     nullable: true,
+    cascade: ['insert'],
+    onDelete: 'CASCADE',
   })
   items: ItemEntity[];
 

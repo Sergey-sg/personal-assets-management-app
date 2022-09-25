@@ -94,6 +94,44 @@ export class InvoicesService {
     }
   }
 
+  public async removeForCreatedUserInvoice(
+    invoiceId: number,
+    id: number,
+  ): Promise<void> {
+    try {
+      const createdBy = await this.userRepository.findOneByOrFail({ id: id });
+      await this.invoiceRepository.findOneByOrFail({
+        id: invoiceId,
+        createdBy: { id: createdBy.id },
+      });
+      await this.invoiceRepository.update(invoiceId, { createdByRemove: true });
+    } catch (e: any) {
+      throw new HttpException(
+        `Invoice does not found for user: ${e.message}`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+  }
+
+  public async removeForBilledToUserInvoice(
+    invoiceId: number,
+    id: number,
+  ): Promise<void> {
+    try {
+      const billedTo = await this.userRepository.findOneByOrFail({ id: id });
+      await this.invoiceRepository.findOneByOrFail({
+        id: invoiceId,
+        billedTo: { id: billedTo.id },
+      });
+      await this.invoiceRepository.update(invoiceId, { billedToRemove: true });
+    } catch (e: any) {
+      throw new HttpException(
+        `Invoice does not found ${e.message}`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+  }
+
   public async getAllInvoices() {
     return await this.invoiceRepository.find({
       relations: { items: true, createdBy: true, billedTo: true },
@@ -109,15 +147,15 @@ export class InvoicesService {
 
   public async getAllCreatedByUser(id: number): Promise<InvoicesDto[]> {
     return await this.invoiceRepository.find({
-      where: { createdBy: { id: id } },
-      relations: { items: true, createdBy: true, billedTo: true },
+      where: { createdBy: { id: id }, createdByRemove: false },
+      relations: { items: true, billedTo: true },
     });
   }
 
   public async getAllBilledToUser(id: number): Promise<InvoicesDto[]> {
     return await this.invoiceRepository.find({
-      where: { billedTo: { id: id } },
-      relations: { items: true, createdBy: true, billedTo: true },
+      where: { billedTo: { id: id }, billedToRemove: false },
+      relations: { items: true, createdBy: true },
     });
   }
 }
