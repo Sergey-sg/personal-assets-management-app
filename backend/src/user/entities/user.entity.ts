@@ -2,6 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Base } from '../../utils/DB/base';
 import { WalletEntity } from '../../wallet/entities/wallet.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
+import { IncomeEntity } from '../../income/entities/income.entity';
+import { CostEntity } from '../../costs/entities/cost.entity';
 
 @Entity('user')
 export class UserEntity extends Base {
@@ -37,6 +39,29 @@ export class UserEntity extends Base {
   @Column({ default: '', name: 'avatar_path' })
   avatarPath?: string;
 
-  @OneToMany(() => WalletEntity, (wallet) => wallet.userWallet)
-  wallet?: WalletEntity[];
+  @ApiProperty()
+  @OneToMany(() => WalletEntity, (wallet: WalletEntity) => wallet.owner, {
+    onDelete: 'CASCADE',
+  })
+  wallets: WalletEntity[];
+
+  @ApiProperty()
+  @OneToMany(
+    () => IncomeEntity,
+    (income_transaction: IncomeEntity) => income_transaction.from_user,
+    {
+      onDelete: 'CASCADE',
+    },
+  )
+  income_transactions: IncomeEntity[];
+
+  @ApiProperty()
+  @OneToMany(
+    () => CostEntity,
+    (costs_transaction: CostEntity) => costs_transaction.to_user,
+    {
+      onDelete: 'CASCADE',
+    },
+  )
+  costs_transactions: CostEntity[];
 }
