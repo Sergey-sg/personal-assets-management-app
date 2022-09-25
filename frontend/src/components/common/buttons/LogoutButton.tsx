@@ -1,9 +1,9 @@
-import React from 'react';
-import { ReactComponent as LogoutIcon } from 'assets/icons/logout.svg';
-import { Typography } from 'components/common/Typography';
+import React from 'react'
+import { ReactComponent as LogoutIcon } from 'assets/icons/logout.svg'
+import { Typography } from 'components/common/Typography'
 
 interface LogoutButtonProps {
-  onClick?: () => void;
+  onClick?: () => void
 }
 
 const LogoutButton: React.FC<LogoutButtonProps> = ({ onClick }) => {
@@ -18,7 +18,7 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({ onClick }) => {
         <Typography type={'Ag-16-semibold'}>Log Out</Typography>
       </div>
     </button>
-  );
-};
+  )
+}
 
-export default LogoutButton;
+export default LogoutButton

@@ -1,8 +1,8 @@
 import { WalletEntity } from '../../wallet/entities/wallet.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { Base } from '../../utils/DB/base';
 import { UserEntity } from '../../user/entities/user.entity';
+import { Base } from 'src/common/dto/base.dto';
 
 @Entity('costs')
 export class CostEntity extends Base {

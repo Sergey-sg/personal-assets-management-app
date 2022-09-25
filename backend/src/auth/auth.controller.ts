@@ -13,7 +13,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { threadId } from 'worker_threads';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
@@ -25,7 +25,9 @@ import { RefreshTokenGuard } from './guards/refreshToken.guard';
 import { isPositive } from 'class-validator';
 import { GoogleOauthGuard } from './guards/googleToken.guard';
 import { OAuth2Client } from 'google-auth-library';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   [x: string]: any;
@@ -63,11 +65,13 @@ export class AuthController {
     return this.authService.login(dto, res);
   }
 
-  @ApiOperation({ summary: 'Create new User' })
+  @ApiOperation({
+    summary: 'Create new User',
+  })
   @ApiResponse({ status: 201, type: UserEntity })
   @UsePipes(new ValidationPipe())
   @Post('register')
-  async register(@Body() dto: AuthDto) {
+  async register(@Body() dto: CreateUserDto) {
     return this.authService.register(dto);
   }
 
