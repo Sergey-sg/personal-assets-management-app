@@ -1,73 +1,19 @@
 import React, { useState } from 'react'
 import ReactTextareaAutosize from 'react-textarea-autosize'
 import customer from '../../assets/images/test_customer_invoice.png'
-import { HeaderItems, MagloBaner } from '../invoice_componetns/statics'
-
-const InvoiceInfoBaner: React.FC = () => {
-  return (
-    <div className="grid grid-rows-1 grid-flow-col columns-2 bg-[#F8F8F8] rounded-xl p-5">
-      <div className="container">
-        <div className="font-bold text-lg">Invoice Number</div>
-        <br />
-        <div className="font-medium text-[#78778B]">MAG 2541420</div>
-        <div className="font-medium text-[#78778B]">
-          Issued Date: 10 Apr 2022
-        </div>
-        <div className="font-medium text-[#78778B]">Due Date: 20 Apr 2022</div>
-      </div>
-      <div className="container text-right">
-        <div className="font-bold text-lg">Billed to</div>
-        <br />
-        <div className="font-medium text-[#78778B]">Sajib Rahman</div>
-        <div className="font-medium text-[#78778B]">3471 Rainy Day Drive</div>
-        <div className="font-medium text-[#78778B]">Needham, MA 02192</div>
-      </div>
-    </div>
-  )
-}
-
-function FooterItems(props: any) {
-  return (
-    <div className="grid grid-cols-7 gap-4 font-semibold text-right">
-      <div className="col-span-4"></div>
-      <div className="col-span-3">
-        <div className="grid grid-cols-4 gap-4 p-3">
-          <div className="col-span-2">Subtotal</div>
-          <div className="col-span-2 mx-auto">${props.subTotal}</div>
-        </div>
-        <div className="grid grid-cols-4 gap-4 p-3">
-          <div className="col-span-2">Discount</div>
-          <button className="text-[#29A073] col-span-2 w-2/4 mx-auto">
-            Add
-          </button>
-        </div>
-        <div className="grid grid-cols-4 gap-4 p-3">
-          <div className="col-span-2">Tax</div>
-          <button className="text-[#29A073] col-span-2 w-2/4 mx-auto">
-            Add
-          </button>
-        </div>
-        <hr className="col-span-2 border-[#E5E5E5]" />
-        <div className="grid grid-cols-4 gap-4 p-3">
-          <div className="col-span-2">Total</div>
-          <div className="col-span-2 mx-auto">${props.total}</div>
-        </div>
-      </div>
-    </div>
-  )
-}
+import { FooterItems, HeaderItems, InvoiceInfoBaner, MagloBaner } from '../invoice_componetns/statics'
 
 function InvoiceItemForm() {
-  const [invoiceDetail, setInvoiceDetail] = useState('')
-  const [invoiceItems, setInvoiceItem] = useState([{}])
-  const [subTotal, setSubTotal] = useState(0)
-  const [total, setTotal] = useState(0)
+  const [invoiceDetail, setInvoiceDetail] = useState('');
+  const [invoiceItems, setInvoiceItem] = useState([{}]);
+  const [subTotal, setSubTotal] = useState(0);
+  const [total, setTotal] = useState(0);
 
   const InvoiceItems: React.FC = () => {
     const InputItem: React.FC = () => {
-      const [name, setName] = useState('')
-      const [number, setNumber] = useState('')
-      const [price, setPrice] = useState('')
+      const [name, setName] = useState('');
+      const [number, setNumber] = useState('');
+      const [price, setPrice] = useState('');
 
       function submitValue(e: any) {
         e.preventDefault()
@@ -213,8 +159,9 @@ const ClientDetails: React.FC = () => {
 }
 
 const BasicInfo: React.FC = () => {
-  const [dueDate, setDueDate] = useState('')
-  const [invoiceDate, setInvoiceDate] = useState('')
+  const [dueDate, setDueDate] = useState('');
+  const [invoiceDate, setInvoiceDate] = useState('');
+  const issuedDate = Date.now();
 
   return (
     <div className="container h-max bg-[#FFFFFF] border border-[#F5F5F5] rounded-xl">
