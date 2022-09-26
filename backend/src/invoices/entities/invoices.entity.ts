@@ -1,7 +1,8 @@
 import { Base } from '../../utils/DB/base';
 import { UserEntity } from '../../user/entities/user.entity';
 import { Column, Entity, JoinColumn, OneToMany, ManyToOne } from 'typeorm';
-import { ItemEntity } from './item.entity';
+import { InvoiceItemEntity } from './invoiceItem.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity('invoices')
 export class InvoicesEntity extends Base {
@@ -9,6 +10,7 @@ export class InvoicesEntity extends Base {
   @JoinColumn()
   createdBy: UserEntity;
 
+  @ApiProperty({ description: 'creator delete invoice flag' })
   @Column({ type: 'boolean', default: false })
   createdByRemove: boolean;
 
@@ -16,31 +18,38 @@ export class InvoicesEntity extends Base {
   @JoinColumn()
   billedTo: UserEntity;
 
+  @ApiProperty({ description: 'customer delete invoice flag' })
   @Column({ type: 'boolean', default: false })
   billedToRemove: boolean;
 
-  @OneToMany(() => ItemEntity, (item) => item.invoice, {
+  @OneToMany(() => InvoiceItemEntity, (item) => item.invoice, {
     nullable: true,
-    cascade: ['insert'],
+    cascade: true,
     onDelete: 'CASCADE',
   })
-  items: ItemEntity[];
+  items: InvoiceItemEntity[];
 
+  @ApiProperty({ description: 'payment flag' })
   @Column({ type: 'boolean', default: false })
   paid: boolean;
 
-  @Column({ default: 1 })
+  @ApiProperty({ description: 'discount' })
+  @Column({ type: 'int', default: 0 })
   discount: number;
 
+  @ApiProperty({ description: 'due date' })
   @Column({ type: 'timestamptz' })
   dueDate: Date;
 
+  @ApiProperty({ description: 'invoice date' })
   @Column({ type: 'timestamptz', nullable: true })
   invoiceDate: Date;
 
+  @ApiProperty({ description: 'invoice details' })
   @Column({ type: 'varchar', length: 500, nullable: true })
-  invoiceDetail: string | null;
+  invoiceDetails: string | null;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  @ApiProperty({ description: 'total invoice price' })
+  @Column({ type: 'int', default: 0 })
   total: number;
 }
