@@ -17,7 +17,17 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('swagger', app, document);
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true, // only allow properties defined in the DTO
+      forbidNonWhitelisted: true, // throw an error if a property is not defined in the DTO
+      transform: true, // transform the payload to the DTO type
+
+      transformOptions: {
+        enableImplicitConversion: true, // convert string to number
+      },
+    }),
+  );
   app.enableCors({ origin: process.env.FRONTEND_URL, credentials: true });
 
   await app.listen(process.env.BACKEND_PORT);

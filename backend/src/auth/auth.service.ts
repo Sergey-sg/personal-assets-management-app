@@ -19,6 +19,7 @@ import { v4 } from 'uuid';
 import { MailerService } from '@nestjs-modules/mailer';
 import { Request, Response } from 'express';
 import { UserGoogle, Tokens } from './types/tokens.type';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -120,7 +121,7 @@ export class AuthService {
     };
   }
 
-  async register(dto: AuthDto) {
+  async register(dto: CreateUserDto) {
     const oldUser = await this.userRepository.findOneBy({ email: dto.email });
 
     if (oldUser) {
@@ -129,6 +130,8 @@ export class AuthService {
     const activationLink = v4();
     const salt = await genSalt(3);
     const newUser = await this.userRepository.create({
+      firstName: dto.firstName,
+      lastName: dto.lastName,
       email: dto.email,
       password: await hash(dto.password, salt),
       activationLink: activationLink,
@@ -255,5 +258,15 @@ export class AuthService {
       id: user.id,
       email: user.email,
     };
+  }
+
+  async hashPassword(password: string): Promise<string> {
+    const salt = await genSalt(3);
+
+    return await hash(password, salt);
+  }
+
+  async compareHash(value: string, hash: string): Promise<boolean> {
+    return await compare(value, hash);
   }
 }

@@ -1,6 +1,6 @@
 import { MailerModule } from '@nestjs-modules/mailer';
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmAsyncConfig } from './config/typeorm.config';
 import { AppController } from './app.controller';
@@ -8,6 +8,8 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { WalletModule } from './wallet/wallet.module';
+import { IncomeModule } from './income/income.module';
+import { CostsModule } from './costs/costs.module';
 import { InvoicesModule } from './invoices/invoices.module';
 
 @Module({
@@ -30,6 +32,8 @@ import { InvoicesModule } from './invoices/invoices.module';
     UserModule,
     AuthModule,
     WalletModule,
+    IncomeModule,
+    CostsModule,
     InvoicesModule,
   ],
   controllers: [AppController],
