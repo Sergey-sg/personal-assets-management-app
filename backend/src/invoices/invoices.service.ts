@@ -1,10 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../user/entities/user.entity';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, EntityManager, Repository } from 'typeorm';
 import { InvoicesDto } from './dto/invoices.dto';
 import { InvoicesEntity } from './entities/invoices.entity';
-import { ItemEntity } from './entities/item.entity';
+import { InvoiceItemEntity } from './entities/invoiceItem.entity';
+import { InvoiceItemDto } from './dto/invoiceItem.dto';
 
 @Injectable()
 export class InvoicesService {
@@ -12,135 +13,243 @@ export class InvoicesService {
     @InjectRepository(InvoicesEntity)
     private invoiceRepository: Repository<InvoicesEntity>,
 
-    @InjectRepository(ItemEntity)
-    private itemRepository: Repository<ItemEntity>,
+    @InjectRepository(InvoiceItemEntity)
+    private itemRepository: Repository<InvoiceItemEntity>,
 
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
+
+    private dataSource: DataSource,
   ) {}
 
-  public async createInvoice(
-    invoicesDto: InvoicesDto,
-  ): Promise<InvoicesEntity> {
-    const createdBy = await this.userRepository.findOneOrFail({
-      where: invoicesDto.createdBy,
-    });
-    const billedTo = await this.userRepository.findOneOrFail({
-      where: invoicesDto.billedTo,
-    });
-    const newInvoice = await this.invoiceRepository.save({
-      createdBy: createdBy,
-      billedTo: billedTo,
-      dueDate: invoicesDto.dueDate,
-      invoiceDate: invoicesDto.invoiceDate,
-      invoiceDetail: invoicesDto.invoiceDetail,
-      total: invoicesDto.total,
-    });
-    invoicesDto.items.forEach((item) =>
-      this.itemRepository.save({
-        invoice: newInvoice,
+  private async getUser(user: any) {
+    const currentUser = await this.userRepository
+      .findOneOrFail({
+        where: user,
+      })
+      .catch(() => {
+        throw new HttpException(
+          user.email
+            ? `User with email: ${user.email} does not exist`
+            : `User with id: ${user.id} does not exist`,
+          HttpStatus.BAD_REQUEST,
+        );
+      });
+    return currentUser;
+  }
+
+  private async getInvoiceByIdForUser(
+    invoiceId: number,
+    user: any,
+    creator: boolean,
+    relationsParams: object,
+  ) {
+    const whereParams = creator
+      ? { id: invoiceId, createdBy: { id: user.id }, createdByRemove: false }
+      : { id: invoiceId, billedTo: { id: user.id }, billedToRemove: false };
+    const invoice = await this.invoiceRepository
+      .findOneOrFail({
+        where: whereParams,
+        relations: relationsParams,
+      })
+      .catch(() => {
+        throw new HttpException(
+          user.email
+            ? `Invoice does not found for user: ${user.email}`
+            : `Invoice does not found for user: ${user.id}`,
+          HttpStatus.NOT_FOUND,
+        );
+      });
+    return invoice;
+  }
+
+  private async getArreyOfNewItems(
+    items: InvoiceItemDto[],
+    invoice: InvoicesDto,
+  ) {
+    const newItems = [];
+    items.forEach((item) => {
+      const newInvoiceItem = this.itemRepository.create({
+        invoice: invoice,
         name: item.name,
         amount: item.amount,
         price: item.price,
         subTotal: item.subTotal,
-      }),
-    );
-    return newInvoice;
+      });
+      newItems.push(newInvoiceItem);
+    });
+    return newItems;
+  }
+
+  public async createInvoice(
+    invoicesDto: InvoicesDto,
+    currentUserId: number,
+  ): Promise<InvoicesEntity> {
+    try {
+      const createdBy = await this.getUser({ id: currentUserId });
+      const billedTo = await this.getUser(invoicesDto.billedTo);
+      const subTotal = invoicesDto.items.reduce(
+        (total, item) => item.price * item.amount + total,
+        0,
+      );
+      const total = (subTotal * (100 - invoicesDto.discount)) / 100;
+      if (total === invoicesDto.total) {
+        const newInvoice = this.invoiceRepository.create({
+          createdBy: createdBy,
+          billedTo: billedTo,
+          dueDate: invoicesDto.dueDate,
+          invoiceDate: invoicesDto.invoiceDate,
+          invoiceDetails: invoicesDto.invoiceDetails,
+          discount: invoicesDto.discount,
+          total: invoicesDto.total,
+        });
+        return await this.dataSource.transaction(
+          async (entityManager: EntityManager) => {
+            await entityManager
+              .withRepository(this.invoiceRepository)
+              .insert(newInvoice);
+            const newInvoiceItems = await this.getArreyOfNewItems(
+              invoicesDto.items,
+              newInvoice,
+            );
+            await entityManager
+              .withRepository(this.itemRepository)
+              .insert(newInvoiceItems);
+            return newInvoice;
+          },
+        );
+      } else {
+        throw new HttpException(
+          'total price is not valid',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    } catch (e: any) {
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+    }
   }
 
   public async updateInvoice(
     id: number,
     invoicesDto: InvoicesDto,
+    currentUserId: number,
   ): Promise<InvoicesEntity> {
     try {
-      const createdBy = await this.userRepository.findOneOrFail({
-        where: invoicesDto.createdBy,
-      });
-      const oldInvoice = await this.invoiceRepository.findOneOrFail({
-        where: { id: id, createdBy: { id: createdBy.id } },
-      });
-      const billedTo = await this.userRepository.findOneOrFail({
-        where: invoicesDto.billedTo,
-      });
-      await this.invoiceRepository.update(id, {
-        billedTo: billedTo,
-        dueDate: invoicesDto.dueDate,
-        invoiceDate: invoicesDto.invoiceDate,
-        invoiceDetail: invoicesDto.invoiceDetail,
-        total: invoicesDto.total,
-      });
-      const updatedInvoice = await this.invoiceRepository.findOneBy({ id: id });
-      const oldItems = await this.itemRepository.find({
-        where: { invoice: { id: updatedInvoice.id } },
-      });
-      oldItems.forEach((item) => {
-        this.itemRepository.delete({ id: item.id });
-      });
-      invoicesDto.items.forEach((item) =>
-        this.itemRepository.save({
-          invoice: updatedInvoice,
-          name: item.name,
-          amount: item.amount,
-          price: item.price,
-          subTotal: item.subTotal,
-        }),
+      const createdBy = await this.getUser({ id: currentUserId });
+      const billedTo = await this.getUser(invoicesDto.billedTo);
+      const oldInvoice = await this.getInvoiceByIdForUser(
+        id,
+        createdBy,
+        true,
+        {},
       );
-      return updatedInvoice;
+      if (oldInvoice.paid) {
+        throw new HttpException(
+          'This invoice has already been paid for and its change is prohibited',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      const oldItems = await this.itemRepository.findBy({
+        invoice: { id: id },
+      });
+      oldInvoice.billedTo = billedTo;
+      oldInvoice.dueDate = invoicesDto.dueDate;
+      oldInvoice.invoiceDate = invoicesDto.invoiceDate;
+      oldInvoice.invoiceDetails = invoicesDto.invoiceDetails;
+      oldInvoice.total = invoicesDto.total;
+      return await this.dataSource.transaction(
+        async (entityManager: EntityManager) => {
+          if (oldItems) {
+            await entityManager
+              .withRepository(this.itemRepository)
+              .delete(oldItems.map((item) => item.id));
+          }
+          const newInvoiceItems = await this.getArreyOfNewItems(
+            invoicesDto.items,
+            oldInvoice,
+          );
+          await entityManager
+            .withRepository(this.itemRepository)
+            .insert(newInvoiceItems);
+          await entityManager
+            .withRepository(this.invoiceRepository)
+            .update(id, oldInvoice);
+          return oldInvoice;
+        },
+      );
     } catch (e) {
-      throw new HttpException(
-        `Invoice does not found for user: ${invoicesDto.createdBy.email}`,
-        HttpStatus.NOT_FOUND,
-      );
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     }
   }
 
-  public async removeForCreatedUserInvoice(
+  public async removeInvoiceForCreator(
     invoiceId: number,
-    id: number,
+    currentUserId: number,
   ): Promise<void> {
     try {
-      const createdBy = await this.userRepository.findOneByOrFail({ id: id });
-      await this.invoiceRepository.findOneByOrFail({
-        id: invoiceId,
-        createdBy: { id: createdBy.id },
-      });
-      await this.invoiceRepository.update(invoiceId, { createdByRemove: true });
-    } catch (e: any) {
-      throw new HttpException(
-        `Invoice does not found for user: ${e.message}`,
-        HttpStatus.NOT_FOUND,
+      const createdBy = await this.getUser({ id: currentUserId });
+      const invoice = await this.getInvoiceByIdForUser(
+        invoiceId,
+        createdBy,
+        true,
+        {},
       );
+      invoice.createdByRemove = true;
+      await this.invoiceRepository.update(invoiceId, invoice);
+    } catch (e) {
+      throw new HttpException(e.message, HttpStatus.NOT_FOUND);
     }
   }
 
-  public async removeForBilledToUserInvoice(
+  public async removeInvoiceForCustomer(
     invoiceId: number,
-    id: number,
+    currentUserId: number,
   ): Promise<void> {
     try {
-      const billedTo = await this.userRepository.findOneByOrFail({ id: id });
-      await this.invoiceRepository.findOneByOrFail({
-        id: invoiceId,
-        billedTo: { id: billedTo.id },
-      });
-      await this.invoiceRepository.update(invoiceId, { billedToRemove: true });
-    } catch (e: any) {
-      throw new HttpException(
-        `Invoice does not found ${e.message}`,
-        HttpStatus.NOT_FOUND,
+      const billedTo = await this.getUser({ id: currentUserId });
+      const invoice = await this.getInvoiceByIdForUser(
+        invoiceId,
+        billedTo,
+        false,
+        {},
       );
+      invoice.billedToRemove = true;
+      await this.invoiceRepository.update(invoiceId, invoice);
+    } catch (e: any) {
+      throw new HttpException(e.message, HttpStatus.NOT_FOUND);
     }
   }
 
-  public async getAllInvoices() {
+  public async getOneByIdForCreator(
+    invoiceId: number,
+    currentUserId: number,
+  ): Promise<InvoicesDto> {
+    return await this.getInvoiceByIdForUser(
+      invoiceId,
+      { id: currentUserId },
+      true,
+      { items: true, billedTo: true },
+    );
+  }
+
+  public async getOneByIdForCustomer(
+    invoiceId: number,
+    currentUserId: number,
+  ): Promise<InvoicesDto> {
+    return await this.getInvoiceByIdForUser(
+      invoiceId,
+      { id: currentUserId },
+      false,
+      { items: true, createdBy: true },
+    );
+  }
+
+  public async getAllInvoicesForUser(currentUserId: number) {
     return await this.invoiceRepository.find({
-      relations: { items: true, createdBy: true, billedTo: true },
-    });
-  }
-
-  public async getOneById(id: number): Promise<InvoicesDto> {
-    return await this.invoiceRepository.findOne({
-      where: { id: id },
+      where: [
+        { createdBy: { id: currentUserId }, createdByRemove: false },
+        { billedTo: { id: currentUserId }, billedToRemove: false },
+      ],
       relations: { items: true, createdBy: true, billedTo: true },
     });
   }

@@ -1,7 +1,7 @@
-import React from 'react';
+import React from 'react'
 
 const MoneyBox = () => {
-  return <div>MoneyBox</div>;
-};
+  return <div>MoneyBox</div>
+}
 
-export default MoneyBox;
+export default MoneyBox

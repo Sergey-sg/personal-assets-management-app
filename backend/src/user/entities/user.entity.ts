@@ -1,46 +1,93 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Base } from '../../utils/DB/base';
 import { WalletEntity } from '../../wallet/entities/wallet.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { InvoicesEntity } from 'src/invoices/entities/invoices.entity';
+import { Base } from 'src/common/dto/base.dto';
+import { IncomeEntity } from 'src/income/entities/income.entity';
+import { CostEntity } from 'src/costs/entities/cost.entity';
 
 @Entity('user')
 export class UserEntity extends Base {
-  @ApiProperty()
-  @Column()
-  email: string;
-
-  @ApiProperty()
-  @Column({ select: false })
-  password?: string;
-
-  @ApiProperty()
-  @Column({ default: '' })
-  lastName: string;
-
-  @ApiProperty()
-  @Column({ default: '' })
+  @ApiProperty({ example: 'Doe', description: 'User name' })
+  @Column({ type: 'varchar', length: 64 })
   firstName: string;
 
+  @ApiProperty({ example: 'John', description: 'User surname' })
+  @Column({ type: 'varchar', length: 64 })
+  lastName: string;
+
+  @ApiProperty({ example: 'johndoe@mail.com', description: 'User email' })
+  @Column({ type: 'varchar', length: 320, unique: true })
+  email: string;
+
+  @ApiProperty({ example: 'Qwerty@12345', description: 'User password' })
+  @Column()
+  password: string;
+
+  @ApiProperty({
+    example: '27 Astronomichna street, Kharkiv, Ukraine',
+    description: 'User address field',
+  })
+  @Column({ nullable: true })
+  address: string;
+
+  @ApiProperty({
+    example: '+380680802212',
+    description: 'User phone number',
+  })
+  @Column({ nullable: true })
+  phone: string;
+
+  @ApiProperty({ example: '2000-12-01', description: 'User birthdate' })
+  @Column({ nullable: true, type: 'date' })
+  birthdate: Date;
+
   @ApiProperty()
-  @Column({ default: '' })
+  @Column({ nullable: true })
   refreshTokenHash?: string;
 
   @ApiProperty()
-  @Column({ default: '' })
-  activationLink?: string;
+  @Column({ unique: true })
+  activationLink: string;
 
   @ApiProperty()
-  @Column({ default: false, name: 'is_verify' })
-  isVerified?: boolean;
+  @Column({ default: false })
+  isVerified: boolean;
+
+  @ApiProperty({
+    example: 'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50',
+    description: 'User avatar',
+  })
+  @Column({ nullable: true })
+  avatarPath: string;
 
   @ApiProperty()
-  @Column({ default: '', name: 'avatar_path' })
-  avatarPath?: string;
+  @OneToMany(() => WalletEntity, (wallet: WalletEntity) => wallet.owner, {
+    onDelete: 'CASCADE',
+  })
+  wallets: WalletEntity[];
 
-  @OneToMany(() => WalletEntity, (wallet) => wallet.userWallet)
-  wallet?: WalletEntity[];
-
+  @ApiProperty()
   @OneToMany(() => InvoicesEntity, (invoice) => invoice.id)
   invoice: InvoicesEntity;
+
+  @ApiProperty()
+  @OneToMany(
+    () => IncomeEntity,
+    (income_transaction: IncomeEntity) => income_transaction.from_user,
+    {
+      onDelete: 'CASCADE',
+    },
+  )
+  income_transactions: IncomeEntity[];
+
+  @ApiProperty()
+  @OneToMany(
+    () => CostEntity,
+    (costs_transaction: CostEntity) => costs_transaction.to_user,
+    {
+      onDelete: 'CASCADE',
+    },
+  )
+  costs_transactions: CostEntity[];
 }

@@ -1,7 +1,7 @@
-import React from 'react';
+import React from 'react'
 
 const Widgets = () => {
-  return <div>Widgets</div>;
-};
+  return <div>Widgets</div>
+}
 
-export default Widgets;
+export default Widgets
