@@ -16,7 +16,7 @@ export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
       autoLoadEntities: true, // models will be loaded automatically
-      synchronize: true, // // your entities will be synced with the database(recommended: disable in prod)
+      synchronize: false, // // your entities will be synced with the database(recommended: disable in prod)
     };
   },
 };

@@ -54,7 +54,9 @@ export class InvoicesService {
       })
       .catch(() => {
         throw new HttpException(
-          `Invoice does not found for created by user: ${user.email}`,
+          user.email
+            ? `Invoice does not found for user: ${user.email}`
+            : `Invoice does not found for user: ${user.id}`,
           HttpStatus.NOT_FOUND,
         );
       });
@@ -81,9 +83,10 @@ export class InvoicesService {
 
   public async createInvoice(
     invoicesDto: InvoicesDto,
+    currentUserId: number,
   ): Promise<InvoicesEntity> {
     try {
-      const createdBy = await this.getUser(invoicesDto.createdBy);
+      const createdBy = await this.getUser({ id: currentUserId });
       const billedTo = await this.getUser(invoicesDto.billedTo);
       const subTotal = invoicesDto.items.reduce(
         (total, item) => item.price * item.amount + total,
@@ -129,9 +132,10 @@ export class InvoicesService {
   public async updateInvoice(
     id: number,
     invoicesDto: InvoicesDto,
+    currentUserId: number,
   ): Promise<InvoicesEntity> {
     try {
-      const createdBy = await this.getUser(invoicesDto.createdBy);
+      const createdBy = await this.getUser({ id: currentUserId });
       const billedTo = await this.getUser(invoicesDto.billedTo);
       const oldInvoice = await this.getInvoiceByIdForUser(
         id,
@@ -180,10 +184,10 @@ export class InvoicesService {
 
   public async removeInvoiceForCreator(
     invoiceId: number,
-    id: number,
+    currentUserId: number,
   ): Promise<void> {
     try {
-      const createdBy = await this.getUser({ id: id });
+      const createdBy = await this.getUser({ id: currentUserId });
       const invoice = await this.getInvoiceByIdForUser(
         invoiceId,
         createdBy,
@@ -199,10 +203,10 @@ export class InvoicesService {
 
   public async removeInvoiceForCustomer(
     invoiceId: number,
-    id: number,
+    currentUserId: number,
   ): Promise<void> {
     try {
-      const billedTo = await this.getUser({ id: id });
+      const billedTo = await this.getUser({ id: currentUserId });
       const invoice = await this.getInvoiceByIdForUser(
         invoiceId,
         billedTo,
@@ -216,15 +220,36 @@ export class InvoicesService {
     }
   }
 
-  public async getAllInvoices() {
-    return await this.invoiceRepository.find({
-      relations: { items: true, createdBy: true, billedTo: true },
-    });
+  public async getOneByIdForCreator(
+    invoiceId: number,
+    currentUserId: number,
+  ): Promise<InvoicesDto> {
+    return await this.getInvoiceByIdForUser(
+      invoiceId,
+      { id: currentUserId },
+      true,
+      { items: true, billedTo: true },
+    );
   }
 
-  public async getOneById(id: number): Promise<InvoicesDto> {
-    return await this.invoiceRepository.findOne({
-      where: { id: id },
+  public async getOneByIdForCustomer(
+    invoiceId: number,
+    currentUserId: number,
+  ): Promise<InvoicesDto> {
+    return await this.getInvoiceByIdForUser(
+      invoiceId,
+      { id: currentUserId },
+      false,
+      { items: true, createdBy: true },
+    );
+  }
+
+  public async getAllInvoicesForUser(currentUserId: number) {
+    return await this.invoiceRepository.find({
+      where: [
+        { createdBy: { id: currentUserId }, createdByRemove: false },
+        { billedTo: { id: currentUserId }, billedToRemove: false },
+      ],
       relations: { items: true, createdBy: true, billedTo: true },
     });
   }

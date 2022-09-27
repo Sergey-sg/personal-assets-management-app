@@ -2,6 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsString,
+  IsDateString,
+  IsNumber,
   IsPositive,
   Max,
   IsInt,
@@ -10,52 +12,60 @@ import {
   Min,
   IsOptional,
 } from 'class-validator';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UserEntity } from '../../user/entities/user.entity';
 import { InvoiceItemDto } from './invoiceItem.dto';
+import { PartialType } from '@nestjs/mapped-types';
+import { InvoicesDto } from './invoices.dto';
 
-export class InvoicesDto {
+export class UpdateInvoicesDto extends PartialType(InvoicesDto) {
   @IsOptional()
   createdBy: UserEntity;
 
+  @IsOptional()
   createdByRemove: boolean;
 
   @IsOptional()
-  billedTo: CreateUserDto;
+  billedTo: UserEntity;
 
+  @IsOptional()
   billedToRemove: boolean;
 
+  @IsOptional()
   paid: boolean;
 
+  @IsOptional()
   @IsNotEmpty()
   @ValidateNested()
   @Type(() => InvoiceItemDto)
   items: InvoiceItemDto[];
 
+  @IsOptional()
   @ApiProperty({
     example: '10',
     description: 'discount percentage',
-    required: false,
   })
   @Min(0)
   @Max(100)
   @IsInt()
   discount: number;
 
+  @IsOptional()
   @ApiProperty({
     example: '2022-09-30',
     description: 'end date for payment',
   })
-  @IsOptional()
+  @IsDateString()
   dueDate: Date;
 
+  @IsOptional()
   @ApiProperty({
     example: '2022-09-30',
     description: 'billing date for payment',
   })
-  @IsOptional()
+  @IsDateString()
   invoiceDate: Date;
 
+  @IsOptional()
   @ApiProperty({
     example: 'Details of invoice',
     description: 'details of invoice',
@@ -63,11 +73,12 @@ export class InvoicesDto {
   @IsString()
   invoiceDetails: string;
 
+  @IsOptional()
   @ApiProperty({
     example: '13500',
     description: 'total price of all items in invoice in coins',
   })
-  @IsInt()
+  @IsNumber()
   @IsPositive()
   total: number;
 }

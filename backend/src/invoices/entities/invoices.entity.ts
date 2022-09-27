@@ -1,8 +1,8 @@
-import { Base } from '../../utils/DB/base';
 import { UserEntity } from '../../user/entities/user.entity';
 import { Column, Entity, JoinColumn, OneToMany, ManyToOne } from 'typeorm';
 import { InvoiceItemEntity } from './invoiceItem.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { Base } from '../../common/dto/base.dto';
 
 @Entity('invoices')
 export class InvoicesEntity extends Base {
