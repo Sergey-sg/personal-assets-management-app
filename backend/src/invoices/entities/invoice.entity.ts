@@ -1,30 +1,24 @@
 import { UserEntity } from '../../user/entities/user.entity';
-import { Column, Entity, JoinColumn, OneToMany, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
 import { InvoiceItemEntity } from './invoiceItem.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { Base } from '../../common/dto/base.dto';
 
 @Entity('invoices')
-export class InvoicesEntity extends Base {
+export class InvoiceEntity extends Base {
   @ManyToOne(() => UserEntity, (user) => user.id)
   @JoinColumn()
   createdBy: UserEntity;
-
-  @ApiProperty({ description: 'creator delete invoice flag' })
-  @Column({ type: 'boolean', default: false })
-  createdByRemove: boolean;
 
   @ManyToOne(() => UserEntity, (user) => user.id)
   @JoinColumn()
   billedTo: UserEntity;
 
-  @ApiProperty({ description: 'customer delete invoice flag' })
-  @Column({ type: 'boolean', default: false })
-  billedToRemove: boolean;
-
+  @ApiProperty()
   @OneToMany(() => InvoiceItemEntity, (item) => item.invoice, {
     nullable: true,
     cascade: true,
+    eager: true,
     onDelete: 'CASCADE',
   })
   items: InvoiceItemEntity[];
@@ -52,4 +46,21 @@ export class InvoicesEntity extends Base {
   @ApiProperty({ description: 'total invoice price' })
   @Column({ type: 'int', default: 0 })
   total: number;
+
+  @ApiProperty()
+  @ManyToMany(() => UserEntity, (user) => user.displayInvoices, {
+    cascade: true,
+  })
+  @JoinTable({
+    name: "user_invoices", // table name for the junction table of this relation
+    joinColumn: {
+        name: "invoice",
+        referencedColumnName: "id"
+    },
+    inverseJoinColumn: {
+        name: "user",
+        referencedColumnName: "id"
+    }
+})
+  displayForUsers: UserEntity[];
 }

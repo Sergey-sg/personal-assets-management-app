@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { WalletEntity } from '../../wallet/entities/wallet.entity';
-import { Column, Entity, OneToMany } from 'typeorm';
-import { InvoicesEntity } from 'src/invoices/entities/invoices.entity';
+import { Column, Entity, ManyToMany, OneToMany } from 'typeorm';
+import { InvoiceEntity } from '../../invoices/entities/invoice.entity';
 import { Base } from 'src/common/dto/base.dto';
 import { IncomeEntity } from 'src/income/entities/income.entity';
 import { CostEntity } from 'src/costs/entities/cost.entity';
@@ -68,8 +68,8 @@ export class UserEntity extends Base {
   wallets: WalletEntity[];
 
   @ApiProperty()
-  @OneToMany(() => InvoicesEntity, (invoice) => invoice.id)
-  invoice: InvoicesEntity;
+  @OneToMany(() => InvoiceEntity, (invoice) => invoice.id)
+  invoice: InvoiceEntity;
 
   @ApiProperty()
   @OneToMany(
@@ -90,4 +90,8 @@ export class UserEntity extends Base {
     },
   )
   costs_transactions: CostEntity[];
+
+  @ApiProperty()
+  @ManyToMany(() => InvoiceEntity, (invoice) => invoice.displayForUsers)
+  displayInvoices: InvoiceEntity[];
 }
