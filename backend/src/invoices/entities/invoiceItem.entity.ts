@@ -1,12 +1,12 @@
 import { Column, Entity, ManyToOne } from 'typeorm';
-import { InvoicesEntity } from './invoices.entity';
+import { InvoiceEntity } from './invoice.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { Base } from '../../common/dto/base.dto';
 
 @Entity('invoice_item')
 export class InvoiceItemEntity extends Base {
-  @ManyToOne(() => InvoicesEntity, (invoice) => invoice.items)
-  invoice: InvoicesEntity;
+  @ManyToOne(() => InvoiceEntity, (invoice) => invoice.items)
+  invoice: InvoiceEntity;
 
   @ApiProperty({ description: 'item name' })
   @Column({ type: 'varchar', length: 300 })

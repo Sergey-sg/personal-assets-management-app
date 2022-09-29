@@ -1,35 +1,29 @@
 import { UserEntity } from '../../user/entities/user.entity';
-import { Column, Entity, JoinColumn, OneToMany, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
 import { InvoiceItemEntity } from './invoiceItem.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { Base } from '../../common/dto/base.dto';
 
 @Entity('invoices')
-export class InvoicesEntity extends Base {
+export class InvoiceEntity extends Base {
   @ManyToOne(() => UserEntity, (user) => user.id)
   @JoinColumn()
   createdBy: UserEntity;
-
-  @ApiProperty({ description: 'creator delete invoice flag' })
-  @Column({ type: 'boolean', default: false })
-  createdByRemove: boolean;
 
   @ManyToOne(() => UserEntity, (user) => user.id)
   @JoinColumn()
   billedTo: UserEntity;
 
-  @ApiProperty({ description: 'customer delete invoice flag' })
-  @Column({ type: 'boolean', default: false })
-  billedToRemove: boolean;
-
+  @ApiProperty({example: [{name: "Phone 10x lite", amount: 2, price: 10000, subtotal: 20000}]})
   @OneToMany(() => InvoiceItemEntity, (item) => item.invoice, {
     nullable: true,
     cascade: true,
+    eager: true,
     onDelete: 'CASCADE',
   })
   items: InvoiceItemEntity[];
 
-  @ApiProperty({ description: 'payment flag' })
+  @ApiProperty({ description: 'payment flag', example: false })
   @Column({ type: 'boolean', default: false })
   paid: boolean;
 
@@ -37,11 +31,11 @@ export class InvoicesEntity extends Base {
   @Column({ type: 'int', default: 0 })
   discount: number;
 
-  @ApiProperty({ description: 'due date' })
+  @ApiProperty({ description: 'due date', example: "2022-09-29" })
   @Column({ type: 'timestamptz' })
   dueDate: Date;
 
-  @ApiProperty({ description: 'invoice date' })
+  @ApiProperty({ description: 'invoice date', example: "2022-09-31" })
   @Column({ type: 'timestamptz', nullable: true })
   invoiceDate: Date;
 
@@ -49,7 +43,23 @@ export class InvoicesEntity extends Base {
   @Column({ type: 'varchar', length: 500, nullable: true })
   invoiceDetails: string | null;
 
-  @ApiProperty({ description: 'total invoice price' })
+  @ApiProperty({ description: 'total invoice price', example: 20000 })
   @Column({ type: 'int', default: 0 })
   total: number;
+
+  @ManyToMany(() => UserEntity, (user) => user.displayInvoices, {
+    cascade: true,
+  })
+  @JoinTable({
+    name: "user_invoices", // table name for the junction table of this relation
+    joinColumn: {
+        name: "invoice",
+        referencedColumnName: "id"
+    },
+    inverseJoinColumn: {
+        name: "user",
+        referencedColumnName: "id"
+    }
+})
+  displayForUsers: UserEntity[];
 }
