@@ -15,16 +15,18 @@ import { UserEntity } from '../../user/entities/user.entity';
 import { InvoiceItemDto } from './invoiceItem.dto';
 
 export class InvoiceDto {
+  @ApiProperty({ description: 'customer', example: "user@mail.com" })
   @IsNotEmpty()
   billedTo: UserEntity;
 
+  @ApiProperty({example: [{name: "Phone 10x lite", amount: 2, price: 10000, subtotal: 20000}]})
   @IsNotEmpty()
   @ValidateNested()
   @Type(() => InvoiceItemDto)
   items: InvoiceItemDto[];
 
   @ApiProperty({
-    example: '10',
+    example: 0,
     description: 'discount percentage',
   })
   @IsOptional()
@@ -57,7 +59,7 @@ export class InvoiceDto {
   invoiceDetails: string;
 
   @ApiProperty({
-    example: '13500',
+    example: 20000,
     description: 'total price of all items in invoice in coins',
   })
   @IsInt()

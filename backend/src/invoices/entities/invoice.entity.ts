@@ -14,7 +14,7 @@ export class InvoiceEntity extends Base {
   @JoinColumn()
   billedTo: UserEntity;
 
-  @ApiProperty()
+  @ApiProperty({example: [{name: "Phone 10x lite", amount: 2, price: 10000, subtotal: 20000}]})
   @OneToMany(() => InvoiceItemEntity, (item) => item.invoice, {
     nullable: true,
     cascade: true,
@@ -23,7 +23,7 @@ export class InvoiceEntity extends Base {
   })
   items: InvoiceItemEntity[];
 
-  @ApiProperty({ description: 'payment flag' })
+  @ApiProperty({ description: 'payment flag', example: false })
   @Column({ type: 'boolean', default: false })
   paid: boolean;
 
@@ -31,11 +31,11 @@ export class InvoiceEntity extends Base {
   @Column({ type: 'int', default: 0 })
   discount: number;
 
-  @ApiProperty({ description: 'due date' })
+  @ApiProperty({ description: 'due date', example: "2022-09-29" })
   @Column({ type: 'timestamptz' })
   dueDate: Date;
 
-  @ApiProperty({ description: 'invoice date' })
+  @ApiProperty({ description: 'invoice date', example: "2022-09-31" })
   @Column({ type: 'timestamptz', nullable: true })
   invoiceDate: Date;
 
@@ -43,11 +43,10 @@ export class InvoiceEntity extends Base {
   @Column({ type: 'varchar', length: 500, nullable: true })
   invoiceDetails: string | null;
 
-  @ApiProperty({ description: 'total invoice price' })
+  @ApiProperty({ description: 'total invoice price', example: 20000 })
   @Column({ type: 'int', default: 0 })
   total: number;
 
-  @ApiProperty()
   @ManyToMany(() => UserEntity, (user) => user.displayInvoices, {
     cascade: true,
   })
