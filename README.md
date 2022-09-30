@@ -49,9 +49,10 @@ Migrations
 - To run in docker `docker exec -it backend bash`
 
 - To show all migrations `npm run migration:show`
-- To create migration `npm run migration:create`
-- To generate migration `npm run migration:generate`
+- To create migration `npm run migration:create --name=[migration name]`
+- To generate migration `npm run migration:generate --name=[migration name]`
 - To run migrations `npm run migration:run`
 - To revert migrations `npm run migration:revert`
+- To run database seeding `npm run seed:run`
 
 - To exit docker `exit`
