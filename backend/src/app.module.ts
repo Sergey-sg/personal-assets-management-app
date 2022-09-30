@@ -2,7 +2,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { typeOrmAsyncConfig } from './config/typeorm.config';
+import TypeormConfig from './config/typeorm.config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
@@ -16,7 +16,11 @@ import { CostsModule } from './costs/costs.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: () => TypeormConfig(),
+    }),
     MailerModule.forRoot({
       transport: {
         host: process.env.SMTP_HOST,
