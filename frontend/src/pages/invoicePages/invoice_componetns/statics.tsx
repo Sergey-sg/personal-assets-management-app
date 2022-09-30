@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from '../../assets/images/maglo_logo_invoice.png';
+import logo from '../../../assets/images/maglo_logo_invoice.png';
 
 export const MagloBaner: React.FC = () => {
     return (

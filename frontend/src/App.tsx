@@ -10,11 +10,12 @@ import {
   MyWallet,
   Transactions,
   Widgets,
+  InvoicesPage,
 } from 'pages/portalPages'
 import NotFoundPage from 'pages/NotFoundPage'
 
 import './index.css'
-import InvoiceCreatePage from 'pages/portalPages/InvoiceCreatePage'
+import InvoiceCreatePage from 'pages/invoicePages/InvoiceCreatePage'
 
 export default function App() {
   return (
@@ -25,7 +26,9 @@ export default function App() {
           <Route index element={<Dashboard />} />
           <Route path={AppRoute.DASHBOARD} element={<Dashboard />} />
           <Route path={AppRoute.TRANSACTIONS} element={<Transactions />} />
-          <Route path={AppRoute.INVOICES} element={<InvoiceCreatePage />} />
+          <Route path={AppRoute.INVOICES} element={<InvoicesPage />}>
+            <Route path={AppRoute.CREATE} element={<InvoiceCreatePage />} />
+          </Route>
           <Route path={AppRoute.MY_WALLETS} element={<MyWallet />} />
           <Route path={AppRoute.WIDGETS} element={<Widgets />} />
           <Route path={AppRoute.MONEY_BOX} element={<MoneyBox />} />

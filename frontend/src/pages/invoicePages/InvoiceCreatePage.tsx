@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import ReactTextareaAutosize from 'react-textarea-autosize'
 import customer from '../../assets/images/test_customer_invoice.png'
-import { FooterItems, HeaderItems, InvoiceInfoBaner, MagloBaner } from '../invoice_componetns/statics'
+import { FooterItems, HeaderItems, InvoiceInfoBaner, MagloBaner } from './invoice_componetns/statics'
 
 function InvoiceItemForm() {
   const [invoiceDetail, setInvoiceDetail] = useState('');
