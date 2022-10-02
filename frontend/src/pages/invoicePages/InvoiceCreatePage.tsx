@@ -1,19 +1,24 @@
 import React, { useState } from 'react'
 import ReactTextareaAutosize from 'react-textarea-autosize'
-import customer from '../../assets/images/test_customer_invoice.png'
-import { FooterItems, HeaderItems, InvoiceInfoBaner, MagloBaner } from './invoice_componetns/statics'
+import customer from '../../assets/images/customer_invoice.test.png'
+import {
+  FooterItems,
+  HeaderItems,
+  InvoiceInfoBaner,
+  MagloBaner,
+} from './invoice_componetns/statics'
 
 function InvoiceItemForm() {
-  const [invoiceDetail, setInvoiceDetail] = useState('');
-  const [invoiceItems, setInvoiceItem] = useState([{}]);
-  const [subTotal, setSubTotal] = useState(0);
-  const [total, setTotal] = useState(0);
+  const [invoiceDetail, setInvoiceDetail] = useState('')
+  const [invoiceItems, setInvoiceItem] = useState([{}])
+  const [subTotal, setSubTotal] = useState(0)
+  const [total, setTotal] = useState(0)
 
   const InvoiceItems: React.FC = () => {
     const InputItem: React.FC = () => {
-      const [name, setName] = useState('');
-      const [number, setNumber] = useState('');
-      const [price, setPrice] = useState('');
+      const [name, setName] = useState('')
+      const [number, setNumber] = useState('')
+      const [price, setPrice] = useState('')
 
       function submitValue(e: any) {
         e.preventDefault()
@@ -159,9 +164,9 @@ const ClientDetails: React.FC = () => {
 }
 
 const BasicInfo: React.FC = () => {
-  const [dueDate, setDueDate] = useState('');
-  const [invoiceDate, setInvoiceDate] = useState('');
-  const issuedDate = Date.now();
+  const [dueDate, setDueDate] = useState('')
+  const [invoiceDate, setInvoiceDate] = useState('')
+  const issuedDate = Date.now()
 
   return (
     <div className="container h-max bg-[#FFFFFF] border border-[#F5F5F5] rounded-xl">
