@@ -104,12 +104,17 @@ function InvoicesPage() {
     )
   }
 
-  function filterByStatus(status: string) {
-    if (!status) {
-      return NaN
-    }
-    setOutInvoices(
-      outInvoices.filter((invoice) => {
+  function filterByDatePriceStatus(filters: {
+    minDate: string
+    maxDate: string
+    minPrice: string
+    maxPrice: string
+    status: string
+  }) {
+    let invoiceList = outInvoices.slice()
+
+    if (filters.status) {
+      invoiceList = invoiceList.filter((invoice) => {
         const nowDate = new Date()
         const dueDate = new Date(invoice.dueDate)
         const statusInvoice = invoice.paid
@@ -118,43 +123,37 @@ function InvoicesPage() {
           ? 'Pending'
           : 'Unpaid'
 
-        return status === statusInvoice
-      }),
-    )
-  }
+        return filters.status === statusInvoice
+      })
+    }
 
-  function filterByDate(min: string, max: string) {
-    const minDate = min ? new Date(min) : new Date('1990-10-29')
-    const maxDate = max ? new Date(max) : new Date()
+    if (filters.minDate || filters.maxDate) {
+      const minDate = filters.minDate
+        ? new Date(filters.minDate)
+        : new Date('1990-10-29')
+      const maxDate = filters.maxDate ? new Date(filters.maxDate) : new Date()
 
-    setOutInvoices(
-      outInvoices.filter((invoice) => {
+      invoiceList = invoiceList.filter((invoice) => {
         const invoiceDate = new Date(invoice.invoiceDate)
 
-        invoiceDate >= minDate && invoiceDate <= maxDate
-      }),
-    )
+        return invoiceDate >= minDate && invoiceDate <= maxDate
+      })
+    }
 
-    console.log(
-      outInvoices.filter((invoice) => {
-        const invoiceDate = new Date(invoice.invoiceDate)
+    if (filters.minPrice || filters.maxPrice) {
+      if (filters.minPrice) {
+        invoiceList = invoiceList.filter(
+          (invoice) => invoice.total / 100 >= parseFloat(filters.minPrice),
+        )
+      }
+      if (filters.maxPrice) {
+        invoiceList = invoiceList.filter(
+          (invoice) => invoice.total / 100 <= parseFloat(filters.maxPrice),
+        )
+      }
+    }
 
-        invoiceDate >= minDate && invoiceDate <= maxDate
-      }),
-    )
-  }
-
-  function filterByPrice(min: string, max: string) {
-    const minPrice = parseFloat(min) | 0
-    const maxPrice = parseFloat(max)
-
-    setOutInvoices(
-      outInvoices.filter((invoice) =>
-        invoice.total / 100 >= minPrice && !maxPrice
-          ? true
-          : invoice.total / 100 <= maxPrice,
-      ),
-    )
+    setOutInvoices(invoiceList)
   }
 
   const HeaderInvoiceTable: React.FC = () => {
@@ -238,7 +237,7 @@ function InvoicesPage() {
           <div className="col-span-4">
             <label className="relative block flex my-4 w-min font-light">
               <button onClick={() => searchInvoices(true)}>
-                <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+                <span className="absolute inset-y-0 left-0 flex items-center pl-3 hover:text-[#27AE60]">
                   <RiSearchLine />
                 </span>
               </button>
@@ -253,7 +252,7 @@ function InvoicesPage() {
                 name="searchInvoice"
               />
               <button onClick={() => searchInvoices(false)}>
-                <span className="absolute inset-y-0 right-0 flex items-center pr-3">
+                <span className="absolute inset-y-0 right-0 flex items-center pr-3 hover:text-[#EB5757]">
                   <MdOutlineCancel />
                 </span>
               </button>
@@ -261,24 +260,15 @@ function InvoicesPage() {
           </div>
           <div className="col-span-8">
             <div className="float-right">
-              <button className="bg-[#C8EE44] rounded-xl font-semibold text-base p-4 my-4">
+              <button className="bg-green-light hover:bg-green-hover rounded-xl font-semibold text-base p-4 my-4">
                 <div className="flex justify-center">
                   <CreateInvoiceIcon className="my-auto" />
                   <span className="pl-3 lg:block hidden">Create Invoice</span>
                 </div>
               </button>
               <FilterMenu
-                filterByStatus={useCallback(
-                  (status: string) => filterByStatus(status),
-                  [],
-                )}
-                filterByDate={useCallback(
-                  (minDate: string, maxDate: string) =>
-                    filterByDate(minDate, maxDate),
-                  [],
-                )}
-                filterByPrice={useCallback(
-                  (min: string, max: string) => filterByPrice(min, max),
+                filterByDatePriceStatus={useCallback(
+                  (filters) => filterByDatePriceStatus(filters),
                   [],
                 )}
               />
