@@ -26,9 +26,11 @@ export default function App() {
           <Route index element={<Dashboard />} />
           <Route path={AppRoute.DASHBOARD} element={<Dashboard />} />
           <Route path={AppRoute.TRANSACTIONS} element={<Transactions />} />
-          <Route path={AppRoute.INVOICES} element={<InvoicesPage />}>
-            <Route path={AppRoute.CREATE} element={<InvoiceCreatePage />} />
-          </Route>
+          <Route path={AppRoute.INVOICES} element={<InvoicesPage />} />
+          <Route
+            path={AppRoute.INVOICE_CREATE}
+            element={<InvoiceCreatePage />}
+          />
           <Route path={AppRoute.MY_WALLETS} element={<MyWallet />} />
           <Route path={AppRoute.WIDGETS} element={<Widgets />} />
           <Route path={AppRoute.MONEY_BOX} element={<MoneyBox />} />

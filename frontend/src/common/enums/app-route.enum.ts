@@ -11,7 +11,7 @@ enum AppRoute {
   MY_WALLETS = 'my-wallets',
   CHATS = 'chats',
   SETTINGS = 'settings',
-  CREATE = 'create'
+  INVOICE_CREATE = 'invoice/create',
 }
 
 export { AppRoute }

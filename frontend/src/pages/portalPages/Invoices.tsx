@@ -6,6 +6,7 @@ import avatarTest from '../../assets/images/invoice_client.test.png'
 import DropDownActions from 'pages/invoicePages/invoice_componetns/DropDownActions'
 import { InvoiceStatus } from 'pages/invoicePages/invoice_componetns/statics'
 import FilterMenu from 'pages/invoicePages/invoice_componetns/FilterMenu'
+import { AppRoute } from 'common/enums/app-route.enum'
 
 const testInvoices = [
   {
@@ -261,10 +262,13 @@ function InvoicesPage() {
           <div className="col-span-8">
             <div className="float-right">
               <button className="bg-green-light hover:bg-green-hover rounded-xl font-semibold text-base p-4 my-4">
-                <div className="flex justify-center">
+                <a
+                  href={AppRoute.INVOICE_CREATE}
+                  className="flex justify-center"
+                >
                   <CreateInvoiceIcon className="my-auto" />
                   <span className="pl-3 lg:block hidden">Create Invoice</span>
-                </div>
+                </a>
               </button>
               <FilterMenu
                 filterByDatePriceStatus={useCallback(

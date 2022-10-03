@@ -64,7 +64,7 @@ const FilterMenu = (props: {
             {'Filter By'}
           </Typography>
           <div className="scroll-auto">
-            <ul className="items-center w-full text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 sm:flex mb-4">
+            <ul className="items-center w-full text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-light sm:flex mb-4">
               {['Unpaid', 'Paid', 'Pending'].map((statusInvoice: string) => (
                 <li key={statusInvoice} className="w-full">
                   <div className="flex items-center pl-3">
@@ -76,12 +76,12 @@ const FilterMenu = (props: {
                       name="status"
                       type="radio"
                       value={statusInvoice}
-                      className="w-4 h-4 text-green bg-gray-100 rounded-xl border-gray-300 focus:ring-green focus:ring-2"
+                      className="w-4 h-4 text-green bg-gray-ultralight rounded-xl border-gray-light focus:ring-transparent"
                       checked={filters.status === statusInvoice}
                     />
                     <label
                       htmlFor="unpaidStatus"
-                      className="py-3 ml-2 w-full text-sm font-medium text-gray-900 dark:text-gray-300"
+                      className="py-3 ml-2 w-full text-sm font-medium text-gray-900"
                     >
                       {statusInvoice}
                     </label>
@@ -90,9 +90,9 @@ const FilterMenu = (props: {
               ))}
             </ul>
 
-            <ul className="items-center w-full text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 sm:flex mb-4">
+            <ul className="items-center w-full text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-light sm:flex mb-4">
               {[true, false].map((min: boolean) => (
-                <li key={min ? 'minDate' : 'maxDate'} className="w-full">
+                <li key={min ? 'minDate' : 'maxDate'} className="w-full mx-2">
                   <div className="font-medium py-3 pl-2">
                     <span className="text-[#78778B] ml-4">
                       {min ? 'Min' : 'Max'} Date
@@ -103,7 +103,7 @@ const FilterMenu = (props: {
                           ? setFilters({ ...filters, minDate: e.target.value })
                           : setFilters({ ...filters, maxDate: e.target.value })
                       }}
-                      className="w-max border border-[#F5F5F5] rounded-xl p-2"
+                      className="w-max border border-gray-light rounded-xl p-2 focus:border-green-ultralight"
                       type={'date'}
                       value={min ? filters.minDate : filters.maxDate}
                     />
@@ -112,9 +112,9 @@ const FilterMenu = (props: {
               ))}
             </ul>
 
-            <ul className="items-center w-full text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 sm:flex mb-4">
+            <ul className="items-center w-full text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-light sm:flex mb-4">
               {[true, false].map((min: boolean) => (
-                <li key={min ? 'minPrice' : 'maxPrice'} className="w-full">
+                <li key={min ? 'minPrice' : 'maxPrice'} className="w-full mx-2">
                   <div className="font-medium py-3 pl-2">
                     <span className="text-[#78778B] ml-4">
                       {min ? 'Min' : 'Max'} Price
@@ -125,7 +125,7 @@ const FilterMenu = (props: {
                           ? setFilters({ ...filters, minPrice: e.target.value })
                           : setFilters({ ...filters, maxPrice: e.target.value })
                       }}
-                      className="w-full border border-[#F5F5F5] rounded-xl p-2"
+                      className="w-full border border-gray-light rounded-xl p-2 focus:border-green-ultralight"
                       type={'number'}
                       value={min ? filters.minPrice : filters.maxPrice}
                     />
@@ -137,13 +137,13 @@ const FilterMenu = (props: {
             <div>
               <button
                 onClick={() => props.filterByDatePriceStatus(filters)}
-                className="w-5/12 bg-[#C8EE44] hover:bg-green-hover rounded-xl font-semibold text-base p-4 my-4 mx-3 text-black"
+                className="w-5/12 bg-green-light hover:bg-green-hover rounded-xl font-semibold text-base p-4 my-4 mx-3 text-black"
               >
                 filter
               </button>
               <button
                 onClick={() => resetFilters()}
-                className="w-5/12 bg-[#C8EE44] hover:bg-green-hover rounded-xl font-semibold text-base p-4 my-4 mx-3 text-black"
+                className="w-5/12 bg-green-light hover:bg-green-hover rounded-xl font-semibold text-base p-4 my-4 mx-3 text-black"
               >
                 reset
               </button>
