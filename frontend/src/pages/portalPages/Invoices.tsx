@@ -58,7 +58,7 @@ function convertDate(dateString: string) {
   return (
     <>
       {dateOut[0]}
-      <p className="text-xs text-[#929EAE] font-normal">
+      <p className="text-xs text-text-ultralight font-normal">
         at {dateOut[1].toLocaleUpperCase()}
       </p>
     </>
@@ -71,18 +71,16 @@ function InvoicesPage() {
   const [searchString, setSearchString] = useState('')
   const [firstNew, setFirstNew] = useState(true)
 
-  function searchInvoices(search: boolean) {
-    search
-      ? setOutInvoices(
-          invoices.filter(
-            (invoice) =>
-              invoice.billedTo.name
-                .toLowerCase()
-                .includes(searchString.toLowerCase()) ||
-              invoice.id.toString().includes(searchString),
-          ),
-        )
-      : setOutInvoices(invoices)
+  function searchInvoices() {
+    setOutInvoices(
+      invoices.filter(
+        (invoice) =>
+          invoice.billedTo.name
+            .toLowerCase()
+            .includes(searchString.toLowerCase()) ||
+          invoice.id.toString().includes(searchString),
+      ),
+    )
   }
 
   function removeInvoice(invoiceId: number) {
@@ -159,14 +157,14 @@ function InvoicesPage() {
 
   const HeaderInvoiceTable: React.FC = () => {
     return (
-      <div className="container grid grid-cols-12 gap-4 text-left text-xs mb-5 text-[#929EAE]">
+      <div className="container grid grid-cols-12 gap-4 text-left text-xs mb-5 text-text-ultralight">
         <div className="col-span-3">NAME/CLIENT</div>
         <button
           className="col-span-2"
-          onClick={() => {
+          onClick={useCallback(() => {
             setFirstNew(!firstNew)
             sortByDate()
-          }}
+          }, [])}
         >
           <span className="float-left">DATE</span>
           {firstNew ? (
@@ -196,37 +194,41 @@ function InvoicesPage() {
   }) => {
     return (
       <>
-        {props.invoices?.map((invoice) => (
-          <div
-            key={invoice.id}
-            className="container grid grid-cols-12 gap-4 text-left text-sm mb-4 font-medium text-[#1B212D]"
-          >
-            <div className="col-span-3 mt-2">
-              <img
-                className="float-left pr-4"
-                src={invoice.billedTo.avatar}
-                alt="client"
+        {props.invoices.length !== 0 ? (
+          props.invoices.map((invoice) => (
+            <div
+              key={invoice.id}
+              className="container grid grid-cols-12 gap-4 text-left text-sm mb-4 font-medium text-text"
+            >
+              <div className="col-span-3 mt-2">
+                <img
+                  className="float-left pr-4"
+                  src={invoice.billedTo.avatar}
+                  alt="client"
+                />
+                {invoice.billedTo.name}
+                <p className="text-xs text-text-ultralight font-normal">
+                  Inv: MGL{invoice.id}
+                </p>
+              </div>
+              <div className="col-span-2 mt-2">
+                {convertDate(invoice.invoiceDate)}
+              </div>
+              <div className="col-span-2 text-text-ultralight mt-2">
+                {invoice.orders}
+              </div>
+              <div className="col-span-2 font-bold mt-2">
+                ${invoice.total / 100}
+              </div>
+              <InvoiceStatus paid={invoice.paid} dueDate={invoice.dueDate} />
+              <DropDownActions
+                removeInvoice={useCallback(() => removeInvoice(invoice.id), [])}
               />
-              {invoice.billedTo.name}
-              <p className="text-xs text-[#929EAE] font-normal">
-                Inv: MGL{invoice.id}
-              </p>
             </div>
-            <div className="col-span-2 mt-2">
-              {convertDate(invoice.invoiceDate)}
-            </div>
-            <div className="col-span-2 text-[#929EAE] mt-2">
-              {invoice.orders}
-            </div>
-            <div className="col-span-2 font-bold mt-2">
-              ${invoice.total / 100}
-            </div>
-            <InvoiceStatus paid={invoice.paid} dueDate={invoice.dueDate} />
-            <DropDownActions
-              removeInvoice={useCallback(() => removeInvoice(invoice.id), [])}
-            />
-          </div>
-        ))}
+          ))
+        ) : (
+          <div>There are no invoices here yet</div>
+        )}
       </>
     )
   }
@@ -237,23 +239,29 @@ function InvoicesPage() {
         <div className="container grid grid-cols-12 gap-4 mb-4 w-full">
           <div className="col-span-4">
             <label className="relative block flex my-4 w-min font-light">
-              <button onClick={() => searchInvoices(true)}>
-                <span className="absolute inset-y-0 left-0 flex items-center pl-3 hover:text-[#27AE60]">
+              <button onClick={() => searchInvoices()}>
+                <span className="absolute inset-y-0 left-0 flex items-center pl-3 hover:text-green">
                   <RiSearchLine />
                 </span>
               </button>
               <input
                 onChange={(e) => setSearchString(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') searchInvoices(true)
+                  if (e.key === 'Enter') searchInvoices()
                 }}
-                className="block bg-[#F5F5F5] w-56 border border-none rounded-2xl py-4 px-9 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                className="block bg-gray-medium w-56 border border-none rounded-2xl py-4 px-9 shadow-sm focus:outline-none focus:border-green-hover focus:ring-green-hover focus:ring-1 sm:text-sm"
                 placeholder="Search invoices"
                 type="text"
                 name="searchInvoice"
+                value={searchString}
               />
-              <button onClick={() => searchInvoices(false)}>
-                <span className="absolute inset-y-0 right-0 flex items-center pr-3 hover:text-[#EB5757]">
+              <button
+                onClick={useCallback(() => {
+                  setSearchString('')
+                  searchInvoices()
+                }, [])}
+              >
+                <span className="absolute inset-y-0 right-0 flex items-center pr-3 hover:text-error">
                   <MdOutlineCancel />
                 </span>
               </button>
@@ -261,10 +269,10 @@ function InvoicesPage() {
           </div>
           <div className="col-span-8">
             <div className="float-right">
-              <button className="bg-green-light hover:bg-green-hover rounded-xl font-semibold text-base p-4 my-4">
+              <button>
                 <a
                   href={AppRoute.INVOICE_CREATE}
-                  className="flex justify-center"
+                  className="flex justify-center bg-green-light hover:bg-green-hover rounded-xl font-semibold text-base p-4 my-4"
                 >
                   <CreateInvoiceIcon className="my-auto" />
                   <span className="pl-3 lg:block hidden">Create Invoice</span>
