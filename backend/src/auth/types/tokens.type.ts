@@ -11,3 +11,8 @@ export type UserGoogle = {
   id: number;
   accessToken: string;
 };
+
+export type JwtPayload = {
+  id: number;
+  email: string;
+};

@@ -18,9 +18,9 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { IncomeService } from './income.service';
 import { UpdateIncomeDto } from './dto/update-income.dto';
 import { AllWalletIncomeResponseDto } from './dto/all-wallet-income-response.dto';
-import { LimitOffsetQueryDto } from '../dto/limit-offset-query.dto';
 import { AllUserIncomeResponseDto } from './dto/all-user-income-response.dto';
 import { AllUserIncomeResponseType } from './interfaces/all-user-income-response.type';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @ApiTags('Income')
 @Controller('income')
@@ -44,7 +44,7 @@ export class IncomeController {
   @UsePipes(new ValidationPipe())
   async getAllWalletIncome(
     @Param('walletId') walletId: number,
-    @Query() query: LimitOffsetQueryDto,
+    @Query() query: PaginationQueryDto,
   ): Promise<AllWalletIncomeResponseDto> {
     return await this.incomeService.getAllWalletIncome(walletId, query);
   }
@@ -55,7 +55,7 @@ export class IncomeController {
   @UsePipes(new ValidationPipe())
   async getAllUserIncome(
     @Param('userId') userId: number,
-    @Query() query: LimitOffsetQueryDto,
+    @Query() query: PaginationQueryDto,
   ): Promise<AllUserIncomeResponseType> {
     return await this.incomeService.getAllUserIncome(userId, query);
   }

@@ -1,44 +1,36 @@
 import React from 'react'
-import { Route, Routes } from 'react-router-dom'
-import { AppRoute } from 'common/enums/app-route.enum'
-import PortalPage from 'pages/PortalPage'
-import {
-  Chats,
-  Dashboard,
-  MoneyBox,
-  Settings,
-  MyWallet,
-  Transactions,
-  Widgets,
-  InvoicesPage,
-} from 'pages/portalPages'
-import NotFoundPage from 'pages/NotFoundPage'
-
+import { useAppDispatch, useAppSelector } from './hooks/useAppDispatch'
+import LoginPage from './pages/login/LoginPage'
+import { checkAuth } from './redux/slice/authSlice'
+import LoginLoader from 'components/loaders/loginLoader/LoginLoader'
+import PortalRouts from ' routes/PortalRouts'
 import './index.css'
-import InvoiceCreatePage from 'pages/invoicePages/InvoiceCreatePage'
 
 export default function App() {
+  const { isAuth, status } = useAppSelector((store) => store.authSlice)
+  const dispatch = useAppDispatch()
+
+  React.useEffect(() => {
+    if (localStorage.getItem('token')) {
+      dispatch(checkAuth())
+    }
+  }, [])
+
+  if (status === 'LOADING') {
+    return <LoginLoader />
+  }
+
   return (
     <div>
-      <Routes>
-        <Route path={AppRoute.HOME} element={<PortalPage />} />
-        <Route path={AppRoute.PORTAL} element={<PortalPage />}>
-          <Route index element={<Dashboard />} />
-          <Route path={AppRoute.DASHBOARD} element={<Dashboard />} />
-          <Route path={AppRoute.TRANSACTIONS} element={<Transactions />} />
-          <Route path={AppRoute.INVOICES} element={<InvoicesPage />} />
-          <Route
-            path={AppRoute.INVOICE_CREATE}
-            element={<InvoiceCreatePage />}
-          />
-          <Route path={AppRoute.MY_WALLETS} element={<MyWallet />} />
-          <Route path={AppRoute.WIDGETS} element={<Widgets />} />
-          <Route path={AppRoute.MONEY_BOX} element={<MoneyBox />} />
-          <Route path={AppRoute.CHATS} element={<Chats />} />
-          <Route path={AppRoute.SETTINGS} element={<Settings />} />
-        </Route>
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+      {isAuth ? (
+        <>
+          <PortalRouts />
+        </>
+      ) : (
+        <>
+          <LoginPage />
+        </>
+      )}
     </div>
   )
 }

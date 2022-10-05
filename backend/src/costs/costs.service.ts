@@ -6,10 +6,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, EntityManager, In, Repository } from 'typeorm';
 import { WalletEntity } from '../wallet/entities/wallet.entity';
 import { UserEntity } from '../user/entities/user.entity';
-import { LimitOffsetQueryDto } from '../dto/limit-offset-query.dto';
 import { AllWalletCostsResponseDto } from './dto/all-wallet-costs-response.dto';
 import { AllUserCostsResponseType } from './interfaces/all-user-costs-response.type';
-import { roundSum } from '../actions/round-sum';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @Injectable()
 export class CostsService {
@@ -40,7 +39,6 @@ export class CostsService {
     }
 
     const newCost = this.costRepository.create(createCostDto);
-    newCost.cost_sum = roundSum(+newCost.cost_sum);
 
     if (+wallet.total_balance < +newCost.cost_sum) {
       throw new HttpException(
@@ -95,7 +93,7 @@ export class CostsService {
 
   async getAllWalletCosts(
     walletId: number,
-    query: LimitOffsetQueryDto,
+    query: PaginationQueryDto,
   ): Promise<AllWalletCostsResponseDto> {
     const wallet = await this.walletRepository.findOneBy({ id: walletId });
 
@@ -118,7 +116,7 @@ export class CostsService {
 
   async getAllUserCosts(
     userId: number,
-    query: LimitOffsetQueryDto,
+    query: PaginationQueryDto,
   ): Promise<AllUserCostsResponseType> {
     const user = await this.userRepository.findOne({
       where: { id: userId },
@@ -177,12 +175,11 @@ export class CostsService {
     const newCost = this.costRepository.create(updateCostDto);
 
     if (updateCostDto.cost_sum) {
-      const roundNewSum = roundSum(+updateCostDto.cost_sum);
       const wallet = await this.walletRepository.findOneBy({
         id: cost.wallet.id,
       });
       const totalSumAfterUpdate =
-        +wallet.total_balance + +cost.cost_sum - +roundNewSum;
+        +wallet.total_balance + +cost.cost_sum - +updateCostDto.cost_sum;
       if (totalSumAfterUpdate < 0) {
         throw new HttpException(
           `Wallet balance cannot be less than 0`,
@@ -190,7 +187,6 @@ export class CostsService {
         );
       }
       wallet.total_balance = totalSumAfterUpdate;
-      newCost.cost_sum = roundNewSum;
 
       return await this.dataSource.transaction(
         async (entityManager: EntityManager) => {

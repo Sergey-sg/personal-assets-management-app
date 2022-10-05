@@ -81,6 +81,25 @@ export class UserService {
     return user;
   }
 
+  async getUserProfile(id: number): Promise<UserEntity> {
+    const userProfile = await this.userRepository.findOne({
+      where: {
+        id,
+      },
+      select: [
+        'email',
+        'firstName',
+        'lastName',
+        'phone',
+        'address',
+        'birthdate',
+        'avatarPath',
+      ],
+    });
+
+    return userProfile;
+  }
+
   async update(id: number, updateUserDto: UpdateUserDto) {
     const user = await this.findOne(id);
 
@@ -108,14 +127,12 @@ export class UserService {
       ...updateUserDto,
     });
 
-    return updatedUser;
+    const userProfile = await this.getUserProfile(updatedUser.id);
+
+    return userProfile;
   }
 
-  async updateAvatar(
-    id: number,
-    updateDto: UpdateUserDto,
-    file: Express.Multer.File,
-  ) {
+  async updateAvatar(id: number, file: Express.Multer.File) {
     const user = await this.userRepository.findOne({
       where: {
         id,
@@ -135,14 +152,18 @@ export class UserService {
     const avatarUrl = `/v${avatar.version}/${avatar.public_id}.${avatar.format}`;
 
     const updatedUser = await this.update(id, {
-      ...updateDto,
+      ...user,
       avatarPath: avatarUrl,
     });
     return updatedUser;
   }
 
   async remove(id: number, userData: { password: string }) {
-    const user = await this.findOne(id);
+    const user = await this.userRepository.findOne({
+      where: {
+        id,
+      },
+    });
 
     const validateUser = await this.authService.validateUser({
       ...user,

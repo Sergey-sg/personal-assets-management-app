@@ -2,15 +2,18 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { join } from 'path';
 import TypeormConfig from './config/typeorm.config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { WalletModule } from './wallet/wallet.module';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { IncomeModule } from './income/income.module';
 import { CostsModule } from './costs/costs.module';
 import { InvoicesModule } from './invoices/invoices.module';
+import { ToDoModule } from './todo/todo.module';
 
 @Module({
   imports: [
@@ -32,6 +35,13 @@ import { InvoicesModule } from './invoices/invoices.module';
           pass: process.env.SMTP_PASSWORD,
         },
       },
+      template: {
+        dir: join(__dirname, 'mails'),
+        adapter: new HandlebarsAdapter(),
+      },
+      options: {
+        strict: true,
+      },
     }),
     UserModule,
     AuthModule,
@@ -39,6 +49,7 @@ import { InvoicesModule } from './invoices/invoices.module';
     IncomeModule,
     CostsModule,
     InvoicesModule,
+    ToDoModule,
   ],
   controllers: [AppController],
   providers: [AppService],

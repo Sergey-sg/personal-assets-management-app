@@ -28,7 +28,12 @@ export const Button: React.FC<ButtonProps> = ({
     <button
       type={type}
       disabled={disabled}
-      className={clsx(STYLES[btnName], className)}
+      className={clsx(
+        'flex justify-center items-center m-2  text-center text-base box-border transition  duration-200 cursor-pointer',
+        STYLES[btnName],
+        className,
+      )}
+      // className={clsx(STYLES[btnName], className)}
       onClick={onClick}
     >
       {btnName === 'google' && (

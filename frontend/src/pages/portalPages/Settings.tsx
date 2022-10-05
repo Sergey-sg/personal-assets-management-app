@@ -6,10 +6,10 @@ import {
   DeleteAccountForm,
 } from 'components/settings'
 
-const Settings = () => {
+const Settings: React.FC = () => {
   return (
     <>
-      <Typography type={'h2'}>Settings</Typography>
+      <Typography type={'h2'}>Account Information</Typography>
       <Typography type={'Ag-14-regular'}>
         Update your account information
       </Typography>

@@ -1,33 +1,43 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Form, Formik } from 'formik'
 import { PersonalInfoSchema } from './schemas/personalInfoSchemes'
 import { InputField } from 'components/common/inputs/InputField'
 import { Button } from 'components/common/buttons/Button'
 import { SectionTitle } from './SectionTitle'
-
-interface PersonalInfoFormProps {
-  userId: string | number
-  firstName: string
-  lastName: string
-  email: string
-  address: string
-  birthdate: string
-  phone: string
-}
-
-const InitialValues: PersonalInfoFormProps = {
-  userId: '',
-  firstName: '',
-  lastName: '',
-  email: '',
-  address: '',
-  birthdate: '',
-  phone: '',
-}
+import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
+import { updateUserProfile } from 'redux/slice/userProfile/actionCreators'
+import { IUserProfile } from 'redux/slice/userProfile/userProfile.slice'
+import { notifyError, notifySuccess } from 'components/common/notifications'
+import { resetError } from 'redux/slice/error/error.slice'
+import { resetSuccess } from 'redux/slice/success/success.slice'
+import { ToastContainer, Zoom } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const PersonalInfoForm: React.FC = () => {
+  const dispatch = useAppDispatch()
+
+  const userProfile = useAppSelector((state) => state.userProfile)
+  const error = useAppSelector((state) => state.error.message)
+  const success = useAppSelector((state) => state.success.message)
+
+  useEffect(() => {
+    error && notifyError(error)
+    success && notifySuccess(success)
+    dispatch(resetError())
+    dispatch(resetSuccess())
+  }, [error, success])
+
+  const InitialValues: IUserProfile = {
+    firstName: userProfile.firstName || '',
+    lastName: userProfile.lastName || '',
+    email: userProfile.email || '',
+    address: userProfile.address || '',
+    birthdate: userProfile.birthdate || '',
+    phone: userProfile.phone || '',
+  }
+
   const handleSubmit = (values: typeof InitialValues) => {
-    console.log(values)
+    dispatch(updateUserProfile(values))
   }
 
   return (
@@ -35,6 +45,7 @@ const PersonalInfoForm: React.FC = () => {
       initialValues={InitialValues}
       validationSchema={PersonalInfoSchema}
       onSubmit={handleSubmit}
+      enableReinitialize
     >
       {({ dirty, isValid }) => {
         return (
@@ -100,6 +111,7 @@ const PersonalInfoForm: React.FC = () => {
                 btnName={'primary'}
                 disabled={!(isValid && dirty)}
               />
+              <ToastContainer transition={Zoom} />
             </Form>
           </>
         )

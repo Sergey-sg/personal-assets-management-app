@@ -1,4 +1,4 @@
 export const CONSTANTS = {
-  CLOUDINARY_FILE_STORAGE: 'http://res.cloudinary.com/myfinance/image/upload',
-  CLOUDINARY_FOLDER: 'MyFinance',
+  CLOUDINARY_FILE_STORAGE: process.env.REACT_APP_CLOUDINARY_FILE_STORAGE,
+  CLOUDINARY_FOLDER: process.env.REACT_APP_CLOUDINARY_FOLDER,
 };

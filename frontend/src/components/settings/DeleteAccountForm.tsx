@@ -5,6 +5,8 @@ import { PasswordInput } from 'components/common/inputs/PasswordInput'
 import { deleteAccountSchema } from './schemas/deleteAccountSchema'
 import { SectionTitle } from './SectionTitle'
 import { ReactComponent as PenIcon } from 'assets/icons/pen.svg'
+import { useAppDispatch, useAppSelector } from '../../hooks/useAppDispatch'
+import { deleteUserProfile } from 'redux/slice/userProfile/actionCreators'
 
 interface DeleteAccountProps {
   currentPassword: string
@@ -17,10 +19,11 @@ const InitialValues: DeleteAccountProps = {
 }
 
 const DeleteAccountForm = () => {
+  const dispatch = useAppDispatch()
   const [isVisible, setIsVisible] = useState(false)
 
   const handleSubmit = (values: typeof InitialValues) => {
-    console.log(values)
+    dispatch(deleteUserProfile({ password: values.currentPassword }))
   }
 
   return (

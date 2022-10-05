@@ -47,8 +47,8 @@ export class UserEntity extends Base {
   refreshTokenHash?: string;
 
   @ApiProperty()
-  @Column({ unique: true })
-  activationLink: string;
+  @Column({ default: '' })
+  activationLink?: string;
 
   @ApiProperty()
   @Column({ default: false })

@@ -11,10 +11,10 @@ export class IncomeEntity extends Base {
   category_name: string;
 
   @ApiProperty({
-    example: 555.21,
+    example: 555,
     description: 'Income sum is integer or decimal number',
   })
-  @Column({ type: 'decimal', default: 0 })
+  @Column({ type: 'int', default: 0 })
   income_sum: number;
 
   @ApiProperty({ example: null, description: 'Is income transaction' })

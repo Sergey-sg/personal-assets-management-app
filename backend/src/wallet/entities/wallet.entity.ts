@@ -18,7 +18,7 @@ export class WalletEntity extends Base {
   status: WalletStatus;
 
   @ApiProperty({ example: 1000, description: 'Wallet total balance' })
-  @Column({ type: 'decimal', default: 0 })
+  @Column({ type: 'int', default: 0 })
   total_balance: number;
 
   @ApiProperty({ example: 'UAH', description: 'Wallet currency' })
