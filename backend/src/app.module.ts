@@ -12,6 +12,7 @@ import { WalletModule } from './wallet/wallet.module';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { IncomeModule } from './income/income.module';
 import { CostsModule } from './costs/costs.module';
+import { InvoicesModule } from './invoices/invoices.module';
 import { ToDoModule } from './todo/todo.module';
 
 @Module({
@@ -47,6 +48,7 @@ import { ToDoModule } from './todo/todo.module';
     WalletModule,
     IncomeModule,
     CostsModule,
+    InvoicesModule,
     ToDoModule,
   ],
   controllers: [AppController],
