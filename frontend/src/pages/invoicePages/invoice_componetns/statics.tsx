@@ -31,24 +31,48 @@ export const HeaderItems: React.FC = () => {
   )
 }
 
+function convertDate(date: string) {
+  const convertedDate = new Intl.DateTimeFormat('en-GB', {
+    dateStyle: 'medium',
+  }).format(new Date(date))
+
+  return convertedDate
+}
+
 export function InvoiceInfoBaner(props: any) {
+  const address = props.billedTo.address
+    ? props.billedTo.address.split(',')
+    : ''
+  const customerName = props.billedTo.firstName
+    ? `${props.billedTo.firstName} ${props.billedTo.lastName}`
+    : props.billedTo.email
+
   return (
     <div className="grid grid-rows-1 grid-flow-col columns-2 bg-gray-ultralight rounded-xl p-5">
       <div className="container">
         <div className="font-bold text-lg">Invoice Number</div>
         <br />
-        <div className="font-medium text-text-light">MAG 2541420</div>
         <div className="font-medium text-text-light">
-          Issued Date: 10 Apr 2022
+          MAG {props.invoice.id}
         </div>
-        <div className="font-medium text-text-light">Due Date: 20 Apr 2022</div>
+        <div className="font-medium text-text-light">
+          Issued Date: {convertDate(props.issuedDate)}
+        </div>
+        <div className="font-medium text-text-light">
+          Due Date:{' '}
+          {props.invoice.dueDate && convertDate(props.invoice.dueDate)}
+        </div>
       </div>
       <div className="container text-right">
         <div className="font-bold text-lg">Billed to</div>
         <br />
-        <div className="font-medium text-text-light">Sajib Rahman</div>
-        <div className="font-medium text-text-light">3471 Rainy Day Drive</div>
-        <div className="font-medium text-text-light">Needham, MA 02192</div>
+        <div className="font-medium text-text-light">{customerName}</div>
+        <div className="font-medium text-text-light">
+          {address && address[0]}
+        </div>
+        <div className="font-medium text-text-light">
+          {address && `${address[1]}, ${address[2]}`}
+        </div>
       </div>
     </div>
   )
@@ -108,6 +132,32 @@ export const InvoiceStatus = (props: { dueDate: string; paid: boolean }) => {
       ) : (
         status
       )}
+    </div>
+  )
+}
+
+export function InvoiceItemsList(props: { items: any[] }) {
+  return (
+    <div className="font-medium">
+      {props.items.map((item: any) => (
+        <div key={item.id}>
+          <div className="container grid grid-cols-12 gap-4">
+            <div className="border border-gray-medium rounded-xl p-4 col-span-5">
+              {item.name}
+            </div>
+            <div className="text-center border border-gray-medium rounded-xl py-4 col-span-3">
+              {item.number}
+            </div>
+            <div className="text-center border border-gray-medium rounded-xl py-4 col-span-2">
+              ${item.price}
+            </div>
+            <div className="text-right border border-gray-medium rounded-xl p-4 col-span-2">
+              ${item.subTotal}
+            </div>
+          </div>
+          <br />
+        </div>
+      ))}
     </div>
   )
 }

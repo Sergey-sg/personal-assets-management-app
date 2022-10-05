@@ -5,147 +5,57 @@ import {
   FooterItems,
   HeaderItems,
   InvoiceInfoBaner,
+  InvoiceItemsList,
   MagloBaner,
 } from './invoice_componetns/statics'
 
-function InvoiceItemForm() {
-  const [invoiceDetail, setInvoiceDetail] = useState('')
-  const [invoiceItems, setInvoiceItem] = useState([{}])
-  const [subTotal, setSubTotal] = useState(0)
-  const [total, setTotal] = useState(0)
-
-  const InvoiceItems: React.FC = () => {
-    const InputItem: React.FC = () => {
-      const [name, setName] = useState('')
-      const [number, setNumber] = useState('')
-      const [price, setPrice] = useState('')
-
-      function submitValue(e: any) {
-        e.preventDefault()
-        const sum = (obj: any) => {
-          return Object.keys(obj).reduce(
-            (sum, key) => sum + parseFloat(obj[key] || 0),
-            0,
-          )
-        }
-        const item = {
-          id: Date.now(),
-          name: name,
-          number: number,
-          price: price,
-          total: parseFloat(price) * parseFloat(number) || 0,
-        }
-
-        if (item.name && item.price && item.number) {
-          if (Object.keys(invoiceItems[0]).length !== 0) {
-            setInvoiceItem([...invoiceItems, item])
-          } else {
-            setInvoiceItem([item])
-          }
-          const sub = sum([
-            ...invoiceItems.map((itemOld: any) => itemOld.total),
-            item.total,
-          ])
-
-          setSubTotal(sub)
-          setTotal(sub)
-        }
-      }
-
-      return (
-        <div className="container grid grid-cols-12 gap-4">
-          <input
-            className="col-span-5 border border-gray-medium rounded-xl p-4 focus:outline-none focus:border-green-hover focus:ring-green-hover focus:ring-0"
-            type={'text'}
-            name="name"
-            onChange={(e) => setName(e.target.value)}
-          />
-          <input
-            className="col-span-3 border border-gray-medium rounded-xl p-4 focus:outline-none focus:border-green-hover focus:ring-green-hover focus:ring-0"
-            type={'number'}
-            name="number"
-            onChange={(e) => setNumber(e.target.value)}
-          />
-          <input
-            className="col-span-2 border border-gray-medium rounded-xl p-4 focus:outline-none focus:border-green-hover focus:ring-green-hover focus:ring-0"
-            type={'number'}
-            name="price"
-            onChange={(e) => setPrice(e.target.value)}
-          />
-          <button
-            className="col-span-2 text-green-medium border border-gray-medium rounded-xl py-4 hover:bg-gray-ultralight"
-            onClick={submitValue}
-          >
-            Add Item
-          </button>
-        </div>
-      )
-    }
-
-    if (Object.keys(invoiceItems[0]).length !== 0) {
-      return (
-        <div className="font-medium">
-          {invoiceItems.map((item: any) => (
-            <div key={item.id}>
-              <div className="container grid grid-cols-12 gap-4">
-                <div className="border border-gray-medium rounded-xl p-4 col-span-5">
-                  {item.name}
-                </div>
-                <div className="text-center border border-gray-medium rounded-xl py-4 col-span-3">
-                  {item.number}
-                </div>
-                <div className="text-center border border-gray-medium rounded-xl py-4 col-span-2">
-                  ${item.price}
-                </div>
-                <div className="text-right border border-gray-medium rounded-xl p-4 col-span-2">
-                  ${item.total}
-                </div>
-              </div>
-              <br />
-            </div>
-          ))}
-          <InputItem />
-        </div>
-      )
-    } else {
-      return <InputItem />
-    }
-  }
-
-  return (
-    <div>
-      <div className="text-base font-bold mb-3.5">Item Details</div>
-      <ReactTextareaAutosize
-        className="w-full border-none rounded-xl focus:outline-none focus:border-green-hover focus:ring-green-hover focus:ring-1"
-        name="detail"
-        placeholder="Details item with more info"
-        onChange={(e) => setInvoiceDetail(e.target.value)}
-        value={invoiceDetail}
-      />
-      <br />
-      <br />
-      <div className="w-full">
-        <HeaderItems />
-        <br />
-        <InvoiceItems />
-      </div>
-      <br />
-      <FooterItems subTotal={subTotal} total={total} />
-    </div>
+const sum = (obj: any) => {
+  return Object.keys(obj).reduce(
+    (sum, key) => sum + (parseFloat(obj[key] || 0) * 100) / 100,
+    0,
   )
 }
 
-const ClientDetails: React.FC = () => {
+function ClientDetails(props: any) {
+  const [billedTo, setBilledTo] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    address: '',
+    phone: '',
+    avatarPath: '',
+  })
+  const userFullName = billedTo.firstName
+    ? `${billedTo.firstName} ${billedTo.lastName}`
+    : billedTo.email
+  const userTest = {
+    firstName: 'Doe',
+    lastName: 'John',
+    email: 'doe@mail.com',
+    address: '27 Astronomichna street, Kharkiv, Ukraine',
+    phone: '+380680802212',
+    avatarPath: customer,
+  }
+
+  function getUser(params: any) {
+    setBilledTo(userTest)
+    props.setCustomer(userTest)
+  }
+
   return (
     <div className="container h-max bg-text-white border border-gray-medium rounded-xl">
       <div className="container text-base font-semibold p-5">
         Client Details
       </div>
-      <img className="float-left px-5" src={customer} alt="customer" />
+      <img
+        className="float-left px-5"
+        src={billedTo.avatarPath}
+        alt={userFullName}
+      />
       <div className="columns-1">
-        <div className="text-base font-semibold text-lg">Sajib Rahman</div>
+        <div className="text-base font-semibold text-lg">{userFullName}</div>
         <div className="text-base font-normal text-text-ultralight">
-          rahmansajib@uihut.com
+          {billedTo.email}
         </div>
       </div>
       <br />
@@ -153,10 +63,13 @@ const ClientDetails: React.FC = () => {
       <div className="container columns-1 p-5">
         <div className="text-base font-semibold text-lg">UIHUT Agency LTD</div>
         <div className="text-base font-normal text-text-ultralight">
-          3471 Rainy Day Drive Tulsa, USA
+          {billedTo.address}
         </div>
         <br />
-        <button className="bg-green-minimal text-green-medium font-medium rounded-xl w-full py-3.5 font-semibold hover:bg-green-ultralight">
+        <button
+          className="bg-green-minimal text-green-medium font-medium rounded-xl w-full py-3.5 font-semibold hover:bg-green-ultralight"
+          onClick={() => getUser('')}
+        >
           Add Customer
         </button>
       </div>
@@ -164,11 +77,7 @@ const ClientDetails: React.FC = () => {
   )
 }
 
-const BasicInfo: React.FC = () => {
-  const [dueDate, setDueDate] = useState('')
-  const [invoiceDate, setInvoiceDate] = useState('')
-  const issuedDate = Date.now()
-
+function BasicInfo(props: any) {
   return (
     <div className="container h-max bg-text-white border border-gray-medium rounded-xl">
       <div className="container text-base font-semibold p-5">Basic Info</div>
@@ -180,7 +89,7 @@ const BasicInfo: React.FC = () => {
             className="w-full border border-gray-medium rounded-xl p-3.5"
             type={'date'}
             onChange={(e) => {
-              setInvoiceDate(e.target.value)
+              props.setInvoiceDate(e.target.value)
             }}
           />
         </div>
@@ -191,7 +100,7 @@ const BasicInfo: React.FC = () => {
             className="w-full border border-gray-medium rounded-xl p-3.5"
             type={'date'}
             onChange={(e) => {
-              setDueDate(e.target.value)
+              props.setDueDate(e.target.value)
             }}
           />
         </div>
@@ -212,32 +121,157 @@ const BasicInfo: React.FC = () => {
   )
 }
 
-const InvoiceRightPanel: React.FC = () => {
+function InputItem(props: {
+  setItem: (arg0: {
+    subTotal: number
+    id: number
+    name: string
+    number: string
+    price: string
+  }) => void
+}) {
+  const [item, setItem] = useState({
+    id: Date.now(),
+    name: '',
+    number: '',
+    price: '',
+  })
+
+  function submitValue() {
+    const subTotal =
+      ((parseFloat(item.price) * 100 * parseFloat(item.number) * 100) / 10000) |
+      0
+
+    if (item.name && item.price && item.number) {
+      props.setItem({ ...item, subTotal })
+      setItem({ id: Date.now(), name: '', number: '', price: '' })
+    }
+  }
+
   return (
-    <div>
-      <ClientDetails />
-      <br />
-      <BasicInfo />
+    <div className="container grid grid-cols-12 gap-4">
+      <input
+        className="col-span-5 border border-gray-medium rounded-xl p-4 focus:outline-none focus:border-green-hover focus:ring-green-hover focus:ring-0"
+        type={'text'}
+        name="name"
+        onChange={(e) => setItem({ ...item, name: e.target.value })}
+        value={item.name}
+      />
+      <input
+        className="col-span-3 border border-gray-medium rounded-xl p-4 focus:outline-none focus:border-green-hover focus:ring-green-hover focus:ring-0"
+        type={'number'}
+        name="number"
+        onChange={(e) => setItem({ ...item, number: e.target.value })}
+        value={item.number}
+      />
+      <input
+        className="col-span-2 border border-gray-medium rounded-xl p-4 focus:outline-none focus:border-green-hover focus:ring-green-hover focus:ring-0"
+        type={'number'}
+        name="price"
+        onChange={(e) => setItem({ ...item, price: e.target.value })}
+        value={item.price}
+      />
+      <button
+        className="col-span-2 text-green-medium border border-gray-medium rounded-xl py-4 hover:bg-gray-ultralight"
+        onClick={() => submitValue()}
+      >
+        Add Item
+      </button>
     </div>
   )
 }
 
 const InvoiceCreatePage: React.FC = () => {
+  const [invoice, setInvoice] = useState({
+    detail: '',
+    total: 0,
+    dueDate: '',
+    invoiceDate: '',
+    discount: 0,
+  })
+  const [billedTo, setBilledTo] = useState({})
+  const [invoiceItems, setInvoiceItems] = useState([{}])
+  const [subTotal, setSubTotal] = useState(0)
+  const issuedDate = new Date()
+
+  function setTotalAndSubTotal() {
+    const sumSubTotal = sum(invoiceItems.map((item: any) => item.subTotal))
+    const total = (sumSubTotal / invoice.discount) * 100 || 0
+
+    setSubTotal(sumSubTotal)
+    setInvoice({ ...invoice, total })
+  }
+
+  function setNewItem(item: any) {
+    console.log(Object.keys(invoiceItems[0]), invoiceItems)
+    if (Object.keys(invoiceItems[0]).length > 0) {
+      setInvoiceItems([...invoiceItems, item])
+    } else {
+      setInvoiceItems([item])
+    }
+    setTotalAndSubTotal()
+  }
+
   return (
     <div className="container mx-auto mb-10">
-      <h1 className="container text-3xl font-bold rounded-md px-10 pt-4">
-        New Invoices: MGL524874
-      </h1>
       <div className="container py-4 grid grid-cols-1 lg:grid-cols-10 gap-4">
         <div className="container col-span-1 lg:col-span-7 md:col-span-7 px-10">
           <MagloBaner />
           <br />
-          <InvoiceInfoBaner />
+          <InvoiceInfoBaner
+            invoice={invoice}
+            billedTo={billedTo}
+            issuedDate={issuedDate}
+          />
           <br />
-          <InvoiceItemForm />
+          <div>
+            <div className="text-base font-bold mb-3.5">Item Details</div>
+            <ReactTextareaAutosize
+              className="w-full border-none rounded-xl focus:outline-none focus:border-green-hover focus:ring-green-hover focus:ring-1"
+              name="detail"
+              placeholder="Details item with more info"
+              onChange={(e) =>
+                setInvoice({ ...invoice, detail: e.target.value })
+              }
+              value={invoice.detail}
+            />
+            <br />
+            <br />
+            <div className="w-full">
+              <HeaderItems />
+              <br />
+              {Object.keys(invoiceItems[0]).length > 0 && (
+                <InvoiceItemsList items={invoiceItems} />
+              )}
+            </div>
+            <br />
+            <InputItem
+              setItem={useCallback((item: any) => {
+                setNewItem(item)
+              }, [])}
+            />
+            <br />
+            <FooterItems subTotal={subTotal} total={invoice.total} />
+          </div>
         </div>
         <div className="container lg:col-span-3 col-span-1">
-          <InvoiceRightPanel />
+          <ClientDetails
+            setCustomer={useCallback(
+              (customer: any) => setBilledTo(customer),
+              [],
+            )}
+          />
+          <br />
+          <BasicInfo
+            setDueDate={useCallback(
+              (dueDate: string) => setInvoice({ ...invoice, dueDate }),
+              [],
+            )}
+            setInvoiceDate={useCallback(
+              (invoiceDate: string) => setInvoice({ ...invoice, invoiceDate }),
+              [],
+            )}
+          />
         </div>
       </div>
     </div>
