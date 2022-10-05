@@ -11,6 +11,8 @@ export interface InputProps extends React.HTMLProps<HTMLInputElement> {
   disabled?: boolean
   isInvalid?: boolean
   error?: string
+  value?: string | number
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 export const Input: React.FC<InputProps> = ({
@@ -20,6 +22,8 @@ export const Input: React.FC<InputProps> = ({
   error,
   isInvalid,
   className,
+  value,
+  onChange,
   ...inputProps
 }) => {
   const borderStyle = isInvalid ? 'border-error' : 'border-green-light'
@@ -31,9 +35,11 @@ export const Input: React.FC<InputProps> = ({
       </label>
 
       <input
-        className={`form-input rounded-lg min-w-full text-sm opacity-70  focus:border-2 focus:border-lime-500 focus:ring-0 ${borderStyle}`}
+        className={`form-input rounded-lg min-w-full text-base font-medium text-green-dark placeholder:italic placeholder:text-slate-400 placeholder:text-sm placeholder:font-medium  opacity-70  focus:border-2 focus:border-lime-500 focus:ring-0 ${borderStyle}`}
         type={type}
         name={name}
+        value={value}
+        onChange={onChange}
         {...inputProps}
       />
 

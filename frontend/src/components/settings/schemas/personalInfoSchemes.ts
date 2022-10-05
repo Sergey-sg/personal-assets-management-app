@@ -1,10 +1,11 @@
 import * as Yup from 'yup'
+import { REGEX } from 'shared/regexp'
 
 export const PersonalInfoSchema = Yup.object({
   firstName: Yup.string()
     .max(64, 'Must be 64 characters or less')
     .matches(
-      /^[a-zA-ZА-ЯҐЄІЇа-яієїґ0-9\s'-]+$/,
+      REGEX.USER_NAME_RULE,
       ' not allowed special symbols except space and dash ',
     )
     .required('Required'),
@@ -12,7 +13,7 @@ export const PersonalInfoSchema = Yup.object({
   lastName: Yup.string()
     .max(64, 'Must be 64 characters or less')
     .matches(
-      /^[a-zA-ZА-ЯҐЄІЇа-яієїґ0-9\s'-]+$/,
+      REGEX.USER_NAME_RULE,
       ' not allowed special symbols except space and dash ',
     )
     .required('Required'),
@@ -24,12 +25,11 @@ export const PersonalInfoSchema = Yup.object({
 
   address: Yup.string()
     .max(256, 'Must be 256 characters or less')
-    .notOneOf(['<', '>'])
-    .required('Required'),
+    .notOneOf(['<', '>']),
 
-  birthdate: Yup.string().required('Birthdate cannot be empty'),
+  birthdate: Yup.date()
+    .min(new Date().getFullYear() - 122, 'You are too old')
+    .max(new Date().getFullYear() - 18, 'You must be at least 18 years old'),
 
-  phone: Yup.string()
-    .matches(/^\+?3?8?(0\d{9})$/, 'Phone number is not valid')
-    .required('Required'),
+  phone: Yup.string().matches(REGEX.PHONE_RULE, 'Phone number is not valid'),
 })

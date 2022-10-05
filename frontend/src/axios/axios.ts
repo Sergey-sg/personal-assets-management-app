@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { config } from 'process'
 
 const api = axios.create({
   baseURL: process.env.BACKEND_URL || 'http://localhost:3001/api',

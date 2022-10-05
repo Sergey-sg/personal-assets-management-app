@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import MenuItem from './MenuItem'
 import { Typography } from '../common/Typography/Typography'
 import LogoutButton from '../common/buttons/LogoutButton'
+import clsx from 'clsx'
 import { useAppDispatch } from 'hooks/useAppDispatch'
 import { Logout } from 'redux/slice/authSlice'
 
@@ -15,13 +16,28 @@ interface MenuStructureItem {
 interface SideBarProps {
   logoLink: string
   structure: MenuStructureItem[]
+  screen: 'desktop' | 'mobile'
 }
 
-const SideBar: React.FC<SideBarProps> = ({ logoLink, structure }) => {
+const STYLES = {
+  desktop: 'hidden md:block',
+  mobile: 'block md:hidden',
+}
+
+export const SideBar: React.FC<SideBarProps> = ({
+  logoLink,
+  structure,
+  screen,
+}) => {
   const dispatch = useAppDispatch()
 
   return (
-    <div className="sticky top-0 hidden bg-gray-ultralight md:block px-6 pt-7 h-screen md:max-w-[274px] w-full">
+    <div
+      className={clsx(
+        'sticky top-0  bg-gray-ultralight  px-6 pt-7 h-screen md:max-w-[274px] w-full ',
+        STYLES[screen],
+      )}
+    >
       <Link to={logoLink} className="block w-[145px] h-[42px] mb-10">
         <Typography type={'h1'}>{'MyFinance'}</Typography>
       </Link>
@@ -39,5 +55,3 @@ const SideBar: React.FC<SideBarProps> = ({ logoLink, structure }) => {
     </div>
   )
 }
-
-export default SideBar

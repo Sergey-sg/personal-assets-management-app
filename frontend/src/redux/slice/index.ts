@@ -1,0 +1,5 @@
+export { default as authSlice } from './authSlice'
+export { default as userProfileSlice } from './userProfile/userProfile.slice'
+export { default as successSlice } from './success/success.slice'
+export { default as loaderSlice } from './loader/loader.slice'
+export { default as errorSlice } from './error/error.slice'

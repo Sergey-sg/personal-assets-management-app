@@ -1,5 +1,6 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform, Type } from 'class-transformer';
 import {
   IsBoolean,
   IsEmail,
@@ -9,7 +10,7 @@ import {
   Matches,
   MinLength,
 } from 'class-validator';
-import { MESSAGES, REGEX } from 'src/common/constants/regexp';
+import { MESSAGES, REGEX } from 'src/shared/regexp';
 import { CreateUserDto } from './create-user.dto';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
@@ -43,7 +44,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   })
   @IsString()
   @IsOptional()
-  @MinLength(6, { message: 'The password must be longer than 6 characters' })
+  @MinLength(8, { message: 'The password must be longer than 8 characters' })
   @Matches(REGEX.PASSWORD_RULE, {
     message: MESSAGES.PASSWORD_RULE_MESSAGE,
   })
@@ -63,15 +64,19 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   })
   @IsString()
   @IsOptional()
-  @IsPhoneNumber('UA')
-  phone?: string;
+  @Type(() => null)
+  @Transform(({ value }) => (value === '' ? null : value))
+  @IsPhoneNumber('UA', { message: MESSAGES.PHONE_NUMBER_MESSAGE })
+  phone?: string | null;
 
   @ApiProperty({
     description: 'User birthdate',
     example: '2000-12-01',
   })
   @IsOptional()
-  readonly birthdate?: Date;
+  @Type(() => null)
+  @Transform(({ value }) => (value === '' ? null : value))
+  birthdate?: Date | null;
 
   @IsString()
   @IsOptional()

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsString, Matches, MinLength } from 'class-validator';
-import { MESSAGES, REGEX } from 'src/common/constants/regexp';
+import { MESSAGES, REGEX } from 'src/shared/regexp';
 
 export class CreateUserDto {
   @ApiProperty({
@@ -22,10 +22,10 @@ export class CreateUserDto {
   readonly email: string;
 
   @ApiProperty({
-    example: 'Pass1234',
+    example: 'Pass@1234',
     description: 'User password',
   })
-  @MinLength(6, { message: 'The password must be longer than 6 characters' })
+  @MinLength(8, { message: 'The password must be longer than 8 characters' })
   @Matches(REGEX.PASSWORD_RULE, {
     message: MESSAGES.PASSWORD_RULE_MESSAGE,
   })

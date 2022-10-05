@@ -2,14 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Open Sans', sans-serif;
-  outline: none;
-}
-input {
-  outline: none;
-  border: none;
+.Toastify__toast--success .Toastify__toast-icon svg {
+  fill: #244d4d !important;
 }

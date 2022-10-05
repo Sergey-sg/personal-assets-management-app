@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 import { AppRoute } from 'common/enums/app-route.enum'
-import Header from 'components/header/Header'
-import SideBar from 'components/sideBar/SideBar'
+import { Header } from 'components/header/Header'
+import { SideBar } from 'components/sideBar/SideBar'
 import { ReactComponent as DashboardIcon } from 'assets/icons/dashboard.svg'
 import { ReactComponent as SettingsIcon } from 'assets/icons/settings.svg'
 import { ReactComponent as TransactionIcon } from 'assets/icons/transaction.svg'
@@ -11,8 +11,10 @@ import { ReactComponent as PluginIcon } from 'assets/icons/plugins.svg'
 import { ReactComponent as WalletIcon } from 'assets/icons/wallet.svg'
 import { ReactComponent as ChatIcon } from 'assets/icons/chat.svg'
 import { Layout } from 'components/common/Layout/Layout'
+import { fetchUserProfile } from 'redux/slice/userProfile/actionCreators'
+import { useAppDispatch } from 'hooks/useAppDispatch'
 
-const menuStructure = [
+export const menuStructure = [
   {
     title: 'Dashboard',
     link: AppRoute.DASHBOARD,
@@ -51,16 +53,28 @@ const menuStructure = [
 ]
 
 const PortalPage: React.FC = () => {
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    dispatch(fetchUserProfile())
+  }, [dispatch])
+
   return (
-    <div className="flex">
-      <SideBar logoLink={AppRoute.DASHBOARD} structure={menuStructure} />
-      <div className="w-full h-screen sticky top-0 ">
-        <Header />
-        <Layout>
-          <Outlet />
-        </Layout>
+    <>
+      <div className="flex">
+        <SideBar
+          logoLink={AppRoute.DASHBOARD}
+          structure={menuStructure}
+          screen="desktop"
+        />
+        <div className="w-full h-screen sticky top-0 ">
+          <Header />
+          <Layout>
+            <Outlet />
+          </Layout>
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 

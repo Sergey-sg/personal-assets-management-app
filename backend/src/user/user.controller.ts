@@ -2,11 +2,9 @@ import {
   Body,
   Controller,
   Delete,
-  FileTypeValidator,
   Get,
-  MaxFileSizeValidator,
+  HttpStatus,
   Param,
-  ParseFilePipe,
   Patch,
   Query,
   UploadedFile,
@@ -20,14 +18,14 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiTags,
+  ApiUnauthorizedResponse,
   OmitType,
 } from '@nestjs/swagger';
-import { REGEX } from 'src/common/constants/regexp';
-
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
 import { UserService } from './user.service';
+import { User } from '../user/decorators/user.decorator';
 
 @ApiTags('User')
 @Controller('user')
@@ -44,6 +42,29 @@ export class UserController {
   })
   async findAll(@Query() paginationQuery: PaginationQueryDto) {
     return await this.userService.findAll(paginationQuery);
+  }
+
+  @Get('/current')
+  @ApiOperation({ summary: 'Get current user by token' })
+  @ApiUnauthorizedResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', default: HttpStatus.UNAUTHORIZED },
+        message: {
+          type: 'string',
+          default: 'Unauthorized',
+        },
+      },
+    },
+  })
+  @ApiOkResponse({
+    description: 'User has been successfully return',
+    type: UserEntity,
+  })
+  async findCurrentUser(@User('id') currentUserId: number) {
+    return this.userService.getUserProfile(currentUserId);
   }
 
   @Get(':id')
@@ -107,8 +128,8 @@ export class UserController {
     return await this.userService.findOne(id);
   }
 
-  @Patch(':id')
-  @ApiOperation({ summary: 'Update user by id.' })
+  @Patch()
+  @ApiOperation({ summary: 'Update current user.' })
   @ApiOkResponse({
     description: 'User with specified id has been successfully updated',
     type: OmitType(UserEntity, [
@@ -117,12 +138,12 @@ export class UserController {
       'activationLink',
     ]),
   })
-  async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
+  async update(@User('id') id: number, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(id, updateUserDto);
   }
 
-  @Patch('avatar/:id')
-  @ApiOperation({ summary: 'Update a user avatar by id.' })
+  @Patch('avatar')
+  @ApiOperation({ summary: 'Update current user avatar' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
@@ -137,7 +158,7 @@ export class UserController {
     },
   })
   @ApiOkResponse({
-    description: 'User avatar with specified id has been successfully updated',
+    description: 'Current User avatar has been successfully updated',
     type: OmitType(UserEntity, [
       'password',
       'refreshTokenHash',
@@ -146,25 +167,14 @@ export class UserController {
   })
   @UseInterceptors(FileInterceptor('file'))
   async updateAvatar(
-    @Param('id') id: number,
-    @Body() updateUserDto: UpdateUserDto,
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [
-          new MaxFileSizeValidator({ maxSize: 5000000 }),
-          new FileTypeValidator({
-            fileType: REGEX.FILE_TYPE_RULE,
-          }),
-        ],
-      }),
-    )
-    file: Express.Multer.File,
+    @User('id') id: number,
+    @UploadedFile() file: Express.Multer.File,
   ) {
-    return this.userService.updateAvatar(id, updateUserDto, file);
+    return this.userService.updateAvatar(id, file);
   }
 
-  @Delete(':id')
-  @ApiOperation({ summary: 'Delete user profile by id and password.' })
+  @Delete()
+  @ApiOperation({ summary: 'Delete current user profile by id and password.' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -177,10 +187,7 @@ export class UserController {
     },
   })
   @ApiNoContentResponse()
-  async remove(
-    @Param('id') id: number,
-    @Body() userData: { password: string },
-  ) {
+  async remove(@User('id') id: number, @Body() userData: { password: string }) {
     return this.userService.remove(id, userData);
   }
 }

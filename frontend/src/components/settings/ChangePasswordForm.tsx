@@ -5,22 +5,28 @@ import { PasswordInput } from 'components/common/inputs/PasswordInput'
 import { changePasswordSchema } from './schemas/changePasswordSchema'
 import { SectionTitle } from './SectionTitle'
 import { ReactComponent as PenIcon } from 'assets/icons/pen.svg'
+import { useAppDispatch } from 'hooks/useAppDispatch'
+import { updateUserProfile } from 'redux/slice/userProfile/actionCreators'
 
-interface ChangePasswordFormProps {
+export interface IChangePassword {
   newPassword: string
   confirmPassword: string
 }
 
-const InitialValues: ChangePasswordFormProps = {
+const InitialValues: IChangePassword = {
   newPassword: '',
   confirmPassword: '',
 }
 
 const ChangePasswordForm: React.FC = () => {
+  const dispatch = useAppDispatch()
   const [isVisible, setIsVisible] = useState(false)
 
-  const handleSubmit = (values: typeof InitialValues) => {
-    console.log(values)
+  const handleSubmit = (values: IChangePassword) => {
+    const newUserPassword = { password: values.newPassword }
+
+    dispatch(updateUserProfile(newUserPassword))
+    setIsVisible(false)
   }
 
   return (
