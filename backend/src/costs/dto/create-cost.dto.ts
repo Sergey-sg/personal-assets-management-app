@@ -3,9 +3,8 @@ import {
   IsBoolean,
   IsInt,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
-  Min,
+  IsPositive,
 } from 'class-validator';
 
 export class CreateCostDto {
@@ -14,14 +13,11 @@ export class CreateCostDto {
   readonly cost_name: string;
 
   @ApiProperty({
-    example: 154.5,
-    description: 'Cost sum is integer or decimal number',
+    example: 154,
+    description: 'Cost sum is integer number',
   })
-  @IsNumber(
-    { maxDecimalPlaces: 2 },
-    { message: 'Cost sum could be integer or decimal number' },
-  )
-  @Min(0.01, { message: 'Sum must be greater than 0' })
+  @IsInt()
+  @IsPositive()
   readonly cost_sum: number;
 
   @ApiProperty({

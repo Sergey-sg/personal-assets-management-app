@@ -17,10 +17,10 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CostsService } from './costs.service';
 import { CreateCostDto } from './dto/create-cost.dto';
 import { UpdateCostDto } from './dto/update-cost.dto';
-import { LimitOffsetQueryDto } from '../dto/limit-offset-query.dto';
 import { AllWalletCostsResponseDto } from './dto/all-wallet-costs-response.dto';
 import { AllUserCostsResponseDto } from './dto/all-user-costs-response.dto';
 import { AllUserCostsResponseType } from './interfaces/all-user-costs-response.type';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @ApiTags('Costs')
 @Controller('costs')
@@ -44,7 +44,7 @@ export class CostsController {
   @UsePipes(new ValidationPipe())
   async getAllWalletCosts(
     @Param('walletId') walletId: number,
-    @Query() query: LimitOffsetQueryDto,
+    @Query() query: PaginationQueryDto,
   ): Promise<AllWalletCostsResponseDto> {
     return await this.costsService.getAllWalletCosts(walletId, query);
   }
@@ -55,7 +55,7 @@ export class CostsController {
   @UsePipes(new ValidationPipe())
   async getAllUserCosts(
     @Param('userId') userId: number,
-    @Query() query: LimitOffsetQueryDto,
+    @Query() query: PaginationQueryDto,
   ): Promise<AllUserCostsResponseType> {
     return await this.costsService.getAllUserCosts(userId, query);
   }

@@ -7,9 +7,8 @@ import { CreateIncomeDto } from './dto/create-income.dto';
 import { WalletEntity } from '../wallet/entities/wallet.entity';
 import { UpdateIncomeDto } from './dto/update-income.dto';
 import { AllWalletIncomeResponseDto } from './dto/all-wallet-income-response.dto';
-import { LimitOffsetQueryDto } from '../dto/limit-offset-query.dto';
 import { AllUserIncomeResponseType } from './interfaces/all-user-income-response.type';
-import { roundSum } from '../actions/round-sum';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @Injectable()
 export class IncomeService {
@@ -74,10 +73,7 @@ export class IncomeService {
       newIncome.from_user = fromUser;
     }
 
-    const roundIncomeSum = roundSum(+newIncome.income_sum);
-
-    newIncome.income_sum = roundIncomeSum;
-    wallet.total_balance = +wallet.total_balance + +roundIncomeSum;
+    wallet.total_balance = +wallet.total_balance + +newIncome.income_sum;
 
     return await this.dataSource.transaction(
       async (entityManager: EntityManager) => {
@@ -91,7 +87,7 @@ export class IncomeService {
 
   async getAllWalletIncome(
     walletId: number,
-    query: LimitOffsetQueryDto,
+    query: PaginationQueryDto,
   ): Promise<AllWalletIncomeResponseDto> {
     const wallet = await this.walletRepository.findOneBy({ id: walletId });
 
@@ -114,7 +110,7 @@ export class IncomeService {
 
   async getAllUserIncome(
     userId: number,
-    query: LimitOffsetQueryDto,
+    query: PaginationQueryDto,
   ): Promise<AllUserIncomeResponseType> {
     const user = await this.userRepository.findOne({
       where: { id: userId },
@@ -173,12 +169,13 @@ export class IncomeService {
     const newIncome = this.incomeRepository.create(updateIncomeDto);
 
     if (updateIncomeDto.income_sum) {
-      const roundNewSum = roundSum(+updateIncomeDto.income_sum);
       const wallet = await this.walletRepository.findOneBy({
         id: income.wallet.id,
       });
       const totalSumAfterUpdate =
-        +wallet.total_balance - +income.income_sum + +roundNewSum;
+        +wallet.total_balance -
+        +income.income_sum +
+        +updateIncomeDto.income_sum;
       if (totalSumAfterUpdate < 0) {
         throw new HttpException(
           `Wallet balance cannot be less than 0`,
@@ -186,7 +183,6 @@ export class IncomeService {
         );
       }
       wallet.total_balance = totalSumAfterUpdate;
-      newIncome.income_sum = roundNewSum;
 
       return await this.dataSource.transaction(
         async (entityManager: EntityManager) => {

@@ -11,10 +11,10 @@ export class CostEntity extends Base {
   cost_name: string;
 
   @ApiProperty({
-    example: 142.5,
+    example: 142,
     description: 'Cost sum is integer or decimal number',
   })
-  @Column({ type: 'decimal', default: 0 })
+  @Column({ type: 'int', default: 0 })
   cost_sum: number;
 
   @ApiProperty({ example: null, description: 'Is income transaction' })
