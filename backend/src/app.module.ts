@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { WalletModule } from './wallet/wallet.module';
 import { IncomeModule } from './income/income.module';
 import { CostsModule } from './costs/costs.module';
+import { ToDoModule } from './todo/todo.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { CostsModule } from './costs/costs.module';
     WalletModule,
     IncomeModule,
     CostsModule,
+    ToDoModule,
   ],
   controllers: [AppController],
   providers: [AppService],
