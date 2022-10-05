@@ -19,6 +19,7 @@ import { v4 } from 'uuid';
 import { MailerService } from '@nestjs-modules/mailer';
 import { Request, Response } from 'express';
 import { UserGoogle, Tokens } from './types/tokens.type';
+import { AuthRegisterDto } from './dto/register.dto';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 
 @Injectable()
@@ -63,7 +64,8 @@ export class AuthService {
         firstName: verifyUser.firstName,
         lastName: verifyUser.lastName,
         avatarPath: verifyUser.avatarPath,
-        refreshTokenHash: '',
+        password: 'email',
+        refreshTokenHash: ' ',
         isVerified: true,
       });
 
@@ -121,7 +123,7 @@ export class AuthService {
     };
   }
 
-  async register(dto: CreateUserDto) {
+  async register(dto: AuthRegisterDto) {
     const oldUser = await this.userRepository.findOneBy({ email: dto.email });
 
     if (oldUser) {
@@ -135,9 +137,27 @@ export class AuthService {
       email: dto.email,
       password: await hash(dto.password, salt),
       activationLink: activationLink,
+      refreshTokenHash: ' ',
     });
 
     const tokens = await this.getTokens(newUser.id, newUser.email);
+    await this.mailerService
+      .sendMail({
+        to: dto.email,
+
+        subject: 'Register',
+        template: './authTemplate',
+        context: {
+          link: `${process.env.ACTIVATE_GMAIL_LINK}${activationLink}`,
+          email: dto.email,
+        },
+      })
+      .catch((e) => {
+        throw new HttpException(
+          `Error: ${JSON.stringify(e)}`,
+          HttpStatus.UNPROCESSABLE_ENTITY,
+        );
+      });
 
     this.updateRt(newUser.id, tokens.refresh_token);
     const user = await this.userRepository.save(newUser);
@@ -176,6 +196,7 @@ export class AuthService {
     this.updateRt(user.id, tokens.refresh_token);
     res.cookie('tokenRefresh', tokens.refresh_token, {
       httpOnly: true,
+
       maxAge: Number(process.env.MAX_AGE_COOKIE_TOKEN),
     });
 

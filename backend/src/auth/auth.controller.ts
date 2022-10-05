@@ -25,7 +25,7 @@ import { RefreshTokenGuard } from './guards/refreshToken.guard';
 import { isPositive } from 'class-validator';
 import { GoogleOauthGuard } from './guards/googleToken.guard';
 import { OAuth2Client } from 'google-auth-library';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { AuthRegisterDto } from './dto/register.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -33,21 +33,7 @@ export class AuthController {
   [x: string]: any;
   constructor(private readonly authService: AuthService) {}
 
-  @UseGuards(GoogleOauthGuard)
-  @Get('google')
-  @UseGuards(AuthGuard('google'))
-  async googleAuth(@Req() req: Request) {
-    console.log('Done');
-  }
-
-  @Redirect(process.env.FRONTEND_URL)
-  @Get('google/callback')
-  @UseGuards(AuthGuard('google'))
-  googleAuthRedirect(@Req() req: Request, @Res() res: Response) {
-    return;
-  }
-
-  @Post('google/test')
+  @Post('google/auth')
   async googleTest(
     @Body('token') token: string,
     @Req() req: Request,
@@ -71,7 +57,7 @@ export class AuthController {
   @ApiResponse({ status: 201, type: UserEntity })
   @UsePipes(new ValidationPipe())
   @Post('register')
-  async register(@Body() dto: CreateUserDto) {
+  async register(@Body() dto: AuthRegisterDto) {
     return this.authService.register(dto);
   }
 
