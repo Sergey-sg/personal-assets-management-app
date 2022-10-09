@@ -1,16 +1,11 @@
 import { Typography } from 'components/common/Typography'
+import { useAppDispatch } from 'hooks/useAppDispatch'
 import React, { useState } from 'react'
 import { MdOutlineCancel, MdOutlineFilterList } from 'react-icons/md'
+import { filterBy } from 'redux/slice/invoiceServices/invoice.slice'
 
-const FilterMenu = (props: {
-  filterByDatePriceStatus: (arg0: {
-    minDate: string
-    maxDate: string
-    minPrice: string
-    maxPrice: string
-    status: string
-  }) => void
-}) => {
+const FilterMenu = () => {
+  const dispatch = useAppDispatch()
   const [showSidebar, setShowSidebar] = useState(false)
   const [filters, setFilters] = useState({
     minDate: '',
@@ -19,6 +14,16 @@ const FilterMenu = (props: {
     maxPrice: '',
     status: '',
   })
+
+  function filterByDatePriceStatus(filters: {
+    minDate: string
+    maxDate: string
+    minPrice: string
+    maxPrice: string
+    status: string
+  }) {
+    dispatch(filterBy(filters))
+  }
 
   function resetFilters() {
     const resetFilters = {
@@ -30,7 +35,7 @@ const FilterMenu = (props: {
     }
 
     setFilters(resetFilters)
-    props.filterByDatePriceStatus(resetFilters)
+    filterByDatePriceStatus(resetFilters)
   }
 
   return (
@@ -136,7 +141,7 @@ const FilterMenu = (props: {
 
             <div>
               <button
-                onClick={() => props.filterByDatePriceStatus(filters)}
+                onClick={() => filterByDatePriceStatus(filters)}
                 className="w-5/12 bg-green-light hover:bg-green-hover rounded-xl font-semibold text-base p-4 my-4 mx-3 text-text"
               >
                 filter

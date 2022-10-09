@@ -25,6 +25,38 @@ const removeInvoice = (invoiceId: number) => {
   return api.delete(`/invoices/${invoiceId}`)
 }
 
+export const fetchCreateInvoice = (invoice: IInvoice) => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      dispatch(resetError())
+      dispatch(resetSuccess())
+      dispatch(startLoading())
+
+      if (!invoice.billedTo || !invoice.dueDate || !invoice.invoiceDate) {
+        const errorMessage = `${!invoice.billedTo ? ' billedTo;' : ''}${
+          !invoice.dueDate ? ' dueDte;' : ''
+        }${!invoice.invoiceDate ? ' invoiceDate;' : ''}`
+
+        throw new Error(`Fields cannot be empty:${errorMessage}`)
+      }
+
+      const response = await createInvoice(invoice)
+
+      dispatch(updateInvoiceSuccess(response.data))
+      dispatch(successAction({ message: 'Invoice created successfully' }))
+    } catch (e) {
+      const axiosErr = e as AxiosError
+      const status = axiosErr.response?.status
+      const message = axiosErr.message
+
+      dispatch(errorOccurred({ statusCode: status, message: message }))
+      // dispatch(updateInvoiceFail())
+    } finally {
+      dispatch(stopLoading())
+    }
+  }
+}
+
 export const fetchAllInvoices = () => {
   return async (dispatch: AppDispatch) => {
     try {
@@ -59,38 +91,6 @@ export const fetchRemoveInvoice = (invoiceId: number) => {
       const message = axiosErr.message
 
       dispatch(errorOccurred({ statusCode: status, message: message }))
-    } finally {
-      dispatch(stopLoading())
-    }
-  }
-}
-
-export const fetchCreateInvoice = (invoice: IInvoice) => {
-  return async (dispatch: AppDispatch) => {
-    try {
-      dispatch(resetError())
-      dispatch(resetSuccess())
-      dispatch(startLoading())
-
-      if (!invoice.billedTo || !invoice.dueDate || !invoice.invoiceDate) {
-        const errorMessage = `${!invoice.billedTo ? ' billedTo;' : ''}${
-          !invoice.dueDate ? ' dueDte;' : ''
-        }${!invoice.invoiceDate ? ' invoiceDate;' : ''}`
-
-        throw new Error(`Fields cannot be empty:${errorMessage}`)
-      }
-
-      const response = await createInvoice(invoice)
-
-      dispatch(updateInvoiceSuccess(response.data))
-      dispatch(successAction({ message: 'Invoice created successfully' }))
-    } catch (e) {
-      const axiosErr = e as AxiosError
-      const status = axiosErr.response?.status
-      const message = axiosErr.message
-
-      dispatch(errorOccurred({ statusCode: status, message: message }))
-      // dispatch(updateInvoiceFail())
     } finally {
       dispatch(stopLoading())
     }
