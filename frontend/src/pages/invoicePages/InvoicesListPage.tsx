@@ -1,51 +1,26 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { RiSearchLine } from 'react-icons/ri'
 import { MdOutlineCancel, MdArrowDropDown, MdArrowDropUp } from 'react-icons/md'
 import { ReactComponent as CreateInvoiceIcon } from 'assets/icons/create_invoice.svg'
-import avatarTest from '../../assets/images/invoice_client.test.png'
 import DropDownActions from 'pages/invoicePages/invoice_componetns/DropDownActions'
 import { InvoiceStatus } from 'pages/invoicePages/invoice_componetns/statics'
 import FilterMenu from 'pages/invoicePages/invoice_componetns/FilterMenu'
 import { AppRoute } from 'common/enums/app-route.enum'
-
-const testInvoices = [
-  {
-    billedTo: {
-      name: 'test 1',
-      avatar: avatarTest,
-    },
-    id: 524874,
-    invoiceDate: '2022-09-22',
-    dueDate: '2022-10-27',
-    orders: 20,
-    total: 42084,
-    paid: false,
-  },
-  {
-    billedTo: {
-      name: 'Gadget Gallery LTD',
-      avatar: avatarTest,
-    },
-    id: 524567,
-    invoiceDate: '2022-09-23',
-    dueDate: '2022-09-27',
-    orders: 5,
-    total: 35467,
-    paid: false,
-  },
-  {
-    billedTo: {
-      name: 'Gadget Gallery LTD',
-      avatar: avatarTest,
-    },
-    id: 524467,
-    invoiceDate: '2022-09-21',
-    dueDate: '2022-09-27',
-    orders: 5,
-    total: 54678,
-    paid: true,
-  },
-]
+import {
+  fetchAllInvoices,
+  fetchRemoveInvoice,
+} from 'redux/slice/invoiceServices/invoiceActions'
+import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
+import { notifyError, notifySuccess } from 'components/common/notifications'
+import { resetError } from 'redux/slice/error/error.slice'
+import { resetSuccess } from 'redux/slice/success/success.slice'
+import { CONSTANTS } from 'shared/constants'
+import {
+  filterBy,
+  removeInvoiceSuccess,
+  searchInvoicesByUserNameAndId,
+  sortByDateInStore,
+} from 'redux/slice/invoiceServices/invoice.slice'
 
 function convertDate(dateString: string) {
   const date = new Intl.DateTimeFormat('en-GB', {
@@ -65,42 +40,40 @@ function convertDate(dateString: string) {
   )
 }
 
-function InvoicesPage() {
-  const [invoices, setInvoices] = useState(testInvoices)
-  const [outInvoices, setOutInvoices] = useState(invoices)
+function currentImagesPath(path: string) {
+  const currentPath = path.includes('MyFinance')
+    ? `${CONSTANTS.CLOUDINARY_FILE_STORAGE}${path}`
+    : path
+
+  return currentPath
+}
+
+function InvoicesListPage() {
+  const dispatch = useAppDispatch()
+  const invoices = useAppSelector((state) => state.invoices.outInvoices)
+  const error = useAppSelector((state) => state.error.message)
+  const success = useAppSelector((state) => state.success.message)
   const [searchString, setSearchString] = useState('')
-  const [firstNew, setFirstNew] = useState(true)
+  const [firstNew, setFirstNew] = useState(false)
+
+  useEffect(() => {
+    dispatch(fetchAllInvoices())
+    error && notifyError(error)
+    success && notifySuccess(success)
+    dispatch(resetError())
+    dispatch(resetSuccess())
+  }, [error, success])
 
   function searchInvoices() {
-    setOutInvoices(
-      invoices.filter(
-        (invoice) =>
-          invoice.billedTo.name
-            .toLowerCase()
-            .includes(searchString.toLowerCase()) ||
-          invoice.id.toString().includes(searchString),
-      ),
-    )
+    dispatch(searchInvoicesByUserNameAndId(searchString))
   }
 
   function removeInvoice(invoiceId: number) {
-    setInvoices(invoices.filter((invoice) => invoice.id !== invoiceId))
-    setOutInvoices(invoices.filter((invoice) => invoice.id !== invoiceId))
+    dispatch(fetchRemoveInvoice(invoiceId))
   }
 
   function sortByDate() {
-    setOutInvoices(
-      outInvoices.sort((a, b) => {
-        if (new Date(a.invoiceDate) > new Date(b.invoiceDate)) {
-          return firstNew ? -1 : 1
-        }
-        if (new Date(a.invoiceDate) < new Date(b.invoiceDate)) {
-          return firstNew ? 1 : -1
-        }
-
-        return 0
-      }),
-    )
+    dispatch(sortByDateInStore(firstNew))
   }
 
   function filterByDatePriceStatus(filters: {
@@ -110,49 +83,7 @@ function InvoicesPage() {
     maxPrice: string
     status: string
   }) {
-    let invoiceList = outInvoices.slice()
-
-    if (filters.status) {
-      invoiceList = invoiceList.filter((invoice) => {
-        const nowDate = new Date()
-        const dueDate = new Date(invoice.dueDate)
-        const statusInvoice = invoice.paid
-          ? 'Paid'
-          : nowDate < dueDate
-          ? 'Pending'
-          : 'Unpaid'
-
-        return filters.status === statusInvoice
-      })
-    }
-
-    if (filters.minDate || filters.maxDate) {
-      const minDate = filters.minDate
-        ? new Date(filters.minDate)
-        : new Date('1990-10-29')
-      const maxDate = filters.maxDate ? new Date(filters.maxDate) : new Date()
-
-      invoiceList = invoiceList.filter((invoice) => {
-        const invoiceDate = new Date(invoice.invoiceDate)
-
-        return invoiceDate >= minDate && invoiceDate <= maxDate
-      })
-    }
-
-    if (filters.minPrice || filters.maxPrice) {
-      if (filters.minPrice) {
-        invoiceList = invoiceList.filter(
-          (invoice) => invoice.total / 100 >= parseFloat(filters.minPrice),
-        )
-      }
-      if (filters.maxPrice) {
-        invoiceList = invoiceList.filter(
-          (invoice) => invoice.total / 100 <= parseFloat(filters.maxPrice),
-        )
-      }
-    }
-
-    setOutInvoices(invoiceList)
+    dispatch(filterBy(filters))
   }
 
   const HeaderInvoiceTable: React.FC = () => {
@@ -181,21 +112,11 @@ function InvoicesPage() {
     )
   }
 
-  const InvoicesList = (props: {
-    invoices: {
-      id: number
-      billedTo: { name: string; avatar: string }
-      invoiceDate: string
-      orders: number
-      total: number
-      paid: boolean
-      dueDate: string
-    }[]
-  }) => {
+  const InvoicesList = (props: any) => {
     return (
       <>
         {props.invoices.length !== 0 ? (
-          props.invoices.map((invoice) => (
+          props.invoices.map((invoice: any) => (
             <div
               key={invoice.id}
               className="container grid grid-cols-12 gap-4 text-left text-sm mb-4 font-medium text-text"
@@ -203,10 +124,10 @@ function InvoicesPage() {
               <div className="col-span-3 mt-2">
                 <img
                   className="float-left pr-4"
-                  src={invoice.billedTo.avatar}
-                  alt="client"
+                  src={currentImagesPath(invoice.billedTo.avatarPath)}
+                  alt={invoice.billedTo.email}
                 />
-                {invoice.billedTo.name}
+                {`${invoice.billedTo.firstName} ${invoice.billedTo.lastName}`}
                 <p className="text-xs text-text-ultralight font-normal">
                   Inv: MGL{invoice.id}
                 </p>
@@ -271,7 +192,7 @@ function InvoicesPage() {
             <div className="float-right">
               <button>
                 <a
-                  href={AppRoute.INVOICE_CREATE}
+                  href={`${AppRoute.INVOICES}/${AppRoute.INVOICE_CREATE}`}
                   className="flex justify-center bg-green-light hover:bg-green-hover rounded-xl font-semibold text-base p-4 my-4"
                 >
                   <CreateInvoiceIcon className="my-auto" />
@@ -288,10 +209,10 @@ function InvoicesPage() {
           </div>
         </div>
         <HeaderInvoiceTable />
-        <InvoicesList invoices={outInvoices} />
+        <InvoicesList invoices={invoices} />
       </div>
     </div>
   )
 }
 
-export default InvoicesPage
+export default InvoicesListPage

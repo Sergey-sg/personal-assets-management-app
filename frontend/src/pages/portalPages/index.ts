@@ -5,6 +5,15 @@ import MoneyBox from './MoneyBox'
 import Widgets from './Widgets'
 import Chats from './Chats'
 import Settings from './Settings'
-import InvoicesPage from './Invoices'
+import InvoicesListPage from 'pages/invoicePages/InvoicesListPage'
 
-export { Dashboard, Transactions, MyWallet, MoneyBox, Widgets, Chats, Settings, InvoicesPage }
+export {
+  Dashboard,
+  Transactions,
+  MyWallet,
+  MoneyBox,
+  Widgets,
+  Chats,
+  Settings,
+  InvoicesListPage,
+}

@@ -75,7 +75,7 @@ export class InvoicesController {
 
   @Delete('/:invoiceId')
   @ApiOperation({ summary: `deletes the order from the creator` })
-  async removeForCreator(
+  async removeInvoice(
     @User() currentUser: UserEntity,
     @Param('invoiceId') invoiceId: number,
   ): Promise<void> {

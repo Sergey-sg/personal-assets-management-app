@@ -6,11 +6,13 @@ import {
   successSlice,
   userProfileSlice,
 } from './slice'
+import invoiceSlice from './slice/invoiceServices/invoice.slice'
 
 export const store = configureStore({
   reducer: {
     authSlice,
     userProfile: userProfileSlice,
+    invoices: invoiceSlice,
     success: successSlice,
     error: errorSlice,
     loader: loaderSlice,
