@@ -1,4 +1,4 @@
-import { AxiosError } from 'axios'
+import { AxiosError, AxiosRequestConfig } from 'axios'
 import api from 'axios/axios'
 import { AppDispatch } from 'redux/store'
 import { errorOccurred, resetError } from '../error/error.slice'
@@ -20,9 +20,13 @@ const createInvoice = (invoiceData: IInvoice) => {
 }
 
 const removeInvoice = (invoiceId: number) => {
-  console.log(invoiceId)
-
   return api.delete(`/invoices/${invoiceId}`)
+}
+
+export const getUserByParams = async (params: any) => {
+  return await api
+    .post('/invoices/customer', params)
+    .then((response) => response.data)
 }
 
 export const fetchCreateInvoice = (invoice: IInvoice) => {
@@ -31,14 +35,6 @@ export const fetchCreateInvoice = (invoice: IInvoice) => {
       dispatch(resetError())
       dispatch(resetSuccess())
       dispatch(startLoading())
-
-      if (!invoice.billedTo || !invoice.dueDate || !invoice.invoiceDate) {
-        const errorMessage = `${!invoice.billedTo ? ' billedTo;' : ''}${
-          !invoice.dueDate ? ' dueDte;' : ''
-        }${!invoice.invoiceDate ? ' invoiceDate;' : ''}`
-
-        throw new Error(`Fields cannot be empty:${errorMessage}`)
-      }
 
       const response = await createInvoice(invoice)
 

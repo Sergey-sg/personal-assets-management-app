@@ -1,6 +1,10 @@
+import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
 import React, { useCallback, useState } from 'react'
 import ReactTextareaAutosize from 'react-textarea-autosize'
+import { getUserByParams } from 'redux/slice/invoiceServices/invoiceActions'
+import { number } from 'yup/lib/locale'
 import customer from '../../assets/images/customer_invoice.test.png'
+import { currentImagesPath } from './invoice_componetns/ListInvices'
 import {
   FooterItems,
   HeaderItems,
@@ -28,18 +32,12 @@ function ClientDetails(props: any) {
   const userFullName = billedTo.firstName
     ? `${billedTo.firstName} ${billedTo.lastName}`
     : billedTo.email
-  const userTest = {
-    firstName: 'Doe',
-    lastName: 'John',
-    email: 'doe@mail.com',
-    address: '27 Astronomichna street, Kharkiv, Ukraine',
-    phone: '+380680802212',
-    avatarPath: customer,
-  }
 
-  function getUser(params: any) {
-    setBilledTo(userTest)
-    props.setCustomer(userTest)
+  async function getUser(params: any) {
+    const user = await getUserByParams({ email: 'glushaksergey90@gmail.com' })
+
+    setBilledTo(user)
+    props.setCustomer(user)
   }
 
   return (
@@ -49,7 +47,7 @@ function ClientDetails(props: any) {
       </div>
       <img
         className="float-left px-5"
-        src={billedTo.avatarPath}
+        src={currentImagesPath(billedTo.avatarPath)}
         alt={userFullName}
       />
       <div className="columns-1">
@@ -182,6 +180,9 @@ function InputItem(props: {
 }
 
 const InvoiceCreatePage: React.FC = () => {
+  const dispatch = useAppDispatch()
+  const error = useAppSelector((state) => state.error.message)
+  const success = useAppSelector((state) => state.success.message)
   const [invoice, setInvoice] = useState({
     detail: '',
     total: 0,

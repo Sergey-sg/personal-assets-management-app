@@ -30,6 +30,7 @@ export const invoiceSlice = createSlice({
       invoices: [...state.invoices, action.payload],
       outInvoices: [...state.invoices, action.payload],
     }),
+    // updateInvoiceFail: () => {},
     removeInvoiceSuccess: (state, action) => {
       state.invoices = state.invoices.filter(
         (invoice) => invoice.id !== action.payload,

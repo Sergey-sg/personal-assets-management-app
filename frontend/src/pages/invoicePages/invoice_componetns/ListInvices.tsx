@@ -5,7 +5,7 @@ import { CONSTANTS } from 'shared/constants'
 import DropDownActions from './DropDownActions'
 import { InvoiceStatus } from './statics'
 
-function currentImagesPath(path: string) {
+export function currentImagesPath(path: string) {
   const currentPath = path.includes('MyFinance')
     ? `${CONSTANTS.CLOUDINARY_FILE_STORAGE}${path}`
     : path

@@ -165,4 +165,20 @@ export class InvoicesService {
       relations: { items: true, createdBy: true, billedTo: true },
     });
   }
+
+  public async findCustomerByParams(params: any) {
+    const user = await this.userRepository.findAndCount({
+      where: params,
+      select: ['id', 'firstName', 'lastName', 'email', 'address', 'avatarPath']
+    });
+
+    if (user[1] !== 1) {
+      throw new HttpException(
+        'You need to make a more precise request. This request is available to several users.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    return user[0][0];
+  }
 }

@@ -84,4 +84,12 @@ export class InvoicesController {
       currentUser,
     );
   }
+
+  @Post('/customer')
+  @ApiOperation({ summary: `get customer user by params` })
+  async getCustomerByParams(
+    @Body() params: any
+  ): Promise<UserEntity> {
+    return this.invoicesService.findCustomerByParams(params)
+  }
 }
