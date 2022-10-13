@@ -78,37 +78,6 @@ export function InvoiceInfoBaner(props: any) {
   )
 }
 
-export function FooterItems(props: any) {
-  return (
-    <div className="grid grid-cols-7 gap-4 font-semibold text-right">
-      <div className="col-span-4"></div>
-      <div className="col-span-3">
-        <div className="grid grid-cols-4 gap-4 p-3">
-          <div className="col-span-2">Subtotal</div>
-          <div className="col-span-2 mx-auto">${props.subTotal}</div>
-        </div>
-        <div className="grid grid-cols-4 gap-4 p-3">
-          <div className="col-span-2">Discount</div>
-          <button className="text-green-medium col-span-2 w-2/4 mx-auto">
-            Add
-          </button>
-        </div>
-        <div className="grid grid-cols-4 gap-4 p-3">
-          <div className="col-span-2">Tax</div>
-          <button className="text-green-medium col-span-2 w-2/4 mx-auto">
-            Add
-          </button>
-        </div>
-        <hr className="col-span-2 border-gray-border" />
-        <div className="grid grid-cols-4 gap-4 p-3">
-          <div className="col-span-2">Total</div>
-          <div className="col-span-2 mx-auto">${props.total}</div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 export const InvoiceStatus = (props: { dueDate: string; paid: boolean }) => {
   const nowDate = new Date()
   const dueDate = new Date(props.dueDate)
@@ -146,13 +115,13 @@ export function InvoiceItemsList(props: { items: any[] }) {
               {item.name}
             </div>
             <div className="text-center border border-gray-medium rounded-xl py-4 col-span-3">
-              {item.number}
+              {item.amount}
             </div>
             <div className="text-center border border-gray-medium rounded-xl py-4 col-span-2">
-              ${item.price}
+              ${item.price / 100}
             </div>
-            <div className="text-right border border-gray-medium rounded-xl p-4 col-span-2">
-              ${item.subTotal}
+            <div className="text-center border border-gray-medium rounded-xl p-4 col-span-2">
+              ${item.subTotal / 100}
             </div>
           </div>
           <br />

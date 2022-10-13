@@ -15,8 +15,8 @@ const getAllInvoices = () => {
   return api.get('/invoices')
 }
 
-const createInvoice = (invoiceData: IInvoice) => {
-  return api.post('/invoices')
+const createInvoice = async (invoice: any) => {
+  return await api.post('/invoices', invoice)
 }
 
 const removeInvoice = (invoiceId: number) => {
@@ -29,7 +29,7 @@ export const getUserByParams = async (params: any) => {
     .then((response) => response.data)
 }
 
-export const fetchCreateInvoice = (invoice: IInvoice) => {
+export const fetchCreateInvoice = (invoice: any) => {
   return async (dispatch: AppDispatch) => {
     try {
       dispatch(resetError())
@@ -38,12 +38,16 @@ export const fetchCreateInvoice = (invoice: IInvoice) => {
 
       const response = await createInvoice(invoice)
 
+      console.log(response.data)
+
       dispatch(updateInvoiceSuccess(response.data))
       dispatch(successAction({ message: 'Invoice created successfully' }))
     } catch (e) {
       const axiosErr = e as AxiosError
       const status = axiosErr.response?.status
       const message = axiosErr.message
+
+      console.log(e)
 
       dispatch(errorOccurred({ statusCode: status, message: message }))
       // dispatch(updateInvoiceFail())

@@ -9,7 +9,7 @@ export interface IInvoice {
   paid: boolean
   dueDate: string
   invoiceDate: string
-  invoiceDetails: string
+  details: string
   total: number
 }
 
