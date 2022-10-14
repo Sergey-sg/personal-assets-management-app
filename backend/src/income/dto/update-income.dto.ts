@@ -1,21 +1,33 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsDate,
+  IsEnum,
   IsInt,
   IsNotEmpty,
   IsOptional,
   IsPositive,
 } from 'class-validator';
+import { IncomeCategories } from '../enums/incomes-category.enum';
 
 export class UpdateIncomeDto {
   @ApiProperty({
-    example: 'My income',
-    description: 'Income category name',
+    example: 'salary',
+    description: 'Income category',
     required: false,
   })
   @IsOptional()
-  @IsNotEmpty({ message: `Income category name can't be empti` })
-  readonly category_name?: string;
+  @IsNotEmpty({ message: `Income category can't be empti` })
+  @IsEnum(IncomeCategories)
+  readonly category_name?: IncomeCategories;
+
+  @ApiProperty({
+    example: 'My income',
+    description: 'Income name',
+    required: false,
+  })
+  @IsOptional()
+  @IsNotEmpty({ message: `Income name can't be empti` })
+  readonly income_name?: string;
 
   @ApiProperty({
     example: 700,
@@ -35,13 +47,4 @@ export class UpdateIncomeDto {
   @IsOptional()
   @IsDate()
   readonly createdAt?: Date;
-
-  @ApiProperty({
-    example: '2022-09-07T10:22:15.300Z',
-    description: 'Income alternative date',
-    required: false,
-  })
-  @IsOptional()
-  @IsDate()
-  readonly alternative_date?: Date;
 }

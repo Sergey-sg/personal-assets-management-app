@@ -1,13 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
+  IsEnum,
   IsInt,
   IsNotEmpty,
   IsOptional,
   IsPositive,
 } from 'class-validator';
+import { CostsCategories } from '../enums/costs-category.enum';
 
 export class CreateCostDto {
+  @ApiProperty({ example: 'salary', description: 'Income category' })
+  @IsNotEmpty({ message: `Income category can't be empti` })
+  @IsEnum(CostsCategories)
+  readonly category_name: CostsCategories;
+
   @ApiProperty({ example: 'My cost', description: 'Cost name' })
   @IsNotEmpty({ message: `Cost name can't be empti` })
   readonly cost_name: string;

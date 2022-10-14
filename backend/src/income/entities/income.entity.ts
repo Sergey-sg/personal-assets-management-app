@@ -3,12 +3,21 @@ import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserEntity } from '../../user/entities/user.entity';
 import { Base } from 'src/common/dto/base.dto';
+import { IncomeCategories } from '../enums/incomes-category.enum';
 
 @Entity('income')
 export class IncomeEntity extends Base {
-  @ApiProperty({ example: 'My income', description: 'Income category name' })
+  @ApiProperty({ example: 'salary', description: 'Income category' })
+  @Column({
+    type: 'enum',
+    enum: IncomeCategories,
+    default: IncomeCategories.OTHER,
+  })
+  category_name: IncomeCategories;
+
+  @ApiProperty({ example: 'My income', description: 'Income name' })
   @Column({ type: 'varchar', length: 50 })
-  category_name: string;
+  income_name: string;
 
   @ApiProperty({
     example: 555,
@@ -30,14 +39,6 @@ export class IncomeEntity extends Base {
   )
   @JoinColumn({ name: 'from_user_id' })
   from_user: UserEntity;
-
-  @ApiProperty({
-    example: '2022-09-07T11:44:17.300Z',
-    description: 'Income create date',
-  })
-  @ApiProperty({ example: null, description: 'Income alternative date' })
-  @Column({ type: 'date', default: null, nullable: true })
-  alternative_date: Date;
 
   @ManyToOne(() => WalletEntity, (wallet: WalletEntity) => wallet.income, {
     onDelete: 'CASCADE',
