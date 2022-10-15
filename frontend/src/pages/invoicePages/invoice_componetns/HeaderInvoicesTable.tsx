@@ -1,24 +1,22 @@
-import { useAppDispatch } from 'hooks/useAppDispatch'
-import React, { useState } from 'react'
+import React from 'react'
 import { MdArrowDropDown, MdArrowDropUp } from 'react-icons/md'
-import { sortByDateInStore } from 'redux/slice/invoiceServices/invoice.slice'
 
-export const HeaderInvoicesTable: React.FC = () => {
-  const [firstNew, setFirstNew] = useState(false)
-  const dispatch = useAppDispatch()
-
+export const HeaderInvoicesTable = (props: any) => {
   return (
     <div className="container grid grid-cols-12 gap-4 text-left text-xs mb-5 text-text-ultralight">
       <div className="col-span-3">NAME/CLIENT</div>
       <button
         className="col-span-2"
         onClick={() => {
-          setFirstNew(!firstNew)
-          dispatch(sortByDateInStore(firstNew))
+          props.setFirstNew(!props.firstNew)
         }}
       >
         <span className="float-left">DATE</span>
-        {firstNew ? <MdArrowDropUp size={16} /> : <MdArrowDropDown size={16} />}
+        {props.firstNew ? (
+          <MdArrowDropUp size={16} />
+        ) : (
+          <MdArrowDropDown size={16} />
+        )}
       </button>
       <div className="col-span-2">ORDERS/TYPE</div>
       <div className="col-span-2">TOTAL</div>

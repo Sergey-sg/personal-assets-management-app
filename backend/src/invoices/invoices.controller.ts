@@ -11,6 +11,7 @@ import {
 import {
   Body,
   Param,
+  Query,
 } from '@nestjs/common/decorators/http/route-params.decorator';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AccessTokenGuard } from '../auth/guards/accessToken.guard';
@@ -41,8 +42,9 @@ export class InvoicesController {
   @ApiResponse({ status: HttpStatus.OK, type: [InvoiceEntity] })
   async getAllInvoices(
     @User() currentUser: UserEntity,
+    @Query() filters: any,
   ): Promise<InvoiceDto[]> {
-    return this.invoicesService.getAllInvoicesForUser(currentUser);
+    return this.invoicesService.getAllInvoicesForUser(currentUser, filters);
   }
 
   @Get('/:invoiceId')

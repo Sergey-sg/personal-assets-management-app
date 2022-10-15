@@ -5,14 +5,19 @@ import { errorOccurred, resetError } from '../error/error.slice'
 import { startLoading, stopLoading } from '../loader/loader.slice'
 import { resetSuccess, successAction } from '../success/success.slice'
 import {
-  IInvoice,
   updateInvoiceSuccess,
   initialInvoices,
   removeInvoiceSuccess,
 } from './invoice.slice'
 
-const getAllInvoices = () => {
-  return api.get('/invoices')
+const getAllInvoices = (filters: any) => {
+  const queryParams = Object.keys(filters).map((key: string) =>
+    filters[key as keyof typeof filters]
+      ? `${key}=${filters[key as keyof typeof filters]}`
+      : '',
+  )
+
+  return api.get(`/invoices?${queryParams.join('&')}`)
 }
 
 const createInvoice = async (invoice: any) => {
@@ -50,19 +55,18 @@ export const fetchCreateInvoice = (invoice: any) => {
       console.log(e)
 
       dispatch(errorOccurred({ statusCode: status, message: message }))
-      // dispatch(updateInvoiceFail())
     } finally {
       dispatch(stopLoading())
     }
   }
 }
 
-export const fetchAllInvoices = () => {
+export const fetchAllInvoices = (filters: any) => {
   return async (dispatch: AppDispatch) => {
     try {
       dispatch(resetError())
       dispatch(startLoading())
-      const response = await getAllInvoices()
+      const response = await getAllInvoices(filters)
 
       dispatch(initialInvoices(response.data))
     } catch (e) {

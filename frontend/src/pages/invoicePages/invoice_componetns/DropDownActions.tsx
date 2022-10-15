@@ -1,13 +1,16 @@
 import React, { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
+import { AppRoute } from 'common/enums/app-route.enum'
+import { useAppSelector } from 'hooks/useAppDispatch'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function DropDownActions(props: {
-  removeInvoice: React.MouseEventHandler<HTMLAnchorElement> | undefined
-}) {
+export default function DropDownActions(props: any) {
+  const dateNow = new Date()
+  const currenUser = useAppSelector((state) => state.userProfile)
+
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
@@ -27,36 +30,42 @@ export default function DropDownActions(props: {
       >
         <Menu.Items className="absolute right-0 z-10 mt-2 w-56 px-4 origin-top-right rounded-md bg-gray-medium shadow-lg ring-1 ring-text ring-opacity-5 focus:outline-none">
           <div className="py-1">
-            <Menu.Item>
-              {({ active }) => (
-                <a
-                  href="#"
-                  className={classNames(
-                    active
-                      ? 'bg-gray-medium text-gray-default'
-                      : 'text-text-light',
-                    'block px-4 py-2 text-sm',
+            {!props.paid && props.createdByEmail === currenUser.email && (
+              <Menu.Item>
+                {({ active }) => (
+                  <a
+                    href={`${AppRoute.INVOICES}/${AppRoute.INVOICE_UPDATE}/${props.invoiceId}`}
+                    className={classNames(
+                      active
+                        ? 'bg-gray-medium text-gray-default'
+                        : 'text-text-light',
+                      'block px-4 py-2 text-sm',
+                    )}
+                  >
+                    Update
+                  </a>
+                )}
+              </Menu.Item>
+            )}
+            {!props.paid &&
+              props.createdByEmail !== currenUser.email &&
+              dateNow < new Date(props.dueDate) && (
+                <Menu.Item>
+                  {({ active }) => (
+                    <a
+                      href="#"
+                      className={classNames(
+                        active
+                          ? 'bg-gray-medium text-gray-default'
+                          : 'text-text-light',
+                        'block px-4 py-2 text-sm',
+                      )}
+                    >
+                      Paid
+                    </a>
                   )}
-                >
-                  Update
-                </a>
+                </Menu.Item>
               )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <a
-                  href="#"
-                  className={classNames(
-                    active
-                      ? 'bg-gray-medium text-gray-default'
-                      : 'text-text-light',
-                    'block px-4 py-2 text-sm',
-                  )}
-                >
-                  Paid
-                </a>
-              )}
-            </Menu.Item>
             <Menu.Item>
               {({ active }) => (
                 <a

@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../user/entities/user.entity';
-import { DataSource, EntityManager, Repository } from 'typeorm';
+import { Between, DataSource, EntityManager, ILike, In, LessThan, LessThanOrEqual, Like, MoreThan, MoreThanOrEqual, Raw, Repository } from 'typeorm';
 import { InvoiceDto } from './dto/invoice.dto';
 import { InvoiceEntity } from './entities/invoice.entity';
 import { InvoiceItemEntity } from './entities/invoiceItem.entity';
@@ -70,6 +70,41 @@ export class InvoicesService {
         HttpStatus.BAD_REQUEST,
       );
     }
+  }
+
+  private getParamsForFilters(filters: any) {
+    const params = {};
+    if (filters.search) {
+      if (parseInt(filters.search)) {
+        params['id'] = In([filters.search]);
+      } else if (filters.search.includes('@')) {
+        params['billedTo'] = {email: ILike(filters.search)};
+      } else {
+        params['billedTo'] = [{firstName: ILike(In(filters.search.split(' ')))}, {lastName: ILike(In(filters.search.split(' ')))}];
+      }
+    }
+    if (filters.minDate || filters.maxDate) {
+      params['invoiceDate'] = Between(filters.minDate? new Date(filters.minDate) : new Date('1990-01-01'), filters.maxDate? new Date(filters.maxDate) : new Date);
+    }
+    if (filters.minPrice || filters.maxPrice) {
+      params['total'] = Between(filters.minPrice? parseInt(filters.minPrice) : 0, filters.maxPrice? parseInt(filters.maxPrice) : 1000000000);
+    }
+    if (filters.status) {
+      switch(filters.status) {
+        case 'paid':
+          params['paid'] = true;
+          break;
+        case 'unpaid':
+          params['dueDate'] = LessThanOrEqual(new Date);
+          params['paid'] = false;
+          break;
+        case 'pending':
+          params['dueDate'] = MoreThanOrEqual(new Date);
+          params['paid'] = false; 
+          break;
+      }
+    }
+    return params;
   }
 
   public async createInvoice(
@@ -157,13 +192,14 @@ export class InvoicesService {
     );
   }
 
-  public async getAllInvoicesForUser(currentUser: UserEntity) {
-    return await this.invoiceRepository.find({
-      where: [
-        { displayForUsers: {id: currentUser.id} },
-      ],
+  public async getAllInvoicesForUser(currentUser: UserEntity, filters: any) {    
+    const params = this.getParamsForFilters(filters);
+    const listInvoices = await this.invoiceRepository.find({
+      where: {displayForUsers: {id: currentUser.id}, ...params},
       relations: { items: true, createdBy: true, billedTo: true },
+      order: {invoiceDate: filters.firstNew? 'DESC' : 'ASC' }
     });
+    return listInvoices;
   }
 
   public async findCustomerByParams(params: any) {

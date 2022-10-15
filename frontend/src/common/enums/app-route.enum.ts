@@ -12,6 +12,7 @@ enum AppRoute {
   CHATS = 'chats',
   SETTINGS = 'settings',
   INVOICE_CREATE = 'new-invoice',
+  INVOICE_UPDATE = 'update-invoice',
 }
 
 export { AppRoute }

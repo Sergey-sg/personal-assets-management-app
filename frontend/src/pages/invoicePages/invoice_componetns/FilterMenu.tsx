@@ -1,29 +1,16 @@
 import { Typography } from 'components/common/Typography'
-import { useAppDispatch } from 'hooks/useAppDispatch'
 import React, { useState } from 'react'
 import { MdOutlineCancel, MdOutlineFilterList } from 'react-icons/md'
-import { filterBy } from 'redux/slice/invoiceServices/invoice.slice'
 
-const FilterMenu = () => {
-  const dispatch = useAppDispatch()
+function FilterMenu(props: any) {
   const [showSidebar, setShowSidebar] = useState(false)
   const [filters, setFilters] = useState({
-    minDate: '',
-    maxDate: '',
-    minPrice: '',
-    maxPrice: '',
-    status: '',
+    minDate: props.filters.minDate,
+    maxDate: props.filters.maxDate,
+    minPrice: props.filters.minPrice,
+    maxPrice: props.filters.maxPrice,
+    status: props.filters.status,
   })
-
-  function filterByDatePriceStatus(filters: {
-    minDate: string
-    maxDate: string
-    minPrice: string
-    maxPrice: string
-    status: string
-  }) {
-    dispatch(filterBy(filters))
-  }
 
   function resetFilters() {
     const resetFilters = {
@@ -35,7 +22,7 @@ const FilterMenu = () => {
     }
 
     setFilters(resetFilters)
-    filterByDatePriceStatus(resetFilters)
+    props.setFilters(resetFilters)
   }
 
   return (
@@ -70,7 +57,7 @@ const FilterMenu = () => {
           </Typography>
           <div className="scroll-auto">
             <ul className="items-center w-full text-sm font-medium text-text-ultralight bg-white rounded-lg border border-gray-light sm:flex mb-4">
-              {['Unpaid', 'Paid', 'Pending'].map((statusInvoice: string) => (
+              {['unpaid', 'paid', 'pending'].map((statusInvoice: string) => (
                 <li key={statusInvoice} className="w-full">
                   <div className="flex items-center pl-3">
                     <input
@@ -127,12 +114,20 @@ const FilterMenu = () => {
                     <input
                       onChange={(e) => {
                         min
-                          ? setFilters({ ...filters, minPrice: e.target.value })
-                          : setFilters({ ...filters, maxPrice: e.target.value })
+                          ? setFilters({
+                              ...filters,
+                              minPrice: parseFloat(e.target.value) * 100,
+                            })
+                          : setFilters({
+                              ...filters,
+                              maxPrice: parseFloat(e.target.value) * 100,
+                            })
                       }}
                       className="w-full border border-gray-light rounded-xl p-2 focus:outline-none focus:border-green-hover focus:ring-green-hover focus:ring-0"
                       type={'number'}
-                      value={min ? filters.minPrice : filters.maxPrice}
+                      value={
+                        min ? filters.minPrice / 100 : filters.maxPrice / 100
+                      }
                     />
                   </div>
                 </li>
@@ -141,7 +136,7 @@ const FilterMenu = () => {
 
             <div>
               <button
-                onClick={() => filterByDatePriceStatus(filters)}
+                onClick={() => props.setFilters(filters)}
                 className="w-5/12 bg-green-light hover:bg-green-hover rounded-xl font-semibold text-base p-4 my-4 mx-3 text-text"
               >
                 filter

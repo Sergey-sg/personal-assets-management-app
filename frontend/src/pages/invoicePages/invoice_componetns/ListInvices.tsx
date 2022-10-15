@@ -33,7 +33,7 @@ function convertDate(dateString: string) {
 
 export const InvoicesList = () => {
   const dispatch = useAppDispatch()
-  const invoices = useAppSelector((state) => state.invoices.outInvoices)
+  const invoices = useAppSelector((state) => state.invoices.invoices)
 
   function removeInvoice(invoiceId: number) {
     dispatch(fetchRemoveInvoice(invoiceId))
@@ -68,7 +68,13 @@ export const InvoicesList = () => {
               ${invoice.total / 100}
             </div>
             <InvoiceStatus paid={invoice.paid} dueDate={invoice.dueDate} />
-            <DropDownActions removeInvoice={() => removeInvoice(invoice.id)} />
+            <DropDownActions
+              removeInvoice={() => removeInvoice(invoice.id)}
+              invoiceId={invoice.id}
+              paid={invoice.paid}
+              dueDate={invoice.dueDate}
+              createdByEmail={invoice.createdBy.email}
+            />
           </div>
         ))
       ) : (

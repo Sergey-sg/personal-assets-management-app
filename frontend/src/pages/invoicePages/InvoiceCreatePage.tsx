@@ -13,7 +13,7 @@ import {
   MagloBaner,
 } from './invoice_componetns/statics'
 
-const sum = (obj: any) => {
+export const sum = (obj: any) => {
   return Object.keys(obj).reduce(
     (sum, key) => sum + (parseFloat(obj[key] || 0) * 100) / 100,
     0,
@@ -98,6 +98,7 @@ const InvoiceCreatePage: React.FC = () => {
                 setInvoice({ ...invoice, invoiceDetails: e.target.value })
               }
               value={invoice.invoiceDetails}
+              maxLength={500}
             />
             <br />
             <br />

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { ReactComponent as CreateInvoiceIcon } from 'assets/icons/create_invoice.svg'
 import FilterMenu from 'pages/invoicePages/invoice_componetns/FilterMenu'
 import { AppRoute } from 'common/enums/app-route.enum'
@@ -10,25 +10,61 @@ import { resetSuccess } from 'redux/slice/success/success.slice'
 import { InvoicesList } from './invoice_componetns/ListInvices'
 import { HeaderInvoicesTable } from './invoice_componetns/HeaderInvoicesTable'
 import { SearchInvoices } from './invoice_componetns/SearchInvoices'
+import { useLocation, useSearchParams } from 'react-router-dom'
 
 function InvoicesListPage() {
   const dispatch = useAppDispatch()
   const error = useAppSelector((state) => state.error.message)
   const success = useAppSelector((state) => state.success.message)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [filters, setFilters] = useState(() => {
+    const queryParams = new URLSearchParams(useLocation().search)
+    const filters = {
+      search: queryParams.get('search') ? queryParams.get('search') : '',
+      firstNew: queryParams.get('firstNew') ? true : false,
+      minDate: queryParams.get('minDate') ? queryParams.get('minDate') : '',
+      maxDate: queryParams.get('maxDate') ? queryParams.get('maxDate') : '',
+      minPrice: queryParams.get('minPrice') ? queryParams.get('minPrice') : '',
+      maxPrice: queryParams.get('maxPrice') ? queryParams.get('maxPrice') : '',
+      status: queryParams.get('status') ? queryParams.get('status') : '',
+    }
+
+    return filters
+  })
 
   useEffect(() => {
-    dispatch(fetchAllInvoices())
+    dispatch(fetchAllInvoices(filters))
     error && notifyError(error)
     success && notifySuccess(success)
     dispatch(resetError())
     dispatch(resetSuccess())
-  }, [error, success])
+  }, [error, success, filters])
+
+  const getInvoicesWithFilters = useCallback(
+    (newFilters: any) => {
+      const currentFilters = { ...filters, ...newFilters }
+      const queryParams = Object.keys(currentFilters).map((key: string) =>
+        currentFilters[key as keyof typeof currentFilters]
+          ? `${key}=${currentFilters[key as keyof typeof currentFilters]}`
+          : '',
+      )
+
+      setFilters(currentFilters)
+      setSearchParams(`${queryParams.join('&')}`)
+    },
+    [filters, searchParams],
+  )
 
   return (
     <div className="container mx-auto mb-10">
       <div className="container">
         <div className="container grid grid-cols-12 gap-4 mb-4 w-full">
-          <SearchInvoices />
+          <SearchInvoices
+            setSearchString={(searchString: string) =>
+              getInvoicesWithFilters({ search: searchString })
+            }
+            searcheString={filters.search}
+          />
           <div className="col-span-8">
             <div className="float-right">
               <button>
@@ -40,11 +76,19 @@ function InvoicesListPage() {
                   <span className="pl-3 lg:block hidden">Create Invoice</span>
                 </a>
               </button>
-              <FilterMenu />
+              <FilterMenu
+                setFilters={(filters: any) => getInvoicesWithFilters(filters)}
+                filters={filters}
+              />
             </div>
           </div>
         </div>
-        <HeaderInvoicesTable />
+        <HeaderInvoicesTable
+          setFirstNew={(firstNew: boolean) =>
+            getInvoicesWithFilters({ firstNew: firstNew })
+          }
+          firstNew={filters.firstNew}
+        />
         <InvoicesList />
       </div>
     </div>
