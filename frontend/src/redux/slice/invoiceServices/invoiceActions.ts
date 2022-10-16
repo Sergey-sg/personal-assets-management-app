@@ -3,19 +3,23 @@ import api from 'axios/axios'
 import { AppDispatch } from 'redux/store'
 import { errorOccurred, resetError } from '../error/error.slice'
 import { startLoading, stopLoading } from '../loader/loader.slice'
+import { setPagination } from '../pagination/pagination.slice'
 import { resetSuccess, successAction } from '../success/success.slice'
 import {
   updateInvoiceSuccess,
   initialInvoices,
   removeInvoiceSuccess,
+  addNewPageOfInvoices,
 } from './invoice.slice'
 
 const getAllInvoices = (filters: any) => {
-  const queryParams = Object.keys(filters).map((key: string) =>
-    filters[key as keyof typeof filters]
-      ? `${key}=${filters[key as keyof typeof filters]}`
-      : '',
-  )
+  const queryParams = Object.keys(filters)
+    .map((key: string) =>
+      filters[key as keyof typeof filters]
+        ? `${key}=${filters[key as keyof typeof filters]}`
+        : '',
+    )
+    .filter((param) => (param ? true : false))
 
   return api.get(`/invoices?${queryParams.join('&')}`)
 }
@@ -43,16 +47,12 @@ export const fetchCreateInvoice = (invoice: any) => {
 
       const response = await createInvoice(invoice)
 
-      console.log(response.data)
-
       dispatch(updateInvoiceSuccess(response.data))
       dispatch(successAction({ message: 'Invoice created successfully' }))
     } catch (e) {
       const axiosErr = e as AxiosError
       const status = axiosErr.response?.status
       const message = axiosErr.message
-
-      console.log(e)
 
       dispatch(errorOccurred({ statusCode: status, message: message }))
     } finally {
@@ -68,7 +68,29 @@ export const fetchAllInvoices = (filters: any) => {
       dispatch(startLoading())
       const response = await getAllInvoices(filters)
 
-      dispatch(initialInvoices(response.data))
+      dispatch(initialInvoices(response.data.data))
+      dispatch(setPagination(response.data.meta))
+    } catch (e) {
+      const axiosErr = e as AxiosError
+      const status = axiosErr.response?.status
+      const message = axiosErr.message
+
+      dispatch(errorOccurred({ statusCode: status, message: message }))
+    } finally {
+      dispatch(stopLoading())
+    }
+  }
+}
+
+export const fetchLoadNextPageInvoices = (filters: any) => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      dispatch(resetError())
+      dispatch(startLoading())
+      const response = await getAllInvoices(filters)
+
+      dispatch(addNewPageOfInvoices(response.data.data))
+      dispatch(setPagination(response.data.meta))
     } catch (e) {
       const axiosErr = e as AxiosError
       const status = axiosErr.response?.status

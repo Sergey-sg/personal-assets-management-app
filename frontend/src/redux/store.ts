@@ -7,12 +7,14 @@ import {
   userProfileSlice,
 } from './slice'
 import invoiceSlice from './slice/invoiceServices/invoice.slice'
+import paginationSlice from './slice/pagination/pagination.slice'
 
 export const store = configureStore({
   reducer: {
     authSlice,
     userProfile: userProfileSlice,
     invoices: invoiceSlice,
+    pagination: paginationSlice,
     success: successSlice,
     error: errorSlice,
     loader: loaderSlice,

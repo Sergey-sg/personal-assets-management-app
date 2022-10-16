@@ -20,6 +20,8 @@ import { InvoiceEntity } from './entities/invoice.entity';
 import { InvoicesService } from './invoices.service';
 import { UserEntity } from 'src/user/entities/user.entity';
 import { User } from 'src/user/decorators/user.decorator';
+import { PageDto } from 'src/pagination/dto/page.dto';
+import { PageOptionsDto } from 'src/pagination/dto/pageOptionsDto';
 
 @ApiTags('Invoices')
 @UseGuards(AccessTokenGuard)
@@ -43,8 +45,9 @@ export class InvoicesController {
   async getAllInvoices(
     @User() currentUser: UserEntity,
     @Query() filters: any,
-  ): Promise<InvoiceDto[]> {
-    return this.invoicesService.getAllInvoicesForUser(currentUser, filters);
+  ): Promise<PageDto<InvoiceDto>> {
+    const pageOptionsDto = new PageOptionsDto({page: filters.page, take: filters.take})
+    return this.invoicesService.getAllInvoicesForUser(currentUser, filters, pageOptionsDto);
   }
 
   @Get('/:invoiceId')

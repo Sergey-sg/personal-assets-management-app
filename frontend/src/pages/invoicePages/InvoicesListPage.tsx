@@ -2,7 +2,10 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { ReactComponent as CreateInvoiceIcon } from 'assets/icons/create_invoice.svg'
 import FilterMenu from 'pages/invoicePages/invoice_componetns/FilterMenu'
 import { AppRoute } from 'common/enums/app-route.enum'
-import { fetchAllInvoices } from 'redux/slice/invoiceServices/invoiceActions'
+import {
+  fetchAllInvoices,
+  fetchLoadNextPageInvoices,
+} from 'redux/slice/invoiceServices/invoiceActions'
 import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
 import { notifyError, notifySuccess } from 'components/common/notifications'
 import { resetError } from 'redux/slice/error/error.slice'
@@ -12,28 +15,37 @@ import { HeaderInvoicesTable } from './invoice_componetns/HeaderInvoicesTable'
 import { SearchInvoices } from './invoice_componetns/SearchInvoices'
 import { useLocation, useSearchParams } from 'react-router-dom'
 
-function InvoicesListPage() {
+const InvoicesListPage = () => {
   const dispatch = useAppDispatch()
   const error = useAppSelector((state) => state.error.message)
   const success = useAppSelector((state) => state.success.message)
   const [searchParams, setSearchParams] = useSearchParams()
-  const [filters, setFilters] = useState(() => {
-    const queryParams = new URLSearchParams(useLocation().search)
-    const filters = {
-      search: queryParams.get('search') ? queryParams.get('search') : '',
-      firstNew: queryParams.get('firstNew') ? true : false,
-      minDate: queryParams.get('minDate') ? queryParams.get('minDate') : '',
-      maxDate: queryParams.get('maxDate') ? queryParams.get('maxDate') : '',
-      minPrice: queryParams.get('minPrice') ? queryParams.get('minPrice') : '',
-      maxPrice: queryParams.get('maxPrice') ? queryParams.get('maxPrice') : '',
-      status: queryParams.get('status') ? queryParams.get('status') : '',
-    }
-
-    return filters
+  const pagination = useAppSelector((state) => state.pagination.pagination)
+  const queryParamsFromUrl = new URLSearchParams(useLocation().search)
+  const [filters, setFilters] = useState({
+    search: queryParamsFromUrl.get('search')
+      ? queryParamsFromUrl.get('search')
+      : '',
+    firstNew: queryParamsFromUrl.get('firstNew') ? true : false,
+    minDate: queryParamsFromUrl.get('minDate')
+      ? queryParamsFromUrl.get('minDate')
+      : '',
+    maxDate: queryParamsFromUrl.get('maxDate')
+      ? queryParamsFromUrl.get('maxDate')
+      : '',
+    minPrice: queryParamsFromUrl.get('minPrice')
+      ? queryParamsFromUrl.get('minPrice')
+      : '',
+    maxPrice: queryParamsFromUrl.get('maxPrice')
+      ? queryParamsFromUrl.get('maxPrice')
+      : '',
+    status: queryParamsFromUrl.get('status')
+      ? queryParamsFromUrl.get('status')
+      : '',
   })
 
   useEffect(() => {
-    dispatch(fetchAllInvoices(filters))
+    dispatch(fetchAllInvoices({ ...filters, page: 1, take: pagination.take }))
     error && notifyError(error)
     success && notifySuccess(success)
     dispatch(resetError())
@@ -43,16 +55,18 @@ function InvoicesListPage() {
   const getInvoicesWithFilters = useCallback(
     (newFilters: any) => {
       const currentFilters = { ...filters, ...newFilters }
-      const queryParams = Object.keys(currentFilters).map((key: string) =>
-        currentFilters[key as keyof typeof currentFilters]
-          ? `${key}=${currentFilters[key as keyof typeof currentFilters]}`
-          : '',
-      )
+      const queryParams = Object.keys(currentFilters)
+        .map((key: string) =>
+          currentFilters[key as keyof typeof currentFilters]
+            ? `${key}=${currentFilters[key as keyof typeof currentFilters]}`
+            : '',
+        )
+        .filter((param) => (param ? true : false))
 
       setFilters(currentFilters)
       setSearchParams(`${queryParams.join('&')}`)
     },
-    [filters, searchParams],
+    [filters, searchParams, pagination],
   )
 
   return (
@@ -89,7 +103,7 @@ function InvoicesListPage() {
           }
           firstNew={filters.firstNew}
         />
-        <InvoicesList />
+        <InvoicesList filters={filters} />
       </div>
     </div>
   )

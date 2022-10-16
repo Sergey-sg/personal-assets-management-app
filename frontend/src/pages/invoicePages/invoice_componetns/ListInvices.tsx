@@ -1,9 +1,13 @@
 import React from 'react'
 import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
-import { fetchRemoveInvoice } from 'redux/slice/invoiceServices/invoiceActions'
+import {
+  fetchLoadNextPageInvoices,
+  fetchRemoveInvoice,
+} from 'redux/slice/invoiceServices/invoiceActions'
 import { CONSTANTS } from 'shared/constants'
 import DropDownActions from './DropDownActions'
 import { InvoiceStatus } from './statics'
+import { fetchSetPagination } from 'redux/slice/pagination/paginationActions'
 
 export function currentImagesPath(path: string) {
   const currentPath = path.includes('MyFinance')
@@ -31,9 +35,10 @@ function convertDate(dateString: string) {
   )
 }
 
-export const InvoicesList = () => {
+export const InvoicesList = (props: any) => {
   const dispatch = useAppDispatch()
   const invoices = useAppSelector((state) => state.invoices.invoices)
+  const pagination = useAppSelector((state) => state.pagination.pagination)
 
   function removeInvoice(invoiceId: number) {
     dispatch(fetchRemoveInvoice(invoiceId))
@@ -62,7 +67,7 @@ export const InvoicesList = () => {
               {convertDate(invoice.invoiceDate)}
             </div>
             <div className="col-span-2 text-text-ultralight mt-2">
-              {invoice.orders}
+              {invoice.type}
             </div>
             <div className="col-span-2 font-bold mt-2">
               ${invoice.total / 100}
@@ -79,6 +84,25 @@ export const InvoicesList = () => {
         ))
       ) : (
         <div>There are no invoices here yet</div>
+      )}
+      {pagination.hasNextPage && (
+        <button
+          className="container bg-green-light hover:bg-green-hover rounded-xl font-semibold text-base p-3 mt-8 mb-4"
+          onClick={() => {
+            const page = parseInt(pagination.page.toString()) + 1 //  otherwise, the typescript does plus as a string and does not allow it to lead to a number
+
+            dispatch(fetchSetPagination({ ...pagination, page: page }))
+            dispatch(
+              fetchLoadNextPageInvoices({
+                ...props.filters,
+                page: page,
+                take: pagination.take,
+              }),
+            )
+          }}
+        >
+          Load More
+        </button>
       )}
     </>
   )

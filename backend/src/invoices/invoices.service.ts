@@ -6,6 +6,9 @@ import { InvoiceDto } from './dto/invoice.dto';
 import { InvoiceEntity } from './entities/invoice.entity';
 import { InvoiceItemEntity } from './entities/invoiceItem.entity';
 import { InvoiceItemDto } from './dto/invoiceItem.dto';
+import { PageOptionsDto } from 'src/pagination/dto/pageOptionsDto';
+import { PageDto } from 'src/pagination/dto/page.dto';
+import { PageMetaDto } from 'src/pagination/dto/page-meta.dto';
 
 @Injectable()
 export class InvoicesService {
@@ -192,14 +195,22 @@ export class InvoicesService {
     );
   }
 
-  public async getAllInvoicesForUser(currentUser: UserEntity, filters: any) {    
+  public async getAllInvoicesForUser(
+    currentUser: UserEntity, 
+    filters: any,
+    pageOptionsDto: PageOptionsDto  
+  ): Promise<PageDto<InvoiceDto>> {   
     const params = this.getParamsForFilters(filters);
-    const listInvoices = await this.invoiceRepository.find({
+    const listInvoices = await this.invoiceRepository.findAndCount({
       where: {displayForUsers: {id: currentUser.id}, ...params},
       relations: { items: true, createdBy: true, billedTo: true },
-      order: {invoiceDate: filters.firstNew? 'DESC' : 'ASC' }
+      order: {invoiceDate: filters.firstNew? 'DESC' : 'ASC' },
+      skip: pageOptionsDto.skip,
+      take: pageOptionsDto.take
     });
-    return listInvoices;
+    const pageMetaDto = new PageMetaDto({ pageOptionsDto: pageOptionsDto, itemCount: listInvoices[1] });
+    const pageDto = new PageDto(listInvoices[0], pageMetaDto);
+    return pageDto;
   }
 
   public async findCustomerByParams(params: any) {

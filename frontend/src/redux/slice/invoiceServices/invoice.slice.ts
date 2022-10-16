@@ -25,6 +25,9 @@ export const invoiceSlice = createSlice({
     updateInvoiceSuccess: (state, action: PayloadAction<IInvoice>) => ({
       invoices: [...state.invoices, action.payload],
     }),
+    addNewPageOfInvoices: (state, action: PayloadAction<IInvoice[]>) => ({
+      invoices: [...state.invoices, ...action.payload],
+    }),
     // updateInvoiceFail: () => {},
     removeInvoiceSuccess: (state, action) => {
       state.invoices = state.invoices.filter(
@@ -34,7 +37,11 @@ export const invoiceSlice = createSlice({
   },
 })
 
-export const { updateInvoiceSuccess, removeInvoiceSuccess, initialInvoices } =
-  invoiceSlice.actions
+export const {
+  updateInvoiceSuccess,
+  removeInvoiceSuccess,
+  initialInvoices,
+  addNewPageOfInvoices,
+} = invoiceSlice.actions
 
 export default invoiceSlice.reducer
