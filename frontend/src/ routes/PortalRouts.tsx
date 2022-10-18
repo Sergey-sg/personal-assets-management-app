@@ -1,5 +1,6 @@
 import { AppRoute } from 'common/enums/app-route.enum'
 import InvoiceCreatePage from 'pages/invoicePages/InvoiceCreatePage'
+import InvoiceDetailPage from 'pages/invoicePages/InvoiceDetailPage'
 import InvoicesListPage from 'pages/invoicePages/InvoicesListPage'
 import InvoiceUpdatePage from 'pages/invoicePages/UpdateInvoicePage'
 import NotFoundPage from 'pages/NotFoundPage'
@@ -32,6 +33,10 @@ const PortalRouts = () => {
           <Route
             path={`${AppRoute.INVOICE_UPDATE}/:invoiceId`}
             element={<InvoiceUpdatePage />}
+          />
+          <Route
+            path={`${AppRoute.INVOICE_DETAILS}/:invoiceId`}
+            element={<InvoiceDetailPage />}
           />
         </Route>
         <Route path={AppRoute.MY_WALLETS} element={<MyWallet />} />

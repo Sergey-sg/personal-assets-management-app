@@ -52,9 +52,7 @@ export function InvoiceInfoBaner(props: any) {
       <div className="container">
         <div className="font-bold text-lg">Invoice Number</div>
         <br />
-        <div className="font-medium text-text-light">
-          MAG {props.invoice.id}
-        </div>
+        <div className="font-medium text-text-light">MAG {props.invoiceId}</div>
         <div className="font-medium text-text-light">
           Issued Date: {convertDate(props.issuedDate)}
         </div>

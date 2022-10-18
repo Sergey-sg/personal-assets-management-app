@@ -13,6 +13,7 @@ enum AppRoute {
   SETTINGS = 'settings',
   INVOICE_CREATE = 'new-invoice',
   INVOICE_UPDATE = 'update-invoice',
+  INVOICE_DETAILS = 'invoice-details',
 }
 
 export { AppRoute }

@@ -142,6 +142,10 @@ const InvoiceCreatePage: React.FC = () => {
               [invoice],
             )}
             sendInvoice={sendInvoice}
+            date={{
+              dueDate: invoice.dueDate,
+              invoiceDate: invoice.invoiceDate,
+            }}
           />
         </div>
       </div>

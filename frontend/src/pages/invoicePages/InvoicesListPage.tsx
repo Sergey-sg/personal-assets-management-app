@@ -2,10 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { ReactComponent as CreateInvoiceIcon } from 'assets/icons/create_invoice.svg'
 import FilterMenu from 'pages/invoicePages/invoice_componetns/FilterMenu'
 import { AppRoute } from 'common/enums/app-route.enum'
-import {
-  fetchAllInvoices,
-  fetchLoadNextPageInvoices,
-} from 'redux/slice/invoiceServices/invoiceActions'
+import { fetchAllInvoices } from 'redux/slice/invoiceServices/invoiceActions'
 import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
 import { notifyError, notifySuccess } from 'components/common/notifications'
 import { resetError } from 'redux/slice/error/error.slice'

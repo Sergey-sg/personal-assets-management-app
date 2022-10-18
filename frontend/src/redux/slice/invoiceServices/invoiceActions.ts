@@ -10,6 +10,7 @@ import {
   initialInvoices,
   removeInvoiceSuccess,
   addNewPageOfInvoices,
+  setOneInvoice,
 } from './invoice.slice'
 
 const getAllInvoices = (filters: any) => {
@@ -30,6 +31,10 @@ const createInvoice = async (invoice: any) => {
 
 const removeInvoice = (invoiceId: number) => {
   return api.delete(`/invoices/${invoiceId}`)
+}
+
+const getInvoiceById = (invoiceId: string) => {
+  return api.get(`/invoices/${invoiceId}`)
 }
 
 export const getUserByParams = async (params: any) => {
@@ -91,6 +96,7 @@ export const fetchLoadNextPageInvoices = (filters: any) => {
 
       dispatch(addNewPageOfInvoices(response.data.data))
       dispatch(setPagination(response.data.meta))
+      dispatch(successAction({ message: 'invoice loaded' }))
     } catch (e) {
       const axiosErr = e as AxiosError
       const status = axiosErr.response?.status
@@ -111,6 +117,27 @@ export const fetchRemoveInvoice = (invoiceId: number) => {
       await removeInvoice(invoiceId)
 
       dispatch(removeInvoiceSuccess(invoiceId))
+    } catch (e) {
+      const axiosErr = e as AxiosError
+      const status = axiosErr.response?.status
+      const message = axiosErr.message
+
+      dispatch(errorOccurred({ statusCode: status, message: message }))
+    } finally {
+      dispatch(stopLoading())
+    }
+  }
+}
+
+export const fetchGetInvoiceById = (invoiceId: string) => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      dispatch(resetError())
+      dispatch(startLoading())
+
+      const response = await getInvoiceById(invoiceId)
+
+      dispatch(setOneInvoice(response.data))
     } catch (e) {
       const axiosErr = e as AxiosError
       const status = axiosErr.response?.status

@@ -4,6 +4,8 @@ import { IUserProfile } from '../userProfile/userProfile.slice'
 export interface IInvoice {
   id: number
   billedTo: IUserProfile
+  createdAt: string
+  updatedAt: string
   items: object[]
   discount: number
   paid: boolean
@@ -28,12 +30,14 @@ export const invoiceSlice = createSlice({
     addNewPageOfInvoices: (state, action: PayloadAction<IInvoice[]>) => ({
       invoices: [...state.invoices, ...action.payload],
     }),
-    // updateInvoiceFail: () => {},
     removeInvoiceSuccess: (state, action) => {
       state.invoices = state.invoices.filter(
         (invoice) => invoice.id !== action.payload,
       )
     },
+    setOneInvoice: (state, action: PayloadAction<IInvoice>) => ({
+      invoices: [action.payload],
+    }),
   },
 })
 
@@ -42,6 +46,7 @@ export const {
   removeInvoiceSuccess,
   initialInvoices,
   addNewPageOfInvoices,
+  setOneInvoice,
 } = invoiceSlice.actions
 
 export default invoiceSlice.reducer

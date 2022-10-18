@@ -1,6 +1,8 @@
 import React from 'react'
 
 export function BasicInfo(props: any) {
+  const dateNow = new Date()
+
   return (
     <div className="container h-max bg-text-white border border-gray-medium rounded-xl">
       <div className="container text-base font-semibold p-5">Basic Info</div>
@@ -11,8 +13,20 @@ export function BasicInfo(props: any) {
             name="invoice-date"
             className="w-full border border-gray-medium rounded-xl p-3.5"
             type={'date'}
+            value={props.date.invoiceDate}
             onChange={(e) => {
-              props.setInvoiceDate(e.target.value)
+              if (new Date(e.target.value) >= dateNow) {
+                props.setInvoiceDate(e.target.value)
+              } else {
+                props.setInvoiceDate(
+                  `${dateNow.getFullYear()}-${String(
+                    dateNow.getMonth() + 1,
+                  ).padStart(2, '0')}-${String(dateNow.getDate()).padStart(
+                    2,
+                    '0',
+                  )}`,
+                )
+              }
             }}
           />
         </div>
@@ -22,8 +36,27 @@ export function BasicInfo(props: any) {
             name="due-date"
             className="w-full border border-gray-medium rounded-xl p-3.5"
             type={'date'}
+            value={props.date.dueDate}
             onChange={(e) => {
-              props.setDueDate(e.target.value)
+              if (new Date(e.target.value) >= new Date()) {
+                if (
+                  props.date.invoiceDate &&
+                  new Date(e.target.value) >= new Date(props.date.invoiceDate)
+                ) {
+                  props.setDueDate(e.target.value)
+                } else if (props.date.invoiceDate) {
+                  props.setDueDate(props.date.invoiceDate)
+                }
+              } else {
+                props.setDueDate(
+                  `${dateNow.getFullYear()}-${String(
+                    dateNow.getMonth() + 1,
+                  ).padStart(2, '0')}-${String(dateNow.getDate()).padStart(
+                    2,
+                    '0',
+                  )}`,
+                )
+              }
             }}
           />
         </div>

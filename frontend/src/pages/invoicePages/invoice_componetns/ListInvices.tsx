@@ -8,6 +8,7 @@ import { CONSTANTS } from 'shared/constants'
 import DropDownActions from './DropDownActions'
 import { InvoiceStatus } from './statics'
 import { fetchSetPagination } from 'redux/slice/pagination/paginationActions'
+import { AppRoute } from 'common/enums/app-route.enum'
 
 export function currentImagesPath(path: string) {
   const currentPath = path.includes('MyFinance')
@@ -52,7 +53,10 @@ export const InvoicesList = (props: any) => {
             key={invoice.id}
             className="container grid grid-cols-12 gap-4 text-left text-sm mb-4 font-medium text-text"
           >
-            <div className="col-span-3 mt-2">
+            <a
+              className="col-span-3 mt-2"
+              href={`${AppRoute.INVOICES}/${AppRoute.INVOICE_DETAILS}/${invoice.id}`}
+            >
               <img
                 className="float-left pr-4"
                 src={currentImagesPath(invoice.billedTo.avatarPath)}
@@ -62,7 +66,7 @@ export const InvoicesList = (props: any) => {
               <p className="text-xs text-text-ultralight font-normal">
                 Inv: MGL {invoice.id}
               </p>
-            </div>
+            </a>
             <div className="col-span-2 mt-2">
               {convertDate(invoice.invoiceDate)}
             </div>
