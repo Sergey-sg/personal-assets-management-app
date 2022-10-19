@@ -33,14 +33,44 @@ const removeInvoice = (invoiceId: number) => {
   return api.delete(`/invoices/${invoiceId}`)
 }
 
-const getInvoiceById = (invoiceId: string) => {
-  return api.get(`/invoices/${invoiceId}`)
+const getInvoiceById = (invoiceId: string, forUpdate: boolean) => {
+  const queryParam = forUpdate ? '?forUpdate=true' : ''
+
+  return api.get(`/invoices/${invoiceId}${queryParam}`)
+}
+
+const updateInvoice = (invoiceId: string, invoice: any) => {
+  return api.put(`/invoices/${invoiceId}`, invoice)
 }
 
 export const getUserByParams = async (params: any) => {
   return await api
     .post('/invoices/customer', params)
     .then((response) => response.data)
+}
+
+export const fetchUpdateInvoice = (invoiceId: string, invoice: any) => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      dispatch(resetError())
+      dispatch(resetSuccess())
+      dispatch(startLoading())
+
+      const response = await updateInvoice(invoiceId, invoice)
+
+      dispatch(updateInvoiceSuccess(response.data))
+      dispatch(successAction({ message: 'Invoice updated successfully' }))
+    } catch (e) {
+      console.log(e)
+      const axiosErr = e as AxiosError
+      const status = axiosErr.response?.status
+      const message = axiosErr.message
+
+      dispatch(errorOccurred({ statusCode: status, message: message }))
+    } finally {
+      dispatch(stopLoading())
+    }
+  }
 }
 
 export const fetchCreateInvoice = (invoice: any) => {
@@ -129,19 +159,24 @@ export const fetchRemoveInvoice = (invoiceId: number) => {
   }
 }
 
-export const fetchGetInvoiceById = (invoiceId: string) => {
+export const fetchGetInvoiceById = (invoiceId: string, forUpdate: boolean) => {
   return async (dispatch: AppDispatch) => {
     try {
       dispatch(resetError())
       dispatch(startLoading())
 
-      const response = await getInvoiceById(invoiceId)
+      const response = await getInvoiceById(invoiceId, forUpdate)
 
       dispatch(setOneInvoice(response.data))
-    } catch (e) {
+      dispatch(successAction({ message: 'Invoice loaded successfully' }))
+    } catch (e: any) {
       const axiosErr = e as AxiosError
       const status = axiosErr.response?.status
-      const message = axiosErr.message
+      const notFoundMessage = 'Invoice does not found for user'
+      const message =
+        e.response?.data.message === notFoundMessage
+          ? notFoundMessage
+          : axiosErr.message
 
       dispatch(errorOccurred({ statusCode: status, message: message }))
     } finally {

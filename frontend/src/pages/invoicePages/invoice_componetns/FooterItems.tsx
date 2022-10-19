@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
 
 export function FooterItems(props: any) {
-  const [inputDiscount, setInputDiscount] = useState(false)
-  const [discount, setDiscount] = useState(0)
+  const [inputDiscount, setInputDiscount] = useState(
+    props.invoice.discount ? true : false,
+  )
+  const [inputTax, setInputTax] = useState(false)
+  const [discount, setDiscount] = useState(props.invoice.discount)
 
   function sendDiscountToInvoice(value: number) {
     const discount = value ? (value < 0 ? 0 : value > 100 ? 100 : value) : 0
@@ -35,7 +38,9 @@ export function FooterItems(props: any) {
         </div>
         <div className="flex px-3">
           <div className="mt-2 mr-8">Discount</div>
-          {inputDiscount ? (
+          {!props.setDiscount ? (
+            <div className="mx-auto mt-2">{props.invoice.discount}%</div>
+          ) : inputDiscount ? (
             <InputDiscount />
           ) : (
             <button
@@ -48,9 +53,20 @@ export function FooterItems(props: any) {
         </div>
         <div className="flex px-3 mt-4">
           <div className="mr-16 pr-2">Tax</div>
-          <button className="text-green-medium text-rigth w-2/4 mx-auto">
-            Add
-          </button>
+          {props.invoice ? (
+            <div className="mx-auto">
+              {props.invoice.tax ? props.invoice.tax : 0}%
+            </div>
+          ) : inputTax ? (
+            <InputDiscount />
+          ) : (
+            <button
+              className="text-green-medium text-rigth w-2/4 mx-auto"
+              // onClick={() => setInputTax(true)}
+            >
+              Add
+            </button>
+          )}
         </div>
         <hr className="col-span-2 border-gray-border mt-2" />
         <div className="flex p-3">

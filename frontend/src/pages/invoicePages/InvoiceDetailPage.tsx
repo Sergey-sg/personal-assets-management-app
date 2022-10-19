@@ -1,7 +1,8 @@
+import { AppRoute } from 'common/enums/app-route.enum'
 import { notifyError, notifySuccess } from 'components/common/notifications'
 import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
 import React, { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { resetError } from 'redux/slice/error/error.slice'
 import { fetchGetInvoiceById } from 'redux/slice/invoiceServices/invoiceActions'
 import { resetSuccess } from 'redux/slice/success/success.slice'
@@ -14,6 +15,7 @@ import {
   InvoiceItemsList,
   MagloBaner,
 } from './invoice_componetns/statics'
+import { sum } from './secondaryFunctions/secondaryFunctions'
 
 const InvoiceDetailPage = () => {
   const dispatch = useAppDispatch()
@@ -21,14 +23,22 @@ const InvoiceDetailPage = () => {
   const error = useAppSelector((state) => state.error.message)
   const success = useAppSelector((state) => state.success.message)
   const invoice = useAppSelector((state) => state.invoices.invoices[0])
+  const subTotal = invoice
+    ? sum(invoice.items?.map((item: any) => item.subTotal))
+    : 0
+  const navigate = useNavigate()
 
   useEffect(() => {
-    dispatch(fetchGetInvoiceById(`${invoiceId}`))
+    console.log('satrt useEffect')
+    dispatch(fetchGetInvoiceById(`${invoiceId}`, false))
+    if (error === 'Invoice does not found for user') {
+      navigate(`/${AppRoute.PORTAL}/${AppRoute.INVOICES}`)
+    }
     error && notifyError(error)
     success && notifySuccess(success)
     dispatch(resetError())
     dispatch(resetSuccess())
-  }, [success, error, invoiceId])
+  }, [error])
 
   return (
     <div className="container mx-auto mb-10">
@@ -40,13 +50,12 @@ const InvoiceDetailPage = () => {
             <InvoiceInfoBaner
               invoice={invoice}
               issuedDate={invoice.createdAt}
+              billedTo={invoice.billedTo}
             />
             <br />
             <div>
               <div className="text-base font-bold mb-3.5">Item Details</div>
-              <div className="w-full border-none rounded-xl focus:outline-none focus:border-green-hover focus:ring-green-hover focus:ring-1">
-                {invoice.invoiceDetails}
-              </div>
+              <div className="w-full">{invoice.invoiceDetails}</div>
               <br />
               <br />
               <div className="w-full">
@@ -58,22 +67,21 @@ const InvoiceDetailPage = () => {
               </div>
               <br />
               <FooterItems
-                //   subTotal={subTotal}
-                subTotal={invoice.total}
+                invoice={invoice}
+                subTotal={subTotal}
                 total={invoice.total}
-                setDiscount={(discount: number) => console.log(discount)}
               />
             </div>
           </div>
           <div className="container lg:col-span-3 col-span-1">
-            <ClientDetails
-              setCustomer={(customer: any) => console.log(customer)}
-            />
+            <ClientDetails billedTo={invoice.billedTo} />
             <br />
             <BasicInfo
-              setDueDate={(dueDate: string) => console.log(dueDate)}
-              setInvoiceDate={(invoiceDate: string) => console.log(invoiceDate)}
-              sendInvoice={() => console.log('send')}
+              invoice={invoice}
+              date={{
+                dueDate: invoice.dueDate,
+                invoiceDate: invoice.invoiceDate,
+              }}
             />
           </div>
         </div>

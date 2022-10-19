@@ -9,6 +9,7 @@ import { InvoiceItemDto } from './dto/invoiceItem.dto';
 import { PageOptionsDto } from 'src/pagination/dto/pageOptionsDto';
 import { PageDto } from 'src/pagination/dto/page.dto';
 import { PageMetaDto } from 'src/pagination/dto/page-meta.dto';
+import { UpdateInvoiceDto } from './dto/updateInvoice.dto';
 
 @Injectable()
 export class InvoicesService {
@@ -43,18 +44,19 @@ export class InvoicesService {
   }
 
   private async getInvoiceByIdForUser(
-    email: string,
     whereParams: object,
     relationsParams: object,
   ) { 
+    const paramsUserSelect = {id: true, firstName: true, lastName: true, email: true, address: true, avatarPath: true};
     const invoice = await this.invoiceRepository
       .findOneOrFail({
         where: whereParams,
         relations: relationsParams,
+        select: {createdBy: paramsUserSelect, billedTo: paramsUserSelect}
       })
       .catch(() => {
         throw new HttpException(
-          `Invoice does not found for user: ${email}`,
+          'Invoice does not found for user',
           HttpStatus.NOT_FOUND,
         );
       });
@@ -87,7 +89,9 @@ export class InvoicesService {
       }
     }
     if (filters.minDate || filters.maxDate) {
-      params['invoiceDate'] = Between(filters.minDate? new Date(filters.minDate) : new Date('1990-01-01'), filters.maxDate? new Date(filters.maxDate) : new Date);
+      const minDate = filters.minDate? new Date(filters.minDate) : new Date('1990-01-01')
+      const maxDate = filters.maxDate? new Date(filters.maxDate) : new Date('2090-01-01') 
+      params['invoiceDate'] = Between(minDate, maxDate);
     }
     if (filters.minPrice || filters.maxPrice) {
       params['total'] = Between(filters.minPrice? parseInt(filters.minPrice) : 0, filters.maxPrice? parseInt(filters.maxPrice) : 1000000000);
@@ -127,13 +131,12 @@ export class InvoicesService {
 
   public async updateInvoice(
     invoiceId: number,
-    invoiceDto: InvoiceDto,
+    invoiceDto: UpdateInvoiceDto,
     currentUser: UserEntity,
   ): Promise<InvoiceEntity> {
     const billedTo = await this.getUser(invoiceDto.billedTo);
     this.validateTotalPrice(invoiceDto.items, invoiceDto.discount, invoiceDto.total);
     const oldInvoice = await this.getInvoiceByIdForUser(
-      currentUser.email,
       { id: invoiceId, createdBy: { id: currentUser.id }, displayForUsers: {id: currentUser.id} },
       {billedTo: true},
     );
@@ -170,7 +173,6 @@ export class InvoicesService {
     currentUser: UserEntity,
   ): Promise<void> {
     const invoice = await this.getInvoiceByIdForUser(
-      currentUser.email,
       { id: invoiceId },
       {displayForUsers: true},
     );
@@ -185,12 +187,15 @@ export class InvoicesService {
   }
 
   public async getOneById(
+    forUpdate: boolean,
     invoiceId: number,
     currentUser: UserEntity,
   ): Promise<InvoiceDto> {
+    const params = forUpdate
+      ? { id: invoiceId, createdBy: {id: currentUser.id}, displayForUsers: {id: currentUser.id} }
+      : { id: invoiceId, displayForUsers: {id: currentUser.id} }
     return await this.getInvoiceByIdForUser(
-      currentUser.email,
-      { id: invoiceId, displayForUsers: {id: currentUser.id} },
+      params,
       { items: true, createdBy: true, billedTo: true },
     );
   }

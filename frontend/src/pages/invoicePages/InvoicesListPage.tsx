@@ -39,15 +39,22 @@ const InvoicesListPage = () => {
     status: queryParamsFromUrl.get('status')
       ? queryParamsFromUrl.get('status')
       : '',
+    toUser: queryParamsFromUrl.get('toUser')
+      ? queryParamsFromUrl.get('toUser')
+      : '',
+    fromUser: queryParamsFromUrl.get('fromUser')
+      ? queryParamsFromUrl.get('fromUser')
+      : '',
   })
 
   useEffect(() => {
+    console.log('satrt useEffect')
     dispatch(fetchAllInvoices({ ...filters, page: 1, take: pagination.take }))
     error && notifyError(error)
     success && notifySuccess(success)
     dispatch(resetError())
     dispatch(resetSuccess())
-  }, [error, success, filters])
+  }, [error, filters])
 
   const getInvoicesWithFilters = useCallback(
     (newFilters: any) => {

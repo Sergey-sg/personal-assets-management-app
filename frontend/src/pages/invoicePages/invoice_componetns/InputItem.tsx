@@ -1,14 +1,6 @@
 import React, { useState } from 'react'
 
-export function InputItem(props: {
-  setItem: (arg0: {
-    subTotal: number
-    id: number
-    name: string
-    amount: number
-    price: number
-  }) => void
-}) {
+export function InputItem(props: any) {
   const [item, setItem] = useState({
     id: Date.now(),
     name: '',

@@ -1,7 +1,12 @@
+import { AppRoute } from 'common/enums/app-route.enum'
+import { notifyError, notifySuccess } from 'components/common/notifications'
 import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import ReactTextareaAutosize from 'react-textarea-autosize'
+import { resetError } from 'redux/slice/error/error.slice'
 import { fetchCreateInvoice } from 'redux/slice/invoiceServices/invoiceActions'
+import { resetSuccess } from 'redux/slice/success/success.slice'
 import { BasicInfo } from './invoice_componetns/BasicInfo'
 import { ClientDetails } from './invoice_componetns/ClientDetails'
 import { FooterItems } from './invoice_componetns/FooterItems'
@@ -12,18 +17,14 @@ import {
   InvoiceItemsList,
   MagloBaner,
 } from './invoice_componetns/statics'
-
-export const sum = (obj: any) => {
-  return Object.keys(obj).reduce(
-    (sum, key) => sum + (parseFloat(obj[key] || 0) * 100) / 100,
-    0,
-  )
-}
+import { sum } from './secondaryFunctions/secondaryFunctions'
 
 const InvoiceCreatePage: React.FC = () => {
   const dispatch = useAppDispatch()
   const error = useAppSelector((state) => state.error.message)
   const success = useAppSelector((state) => state.success.message)
+  const createdInvoice = useAppSelector((state) => state.invoices.invoices[0])
+  const navigate = useNavigate()
   const [invoice, setInvoice] = useState({
     invoiceDetails: '',
     total: 0,
@@ -35,6 +36,19 @@ const InvoiceCreatePage: React.FC = () => {
   const [invoiceItems, setInvoiceItems] = useState([{}])
   const [subTotal, setSubTotal] = useState(0)
   const issuedDate = new Date()
+
+  useEffect(() => {
+    console.log('satrt useEffect')
+    error && notifyError(error)
+    success && notifySuccess(success)
+    if (success === 'Invoice created successfully' && createdInvoice) {
+      navigate(
+        `/${AppRoute.PORTAL}/${AppRoute.INVOICES}/${AppRoute.INVOICE_DETAILS}/${createdInvoice.id}`,
+      )
+    }
+    dispatch(resetError())
+    dispatch(resetSuccess())
+  }, [error, success, createdInvoice])
 
   const setNewItem = useCallback(
     (item: {
@@ -89,9 +103,9 @@ const InvoiceCreatePage: React.FC = () => {
           />
           <br />
           <div>
-            <div className="text-base font-bold mb-3.5">Item Details</div>
+            <div className="text-base font-bold mb-3">Item Details</div>
             <ReactTextareaAutosize
-              className="w-full border-none rounded-xl focus:outline-none focus:border-green-hover focus:ring-green-hover focus:ring-1"
+              className="w-full border-none rounded-xl focus:border-green-hover focus:ring-green-hover focus:ring-1"
               name="detail"
               placeholder="Details item with more info"
               onChange={(e) =>
@@ -117,6 +131,7 @@ const InvoiceCreatePage: React.FC = () => {
             />
             <br />
             <FooterItems
+              invoice={invoice}
               subTotal={subTotal}
               total={invoice.total}
               setDiscount={(discount: number) => setDiscount(discount)}
@@ -132,13 +147,9 @@ const InvoiceCreatePage: React.FC = () => {
           />
           <br />
           <BasicInfo
-            setDueDate={useCallback(
-              (dueDate: string) => setInvoice({ ...invoice, dueDate: dueDate }),
-              [invoice],
-            )}
-            setInvoiceDate={useCallback(
-              (invoiceDate: string) =>
-                setInvoice({ ...invoice, invoiceDate: invoiceDate }),
+            setDate={useCallback(
+              (date: { invoiceDate: string; dueDate: string }) =>
+                setInvoice({ ...invoice, ...date }),
               [invoice],
             )}
             sendInvoice={sendInvoice}

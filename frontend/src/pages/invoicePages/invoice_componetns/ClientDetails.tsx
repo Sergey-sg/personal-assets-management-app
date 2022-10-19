@@ -4,17 +4,23 @@ import { currentImagesPath } from './ListInvices'
 import { UserInputModal } from './UserInputModal'
 
 export function ClientDetails(props: any) {
-  const [billedTo, setBilledTo] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    address: '',
-    phone: '',
-    avatarPath: '',
-  })
+  const [billedTo, setBilledTo] = useState(
+    props.billedTo
+      ? props.billedTo
+      : {
+          firstName: '',
+          lastName: '',
+          email: '',
+          address: '',
+          phone: '',
+          avatarPath: '',
+        },
+  )
   const [error, setError] = useState('')
   const [showModal, setShowModal] = useState(false)
-  const [userAllReady, setUserAllReady] = useState(false)
+  const [userAllReady, setUserAllReady] = useState(
+    props.billedTo ? true : false,
+  )
   const userFullName = billedTo.firstName
     ? `${billedTo.firstName} ${billedTo.lastName}`
     : billedTo.email
@@ -67,20 +73,24 @@ export function ClientDetails(props: any) {
         <div className="text-base font-normal text-text-ultralight">
           {address[0]}, {address[2]}
         </div>
-        <br />
-        <UserInputModal
-          getCustomer={useCallback(
-            (params: { email: string; phone: string }) => getUser(params),
-            [],
-          )}
-          showModal={showModal}
-          userAllReady={userAllReady}
-          setShowModal={useCallback(
-            (status: boolean) => setShowModal(status),
-            [],
-          )}
-          error={error}
-        />
+        {props.setCustomer && (
+          <>
+            <br />
+            <UserInputModal
+              getCustomer={useCallback(
+                (params: { email: string; phone: string }) => getUser(params),
+                [],
+              )}
+              showModal={showModal}
+              userAllReady={userAllReady}
+              setShowModal={useCallback(
+                (status: boolean) => setShowModal(status),
+                [],
+              )}
+              error={error}
+            />
+          </>
+        )}
       </div>
     </div>
   )

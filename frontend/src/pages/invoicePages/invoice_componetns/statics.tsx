@@ -1,5 +1,6 @@
 import React from 'react'
 import logo from '../../../assets/images/maglo_logo_invoice.png'
+import { convertDate } from '../secondaryFunctions/secondaryFunctions'
 
 export const MagloBaner: React.FC = () => {
   return (
@@ -31,14 +32,6 @@ export const HeaderItems: React.FC = () => {
   )
 }
 
-function convertDate(date: string) {
-  const convertedDate = new Intl.DateTimeFormat('en-GB', {
-    dateStyle: 'medium',
-  }).format(new Date(date))
-
-  return convertedDate
-}
-
 export function InvoiceInfoBaner(props: any) {
   const address = props.billedTo.address
     ? props.billedTo.address.split(',')
@@ -52,7 +45,11 @@ export function InvoiceInfoBaner(props: any) {
       <div className="container">
         <div className="font-bold text-lg">Invoice Number</div>
         <br />
-        <div className="font-medium text-text-light">MAG {props.invoiceId}</div>
+        {props.invoice.createdAt && (
+          <div className="font-medium text-text-light">
+            MAG {props.invoice.id}
+          </div>
+        )}
         <div className="font-medium text-text-light">
           Issued Date: {convertDate(props.issuedDate)}
         </div>

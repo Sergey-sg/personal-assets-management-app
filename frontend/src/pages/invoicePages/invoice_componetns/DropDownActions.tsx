@@ -9,7 +9,7 @@ function classNames(...classes: string[]) {
 
 export default function DropDownActions(props: any) {
   const dateNow = new Date()
-  const currenUser = useAppSelector((state) => state.userProfile)
+  const currentUser = useAppSelector((state) => state.userProfile)
 
   return (
     <Menu as="div" className="relative inline-block text-left">
@@ -30,7 +30,7 @@ export default function DropDownActions(props: any) {
       >
         <Menu.Items className="absolute right-0 z-10 mt-2 w-56 px-4 origin-top-right rounded-md bg-gray-medium shadow-lg ring-1 ring-text ring-opacity-5 focus:outline-none">
           <div className="py-1">
-            {!props.paid && props.createdByEmail === currenUser.email && (
+            {!props.paid && props.createdByEmail === currentUser.email && (
               <Menu.Item>
                 {({ active }) => (
                   <a
@@ -48,7 +48,7 @@ export default function DropDownActions(props: any) {
               </Menu.Item>
             )}
             {!props.paid &&
-              props.createdByEmail !== currenUser.email &&
+              props.createdByEmail !== currentUser.email &&
               dateNow < new Date(props.dueDate) && (
                 <Menu.Item>
                   {({ active }) => (

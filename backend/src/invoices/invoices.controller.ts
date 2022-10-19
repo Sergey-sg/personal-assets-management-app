@@ -22,6 +22,7 @@ import { UserEntity } from 'src/user/entities/user.entity';
 import { User } from 'src/user/decorators/user.decorator';
 import { PageDto } from 'src/pagination/dto/page.dto';
 import { PageOptionsDto } from 'src/pagination/dto/pageOptionsDto';
+import { UpdateInvoiceDto } from './dto/updateInvoice.dto';
 
 @ApiTags('Invoices')
 @UseGuards(AccessTokenGuard)
@@ -56,8 +57,11 @@ export class InvoicesController {
   async getOneById(
     @User() currentUser: UserEntity,
     @Param('invoiceId', ParseIntPipe) invoiceId: number,
+    @Query() queryParam: any,
   ): Promise<InvoiceDto> {
+    const forUpdate = queryParam.forUpdate? true : false
     return await this.invoicesService.getOneById(
+      forUpdate,
       invoiceId,
       currentUser,
     );
@@ -69,7 +73,7 @@ export class InvoicesController {
   async update(
     @User() currentUser: UserEntity,
     @Param('invoiceId') invoiceId: number,
-    @Body() invoice: InvoiceDto,
+    @Body() invoice: UpdateInvoiceDto,
   ): Promise<InvoiceDto> {
     return this.invoicesService.updateInvoice(
       invoiceId,
