@@ -120,6 +120,12 @@ export class InvoicesService {
   ): Promise<InvoiceEntity> {
     const billedTo = await this.getUser(invoiceDto.billedTo);
     this.validateTotalPrice(invoiceDto.items, invoiceDto.discount, invoiceDto.total);
+    if (invoiceDto.dueDate < invoiceDto.invoiceDate) {
+      throw new HttpException(
+        'Due date must be greater than or equal to the Invoice date',
+        HttpStatus.BAD_REQUEST,
+      );
+    } 
     const newInvoice = this.invoiceRepository.create({
       ...invoiceDto,
       createdBy: currentUser,
@@ -146,6 +152,12 @@ export class InvoicesService {
         HttpStatus.BAD_REQUEST,
       );
     }
+    if (invoiceDto.dueDate < invoiceDto.invoiceDate) {
+      throw new HttpException(
+        'Due date must be greater than or equal to the Invoice date',
+        HttpStatus.BAD_REQUEST,
+      );
+    } 
     const newInvoice = this.invoiceRepository.create({
       ...invoiceDto,
       id: invoiceId,
