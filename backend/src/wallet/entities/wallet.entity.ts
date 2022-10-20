@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UserEntity } from '../../user/entities/user.entity';
+import { WalletLimitEntity } from '../../walletLimit/entities/walletLimit.entity';
 import { Entity, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { IncomeEntity } from '../../income/entities/income.entity';
 import { CostEntity } from '../../costs/entities/cost.entity';
@@ -42,4 +43,11 @@ export class WalletEntity extends Base {
     onDelete: 'CASCADE',
   })
   costs: CostEntity[];
+
+  @ApiProperty()
+  @OneToMany(() => WalletLimitEntity, (walletLimit: WalletLimitEntity) => walletLimit.wallet, {
+    onDelete: 'CASCADE',
+  })
+  walletLimits: WalletLimitEntity[];
+
 }

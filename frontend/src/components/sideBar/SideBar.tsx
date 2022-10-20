@@ -56,7 +56,12 @@ export const SideBar: React.FC<SideBarProps> = ({
       <nav className="flex flex-col justify-between h-5/6">
         <div>
           {structure.map(({ link, title, icon }) => (
-            <MenuItem key={link} link={link} label={title} icon={icon} />
+            <MenuItem
+              key={'/portal' + link}
+              link={'/portal/' + link}
+              label={title}
+              icon={icon}
+            />
           ))}
         </div>
         <div className="pl-4 text-gray  hover:text-gray-dark fill-gray hover:fill-gray-dark transition">

@@ -120,7 +120,6 @@ export const CreateTransactionForm: React.FC<ICreateTransactionFormProps> = ({
                 <InputField
                   onChange={(e) => {
                     checkSum(e.target.value)
-
                     ;+e.target.value > 0
                       ? setIsPositiveSum(true)
                       : setIsPositiveSum(false)
