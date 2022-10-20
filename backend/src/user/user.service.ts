@@ -3,22 +3,28 @@ import {
   Injectable,
   forwardRef,
   NotFoundException,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, Repository, Like } from 'typeorm';
 import { UserEntity } from './entities/user.entity';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { AuthService } from 'src/auth/auth.service';
 import { v4 } from 'uuid';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { CONSTANTS } from 'src/shared/constants';
+import { FilterDto } from './dto/filter.dto';
+import { Conversation } from 'src/conversations/entities/conversation.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(Conversation)
+    private readonly conversationRepository: Repository<Conversation>,
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
     private readonly dataSource: DataSource,
@@ -87,6 +93,7 @@ export class UserService {
         id,
       },
       select: [
+        'id',
         'email',
         'firstName',
         'lastName',
@@ -172,5 +179,61 @@ export class UserService {
     });
 
     return this.userRepository.delete(validateUser.id);
+  }
+
+  async saveUser(user: UserEntity) {
+    return this.userRepository.save(user);
+  }
+
+  async findByEmailOrName(searchQuery: FilterDto, userId: number) {
+    const { email, name } = searchQuery;
+
+    const recipient = await this.userRepository.findOne({
+      where: [
+        {
+          email: Like(`%${email}%`),
+        },
+        {
+          firstName: Like(`%${name}%`),
+        },
+        {
+          lastName: Like(`%${name}%`),
+        },
+      ],
+      select: ['id', 'email', 'firstName', 'lastName', 'phone', 'avatarPath'],
+    });
+
+    if (!recipient) {
+      throw new HttpException('No users found', HttpStatus.NOT_FOUND);
+    }
+
+    if (recipient.id === userId) {
+      throw new HttpException(
+        'You cannot send message to yourself',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const existingConversation = await this.conversationRepository.findOne({
+      where: [
+        {
+          creator: { id: userId },
+          recipient: { id: recipient.id },
+        },
+        {
+          creator: { id: recipient.id },
+          recipient: { id: userId },
+        },
+      ],
+    });
+
+    if (existingConversation) {
+      throw new HttpException(
+        'Conversation already exists',
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    return recipient;
   }
 }

@@ -12,6 +12,10 @@ import { WalletModule } from './wallet/wallet.module';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { IncomeModule } from './income/income.module';
 import { CostsModule } from './costs/costs.module';
+import { ConversationsModule } from './conversations/conversations.module';
+import { MessagesModule } from './messages/messages.module';
+import { GatewayModule } from './gateway/gateway.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { InvoicesModule } from './invoices/invoices.module';
 import { ToDoModule } from './todo/todo.module';
 
@@ -48,6 +52,10 @@ import { ToDoModule } from './todo/todo.module';
     WalletModule,
     IncomeModule,
     CostsModule,
+    ConversationsModule,
+    MessagesModule,
+    GatewayModule,
+    EventEmitterModule.forRoot(),
     InvoicesModule,
     ToDoModule,
   ],

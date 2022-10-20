@@ -26,7 +26,7 @@ export class InvoicesService {
     const currentUser = await this.userRepository
       .findOneOrFail({
         where: user,
-        select: {id: true, email: true},
+        select: { id: true, email: true },
       })
       .catch(() => {
         throw new HttpException(
@@ -43,7 +43,7 @@ export class InvoicesService {
     email: string,
     whereParams: object,
     relationsParams: object,
-  ) { 
+  ) {
     const invoice = await this.invoiceRepository
       .findOneOrFail({
         where: whereParams,
@@ -58,7 +58,11 @@ export class InvoicesService {
     return invoice;
   }
 
-  private validateTotalPrice(items: InvoiceItemDto[], discount: number, entryTotalPrice: number) {
+  private validateTotalPrice(
+    items: InvoiceItemDto[],
+    discount: number,
+    entryTotalPrice: number,
+  ) {
     const subTotal = items.reduce(
       (total, item) => item.price * item.amount + total,
       0,
@@ -77,7 +81,11 @@ export class InvoicesService {
     currentUser: UserEntity,
   ): Promise<InvoiceEntity> {
     const billedTo = await this.getUser(invoiceDto.billedTo);
-    this.validateTotalPrice(invoiceDto.items, invoiceDto.discount, invoiceDto.total);
+    this.validateTotalPrice(
+      invoiceDto.items,
+      invoiceDto.discount,
+      invoiceDto.total,
+    );
     const newInvoice = this.invoiceRepository.create({
       ...invoiceDto,
       createdBy: currentUser,
@@ -93,11 +101,19 @@ export class InvoicesService {
     currentUser: UserEntity,
   ): Promise<InvoiceEntity> {
     const billedTo = await this.getUser(invoiceDto.billedTo);
-    this.validateTotalPrice(invoiceDto.items, invoiceDto.discount, invoiceDto.total);
+    this.validateTotalPrice(
+      invoiceDto.items,
+      invoiceDto.discount,
+      invoiceDto.total,
+    );
     const oldInvoice = await this.getInvoiceByIdForUser(
       currentUser.email,
-      { id: invoiceId, createdBy: { id: currentUser.id }, displayForUsers: {id: currentUser.id} },
-      {billedTo: true},
+      {
+        id: invoiceId,
+        createdBy: { id: currentUser.id },
+        displayForUsers: { id: currentUser.id },
+      },
+      { billedTo: true },
     );
     if (oldInvoice.paid) {
       throw new HttpException(
@@ -112,8 +128,8 @@ export class InvoicesService {
       displayForUsers: [currentUser, billedTo],
     });
     const oldItems = await this.itemRepository.find({
-      select: {id: true},
-      where: {invoice: { id: invoiceId }},
+      select: { id: true },
+      where: { invoice: { id: invoiceId } },
     });
     return await this.dataSource.transaction(
       async (entityManager: EntityManager) => {
@@ -122,7 +138,9 @@ export class InvoicesService {
             .withRepository(this.itemRepository)
             .delete(oldItems.map((item) => item.id));
         }
-        return await entityManager.withRepository(this.invoiceRepository).save(newInvoice);
+        return await entityManager
+          .withRepository(this.invoiceRepository)
+          .save(newInvoice);
       },
     );
   }
@@ -134,15 +152,19 @@ export class InvoicesService {
     const invoice = await this.getInvoiceByIdForUser(
       currentUser.email,
       { id: invoiceId },
-      {displayForUsers: true},
+      { displayForUsers: true },
     );
-    if (!invoice.displayForUsers.map(user => user.id).includes(currentUser.id)) {
+    if (
+      !invoice.displayForUsers.map((user) => user.id).includes(currentUser.id)
+    ) {
       throw new HttpException(
         `Invoice does not found for user: ${currentUser.email}`,
         HttpStatus.NOT_FOUND,
       );
     }
-    invoice.displayForUsers = invoice.displayForUsers.filter((user) => user.id !== currentUser.id);
+    invoice.displayForUsers = invoice.displayForUsers.filter(
+      (user) => user.id !== currentUser.id,
+    );
     await this.invoiceRepository.save(invoice);
   }
 
@@ -152,16 +174,14 @@ export class InvoicesService {
   ): Promise<InvoiceDto> {
     return await this.getInvoiceByIdForUser(
       currentUser.email,
-      { id: invoiceId, displayForUsers: {id: currentUser.id} },
+      { id: invoiceId, displayForUsers: { id: currentUser.id } },
       { items: true, createdBy: true, billedTo: true },
     );
   }
 
   public async getAllInvoicesForUser(currentUser: UserEntity) {
     return await this.invoiceRepository.find({
-      where: [
-        { displayForUsers: {id: currentUser.id} },
-      ],
+      where: [{ displayForUsers: { id: currentUser.id } }],
       relations: { items: true, createdBy: true, billedTo: true },
     });
   }

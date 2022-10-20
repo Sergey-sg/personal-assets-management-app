@@ -1,10 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { WalletEntity } from '../../wallet/entities/wallet.entity';
-import { Column, Entity, ManyToMany, OneToMany } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToMany, OneToMany } from 'typeorm';
 import { InvoiceEntity } from '../../invoices/entities/invoice.entity';
 import { Base } from 'src/common/dto/base.dto';
 import { IncomeEntity } from 'src/income/entities/income.entity';
 import { CostEntity } from 'src/costs/entities/cost.entity';
+import { Message } from 'src/messages/entities/message.entity';
 
 @Entity('user')
 export class UserEntity extends Base {
@@ -17,7 +18,7 @@ export class UserEntity extends Base {
   lastName: string;
 
   @ApiProperty({ example: 'johndoe@mail.com', description: 'User email' })
-  @Column({ type: 'varchar', length: 320, unique: true })
+  @Column({ type: 'varchar', length: 320, unique: true, nullable: false })
   email: string;
 
   @ApiProperty({ example: 'Qwerty@12345', description: 'User password' })
@@ -94,4 +95,8 @@ export class UserEntity extends Base {
   @ApiProperty()
   @ManyToMany(() => InvoiceEntity, (invoice) => invoice.displayForUsers)
   displayInvoices: InvoiceEntity[];
+
+  @OneToMany(() => Message, (message) => message.author)
+  @JoinColumn()
+  messages: Message[];
 }

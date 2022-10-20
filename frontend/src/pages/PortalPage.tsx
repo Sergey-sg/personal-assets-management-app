@@ -12,7 +12,12 @@ import { ReactComponent as WalletIcon } from 'assets/icons/wallet.svg'
 import { ReactComponent as ChatIcon } from 'assets/icons/chat.svg'
 import { Layout } from 'components/common/Layout/Layout'
 import { fetchUserProfile } from 'redux/slice/userProfile/actionCreators'
-import { useAppDispatch } from 'hooks/useAppDispatch'
+import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
+import { notifyError, notifySuccess } from 'components/common/notifications'
+import { resetError } from 'redux/slice/error/error.slice'
+import { resetSuccess } from 'redux/slice/success/success.slice'
+import { ToastContainer, Zoom } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 export const menuStructure = [
   {
@@ -54,27 +59,35 @@ export const menuStructure = [
 
 const PortalPage: React.FC = () => {
   const dispatch = useAppDispatch()
+  const error = useAppSelector((state) => state.error.message)
+  const success = useAppSelector((state) => state.success.message)
+
+  useEffect(() => {
+    error && notifyError(error)
+    success && notifySuccess(success)
+    dispatch(resetError())
+    dispatch(resetSuccess())
+  }, [error, success])
 
   useEffect(() => {
     dispatch(fetchUserProfile())
   }, [dispatch])
 
   return (
-    <>
-      <div className="flex">
-        <SideBar
-          logoLink={AppRoute.DASHBOARD}
-          structure={menuStructure}
-          screen="desktop"
-        />
-        <div className="w-full h-screen sticky top-0 ">
-          <Header />
-          <Layout>
-            <Outlet />
-          </Layout>
-        </div>
+    <div className="flex overflow-hidden">
+      <SideBar
+        logoLink={AppRoute.DASHBOARD}
+        structure={menuStructure}
+        screen="desktop"
+      />
+      <div className="w-full h-screen sticky top-0 ">
+        <Header />
+        <Layout>
+          <Outlet />
+        </Layout>
       </div>
-    </>
+      <ToastContainer transition={Zoom} />
+    </div>
   )
 }
 

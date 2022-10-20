@@ -9,17 +9,21 @@ import {
   ValidateNested,
   Min,
   IsOptional,
-  IsDate
+  IsDate,
 } from 'class-validator';
 import { UserEntity } from '../../user/entities/user.entity';
 import { InvoiceItemDto } from './invoiceItem.dto';
 
 export class InvoiceDto {
-  @ApiProperty({ description: 'customer', example: "user@mail.com" })
+  @ApiProperty({ description: 'customer', example: 'user@mail.com' })
   @IsNotEmpty()
   billedTo: UserEntity;
 
-  @ApiProperty({example: [{name: "Phone 10x lite", amount: 2, price: 10000, subtotal: 20000}]})
+  @ApiProperty({
+    example: [
+      { name: 'Phone 10x lite', amount: 2, price: 10000, subtotal: 20000 },
+    ],
+  })
   @IsNotEmpty()
   @ValidateNested()
   @Type(() => InvoiceItemDto)

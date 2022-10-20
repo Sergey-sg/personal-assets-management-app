@@ -1,5 +1,13 @@
 import { UserEntity } from '../../user/entities/user.entity';
-import { Column, Entity, JoinColumn, OneToMany, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  ManyToOne,
+  ManyToMany,
+  JoinTable,
+} from 'typeorm';
 import { InvoiceItemEntity } from './invoiceItem.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { Base } from '../../common/dto/base.dto';
@@ -14,7 +22,11 @@ export class InvoiceEntity extends Base {
   @JoinColumn()
   billedTo: UserEntity;
 
-  @ApiProperty({example: [{name: "Phone 10x lite", amount: 2, price: 10000, subtotal: 20000}]})
+  @ApiProperty({
+    example: [
+      { name: 'Phone 10x lite', amount: 2, price: 10000, subtotal: 20000 },
+    ],
+  })
   @OneToMany(() => InvoiceItemEntity, (item) => item.invoice, {
     nullable: true,
     cascade: true,
@@ -31,11 +43,11 @@ export class InvoiceEntity extends Base {
   @Column({ type: 'int', default: 0 })
   discount: number;
 
-  @ApiProperty({ description: 'due date', example: "2022-09-29" })
+  @ApiProperty({ description: 'due date', example: '2022-09-29' })
   @Column({ type: 'timestamptz' })
   dueDate: Date;
 
-  @ApiProperty({ description: 'invoice date', example: "2022-09-31" })
+  @ApiProperty({ description: 'invoice date', example: '2022-09-31' })
   @Column({ type: 'timestamptz', nullable: true })
   invoiceDate: Date;
 
@@ -51,15 +63,15 @@ export class InvoiceEntity extends Base {
     cascade: true,
   })
   @JoinTable({
-    name: "user_invoices", // table name for the junction table of this relation
+    name: 'user_invoices', // table name for the junction table of this relation
     joinColumn: {
-        name: "invoice",
-        referencedColumnName: "id"
+      name: 'invoice',
+      referencedColumnName: 'id',
     },
     inverseJoinColumn: {
-        name: "user",
-        referencedColumnName: "id"
-    }
-})
+      name: 'user',
+      referencedColumnName: 'id',
+    },
+  })
   displayForUsers: UserEntity[];
 }

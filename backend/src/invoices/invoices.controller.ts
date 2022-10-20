@@ -39,9 +39,7 @@ export class InvoicesController {
   @Get()
   @ApiOperation({ summary: `Get all invoices` })
   @ApiResponse({ status: HttpStatus.OK, type: [InvoiceEntity] })
-  async getAllInvoices(
-    @User() currentUser: UserEntity,
-  ): Promise<InvoiceDto[]> {
+  async getAllInvoices(@User() currentUser: UserEntity): Promise<InvoiceDto[]> {
     return this.invoicesService.getAllInvoicesForUser(currentUser);
   }
 
@@ -52,10 +50,7 @@ export class InvoicesController {
     @User() currentUser: UserEntity,
     @Param('invoiceId', ParseIntPipe) invoiceId: number,
   ): Promise<InvoiceDto> {
-    return await this.invoicesService.getOneById(
-      invoiceId,
-      currentUser,
-    );
+    return await this.invoicesService.getOneById(invoiceId, currentUser);
   }
 
   @Put('/:invoiceId')
@@ -66,11 +61,7 @@ export class InvoicesController {
     @Param('invoiceId') invoiceId: number,
     @Body() invoice: InvoiceDto,
   ): Promise<InvoiceDto> {
-    return this.invoicesService.updateInvoice(
-      invoiceId,
-      invoice,
-      currentUser,
-    );
+    return this.invoicesService.updateInvoice(invoiceId, invoice, currentUser);
   }
 
   @Delete('/:invoiceId')
@@ -79,9 +70,6 @@ export class InvoicesController {
     @User() currentUser: UserEntity,
     @Param('invoiceId') invoiceId: number,
   ): Promise<void> {
-    return this.invoicesService.removeInvoiceForUser(
-      invoiceId,
-      currentUser,
-    );
+    return this.invoicesService.removeInvoiceForUser(invoiceId, currentUser);
   }
 }

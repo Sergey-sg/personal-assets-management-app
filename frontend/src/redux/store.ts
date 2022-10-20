@@ -1,8 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
 import {
   authSlice,
+  conversationsSlice,
   errorSlice,
   loaderSlice,
+  messagesSlice,
   successSlice,
   userProfileSlice,
 } from './slice'
@@ -14,6 +16,8 @@ export const store = configureStore({
     success: successSlice,
     error: errorSlice,
     loader: loaderSlice,
+    messages: messagesSlice,
+    conversations: conversationsSlice,
   },
 })
 // Infer the `RootState` and `AppDispatch` types from the store itself

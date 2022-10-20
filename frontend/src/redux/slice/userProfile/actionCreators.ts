@@ -17,8 +17,14 @@ const getCurrentUserId = () => {
   return api.get('/user/current')
 }
 
-const getUserById = (userId: number) => {
+export const getUserById = (userId: number) => {
   return api.get(`/user/${userId}`)
+}
+
+export const getUserByQuery = (
+  params?: URLSearchParams | Record<string, string>,
+) => {
+  return api.get('/user', { params })
 }
 
 const updateUser = (user: IUserProfile | { password: string }) => {

@@ -6,10 +6,11 @@ import { UserEntity } from './entities/user.entity';
 import { AuthModule } from 'src/auth/auth.module';
 import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
 import { AuthMiddleware } from 'src/auth/middleware/auth.middleware';
+import { Conversation } from 'src/conversations/entities/conversation.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserEntity]),
+    TypeOrmModule.forFeature([UserEntity, Conversation]),
     forwardRef(() => AuthModule),
     CloudinaryModule,
   ],
