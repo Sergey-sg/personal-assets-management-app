@@ -1,3 +1,4 @@
+import { verifyCodeDto } from './dto/verifyCode.dto';
 import { OAuth2Client } from 'google-auth-library';
 import { AuthDto } from './dto/auth.dto';
 import {
@@ -18,9 +19,10 @@ import { compare, genSalt, hash } from 'bcryptjs';
 import { v4 } from 'uuid';
 import { MailerService } from '@nestjs-modules/mailer';
 import { Request, Response } from 'express';
-import { UserGoogle, Tokens } from './types/tokens.type';
 import { AuthRegisterDto } from './dto/register.dto';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { forgotPasswordDto } from './dto/forgotPassword';
+import { refreshPasswordDto } from './dto/refreshPassword.dto';
+import { AuthDtoWithCode } from './dto/authDtoWithCode.dto';
 
 @Injectable()
 export class AuthService {
@@ -78,7 +80,6 @@ export class AuthService {
         httpOnly: true,
       });
       const userCreate = await this.userRepository.save(newUser);
-
       return {
         userCreate,
         tokens,
@@ -91,13 +92,13 @@ export class AuthService {
       process.env.GOOGLE_CLIENT_ID,
       process.env.GOOGLE_CLIENT_SECRET,
     );
-    const ticket = await client.verifyIdToken({
+    const userDataGoogle = await client.verifyIdToken({
       idToken: token,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
 
-    const { email, name, picture, given_name, family_name } =
-      ticket.getPayload();
+    const { email, picture, given_name, family_name } =
+      userDataGoogle.getPayload();
 
     const user = {
       email: email,
@@ -108,10 +109,37 @@ export class AuthService {
     return user;
   }
 
-  async login(dto: AuthDto, res: Response) {
+  async login(dto: AuthDto) {
     const user = await this.validateUser(dto);
-    const tokens = await this.getTokens(user.id, user.email);
-    this.updateRt(user.id, tokens.refresh_token);
+    if (!user) {
+      throw new BadRequestException('User is not found');
+    }
+  }
+
+  async loginAuthWithCode(dto: AuthDtoWithCode, res: Response) {
+    const user = await this.userRepository.findOne({
+      where: {
+        email: dto.email,
+        refreshPasswordCode: dto.code,
+      },
+    });
+
+    if (!user) {
+      throw new BadRequestException('Invalid Verify Code');
+    }
+    const userVerify = await this.validateUser(dto);
+    if (!userVerify) {
+      throw new UnauthorizedException(
+        'Your password or email is wrong, try again please',
+      );
+    }
+    console.log('start');
+    const tokens = await this.getTokens(userVerify.id, userVerify.email);
+    console.log('toket get');
+
+    this.updateRt(userVerify.id, tokens.refresh_token);
+    console.log('token save');
+
     res.cookie('tokenRefresh', tokens.refresh_token, {
       maxAge: Number(process.env.MAX_AGE_COOKIE_TOKEN),
       httpOnly: true,
@@ -175,7 +203,7 @@ export class AuthService {
       await this.userRepository.save(user);
     } catch (e) {
       console.log(e);
-      return new NotFoundException('Error with logout');
+      throw new NotFoundException('Error with logout');
     }
     res.clearCookie('tokenRefresh');
     return HttpCode(200);
@@ -184,16 +212,16 @@ export class AuthService {
   async refreshToken(userId: number, rt: string, res: Response) {
     const user = await this.userRepository.findOneBy({ id: userId });
     if (!user) {
-      return new ForbiddenException('Acces Denied');
+      throw new ForbiddenException('Acces Denied and User');
     }
 
     const rtMatches = await compare(rt, user.refreshTokenHash);
     if (!rtMatches) {
-      return new ForbiddenException('Acces Denied');
+      throw new ForbiddenException('Refresh Denied');
     }
 
     const tokens = await this.getTokens(user.id, user.email);
-    this.updateRt(user.id, tokens.refresh_token);
+    await this.updateRt(user.id, tokens.refresh_token);
     res.cookie('tokenRefresh', tokens.refresh_token, {
       httpOnly: true,
 
@@ -213,7 +241,10 @@ export class AuthService {
       },
       select: ['id', 'email', 'password'],
     });
-    if (!user) throw new NotFoundException('User not found');
+    if (!user)
+      throw new NotFoundException(
+        'Your password or email is wrong, try again please.',
+      );
 
     const isValidPassword = await compare(dto.password, user.password);
 
@@ -255,6 +286,7 @@ export class AuthService {
     const rtHash = await hash(rt, salt);
     const user = await this.userRepository.findOne({ where: { id: userId } });
     user.refreshTokenHash = rtHash;
+
     await this.userRepository.save(user);
 
     return user.refreshTokenHash;
@@ -278,7 +310,78 @@ export class AuthService {
     return {
       id: user.id,
       email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      avatarPath: user.avatarPath,
+      isVerified: user.isVerified,
     };
+  }
+
+  async forgotPassword(dto: forgotPasswordDto): Promise<void> {
+    const user = await this.userRepository.findOne({
+      where: { email: dto.email },
+    });
+
+    if (!user) {
+      throw new BadRequestException('Invalid email');
+    }
+    let code = await this.generateNewCode(dto);
+    code = user.refreshPasswordCode = String(code);
+    await this.mailerService
+      .sendMail({
+        to: dto.email,
+        subject: 'Auth Code',
+        template: './authTemplate',
+        context: {
+          link: process.env.FRONTEND_URL,
+          email: code,
+        },
+      })
+      .catch((e) => {
+        throw new HttpException(`Error`, HttpStatus.UNPROCESSABLE_ENTITY);
+      });
+
+    await this.userRepository.save(user);
+  }
+
+  async generateNewCode(dto: forgotPasswordDto) {
+    setTimeout(async () => {
+      const user = await this.userRepository.findOne({
+        where: { email: dto.email },
+      });
+      user.refreshPasswordCode = Math.random().toFixed(6).slice(2);
+      return await this.userRepository.save(user);
+    }, 60 * 1000);
+
+    return Math.random().toFixed(6).slice(2);
+  }
+
+  async verifyCode(dto: verifyCodeDto) {
+    const user = await this.userRepository.findOne({
+      where: {
+        email: dto.email,
+        refreshPasswordCode: dto.code,
+      },
+    });
+
+    if (!user) {
+      throw new BadRequestException('Invalid Verify Code');
+    }
+  }
+
+  async refreshPassword(dto: refreshPasswordDto) {
+    const user = await this.userRepository.findOne({
+      where: { email: dto.email },
+    });
+
+    if (!user) {
+      throw new BadRequestException('User is not found');
+    }
+
+    const salt = await genSalt(3);
+    user.password = await hash(dto.password, salt);
+
+    return await this.userRepository.save(user);
   }
 
   async hashPassword(password: string): Promise<string> {

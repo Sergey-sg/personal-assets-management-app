@@ -1,10 +1,11 @@
-import { Tokens } from './types/tokens.type';
+import { forgotPasswordDto } from './dto/forgotPassword';
 import {
   Body,
   Controller,
   Get,
   HttpCode,
   Param,
+  Patch,
   Post,
   Redirect,
   Req,
@@ -14,18 +15,16 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { threadId } from 'worker_threads';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
 import { UserEntity } from 'src/user/entities/user.entity';
 import { Request, Response } from 'express';
-import { AuthGuard } from '@nestjs/passport';
 import { AccessTokenGuard } from './guards/accessToken.guard';
 import { RefreshTokenGuard } from './guards/refreshToken.guard';
-import { isPositive } from 'class-validator';
-import { GoogleOauthGuard } from './guards/googleToken.guard';
-import { OAuth2Client } from 'google-auth-library';
 import { AuthRegisterDto } from './dto/register.dto';
+import { refreshPasswordDto } from './dto/refreshPassword.dto';
+import { verifyCodeDto } from './dto/verifyCode.dto';
+import { AuthDtoWithCode } from './dto/authDtoWithCode.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -42,13 +41,21 @@ export class AuthController {
     return this.authService.authGoogle(token, req, res);
   }
 
+  @ApiOperation({ summary: 'Login new User' })
+  @ApiResponse({ status: 201, type: UserEntity })
   @Post('login')
-  async login(
-    @Body() dto: AuthDto,
-    @Req() req: Request,
+  async login(@Body() dto: AuthDto) {
+    return this.authService.login(dto);
+  }
+
+  @ApiOperation({ summary: 'Verify code User' })
+  @ApiResponse({ status: 201, type: UserEntity })
+  @Post('login/verify')
+  async loginAuthWithCode(
+    @Body() dto: AuthDtoWithCode,
     @Res({ passthrough: true }) res: Response,
   ) {
-    return this.authService.login(dto, res);
+    return this.authService.loginAuthWithCode(dto, res);
   }
 
   @ApiOperation({
@@ -86,5 +93,22 @@ export class AuthController {
     const user = req.user['id'];
 
     return this.authService.refreshToken(user, tokenRefresh, res);
+  }
+
+  @Post('forgotPassword')
+  async forgotPassword(@Body() dto: forgotPasswordDto) {
+    return this.authService.forgotPassword(dto);
+  }
+
+  @HttpCode(200)
+  @Post('verifyCode')
+  async verifyCode(@Body() dto: verifyCodeDto) {
+    return this.authService.verifyCode(dto);
+  }
+
+  @HttpCode(202)
+  @Patch('refreshPassword')
+  async changePasswod(@Body() dto: refreshPasswordDto) {
+    return this.authService.refreshPassword(dto);
   }
 }

@@ -17,6 +17,8 @@ export class WalletEntity extends Base {
   @Column({ type: 'enum', enum: WalletStatus, default: WalletStatus.OPEN })
   status: WalletStatus;
 
+  @ManyToOne(() => UserEntity, (user) => user.wallet)
+  userWallet: UserEntity;
   @ApiProperty({ example: 1000, description: 'Wallet total balance' })
   @Column({ type: 'int', default: 0 })
   total_balance: number;

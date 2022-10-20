@@ -8,6 +8,7 @@ import {
   successSlice,
   userProfileSlice,
 } from './slice'
+import refreshPasswordSlice from './slice/refreshPasswordSlice'
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     success: successSlice,
     error: errorSlice,
     loader: loaderSlice,
+    refreshPasswordSlice,
     messages: messagesSlice,
     conversations: conversationsSlice,
   },

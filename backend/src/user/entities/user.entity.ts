@@ -83,6 +83,11 @@ export class UserEntity extends Base {
   income_transactions: IncomeEntity[];
 
   @ApiProperty()
+  @Column({ default: '' })
+  refreshPasswordCode?: string;
+
+  @OneToMany(() => WalletEntity, (wallet) => wallet.userWallet)
+  wallet?: WalletEntity[];
   @OneToMany(
     () => CostEntity,
     (costs_transaction: CostEntity) => costs_transaction.to_user,

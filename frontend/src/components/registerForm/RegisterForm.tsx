@@ -4,10 +4,12 @@ import { useAppDispatch } from '../../hooks/useAppDispatch'
 import InputUI from '../../ui/input/InputUI'
 import { Form, Formik } from 'formik'
 import { validationsSchemaRegister } from './schemasAuth/ValidationSchemaAuth'
-import { Registration } from 'redux/slice/authSlice'
+import { Registration } from 'redux/thunk/authThunk'
+import { Link } from 'react-router-dom'
+import { AppRoute } from 'common/enums/app-route.enum'
 
 type PropsRegisterForm = {
-  toggleFunction: React.MouseEventHandler<HTMLButtonElement>
+  toggleFunction?: React.MouseEventHandler<HTMLButtonElement>
 }
 
 const RegisterForm: React.FC<PropsRegisterForm> = ({ toggleFunction }: any) => {
@@ -183,12 +185,14 @@ const RegisterForm: React.FC<PropsRegisterForm> = ({ toggleFunction }: any) => {
           </div>
         )}
       </Formik>
-      <div
-        onClick={toggleFunction}
-        className="italic cursor-pointer hover: text-slate-500"
-      >
-        You already have an account?
-      </div>
+      <Link to={`${AppRoute.HOME}`}>
+        <div
+          onClick={toggleFunction}
+          className="italic cursor-pointer hover: text-slate-500"
+        >
+          You already have an account?
+        </div>
+      </Link>
     </div>
   )
 }

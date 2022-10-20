@@ -8,6 +8,8 @@ interface MenuItemProps {
   label: string
 }
 
+/*eslint-disable */
+
 const MenuItem: React.FC<MenuItemProps> = ({ link, icon, label }) => {
   return (
     <NavLink
@@ -28,5 +30,6 @@ const MenuItem: React.FC<MenuItemProps> = ({ link, icon, label }) => {
     </NavLink>
   )
 }
+/*eslint-enable */
 
 export default MenuItem

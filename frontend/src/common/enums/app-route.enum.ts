@@ -11,6 +11,8 @@ enum AppRoute {
   MY_WALLETS = 'my-wallets',
   CHATS = 'chats',
   SETTINGS = 'settings',
+  FORGOT_PASSWORD = 'forgotPassword',
+  VERIFY_CODE = 'verify-code',
 }
 
 export { AppRoute }

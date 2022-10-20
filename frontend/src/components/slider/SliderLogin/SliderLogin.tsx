@@ -1,7 +1,6 @@
 import React from 'react'
 import './SliderLogin.scss'
 import grenPhoto from '../../../assets/sliderPhoto/Rectangle2.jpg'
-import { idText } from 'typescript'
 
 const slides = [
   {

@@ -1,11 +1,12 @@
 import React, { ReactNode } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import MenuItem from './MenuItem'
 import { Typography } from '../common/Typography/Typography'
 import LogoutButton from '../common/buttons/LogoutButton'
 import clsx from 'clsx'
 import { useAppDispatch } from 'hooks/useAppDispatch'
-import { Logout } from 'redux/slice/authSlice'
+import { Logout } from 'redux/thunk/authThunk'
+import { AppRoute } from 'common/enums/app-route.enum'
 
 interface MenuStructureItem {
   title: string
@@ -30,7 +31,17 @@ export const SideBar: React.FC<SideBarProps> = ({
   screen,
 }) => {
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
 
+  const logoutClick = React.useCallback(() => {
+    try {
+      dispatch(Logout())
+      navigate(AppRoute.HOME)
+    } catch (e) {
+      console.log(e, 'error with logout')
+    }
+  }, [])
+  
   return (
     <div
       className={clsx(
@@ -49,7 +60,7 @@ export const SideBar: React.FC<SideBarProps> = ({
           ))}
         </div>
         <div className="pl-4 text-gray  hover:text-gray-dark fill-gray hover:fill-gray-dark transition">
-          <LogoutButton onClick={() => dispatch(Logout())} />
+          <LogoutButton onClick={() => logoutClick()} />
         </div>
       </nav>
     </div>

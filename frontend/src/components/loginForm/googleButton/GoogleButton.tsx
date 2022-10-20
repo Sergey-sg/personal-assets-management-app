@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google'
-import { authWithGoogle } from 'redux/slice/authSlice'
+import { authWithGoogle } from 'redux/thunk/authThunk'
 
 const GoogleButton = (props: any) => {
   const dispatch = useAppDispatch()
