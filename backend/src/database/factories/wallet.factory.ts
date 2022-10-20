@@ -18,7 +18,7 @@ export class WalletFactory extends Factory<WalletEntity> {
     return {
       wallet_name: 'Main',
       status: WalletStatus.OPEN,
-      total_balance: +faker.finance.amount(0, 50000, 2),
+      total_balance: +faker.finance.amount(0, 50000, 0),
       currency: WalletCurrency.UAH,
       income: [],
       costs: [],
