@@ -12,6 +12,7 @@ import {
   costsSlice,
 } from './slice'
 import refreshPasswordSlice from './slice/refreshPasswordSlice'
+import todoSlice from './slice/todo/todo.slice'
 
 export const store = configureStore({
   reducer: {
@@ -26,6 +27,7 @@ export const store = configureStore({
     refreshPasswordSlice,
     messages: messagesSlice,
     conversations: conversationsSlice,
+    todo: todoSlice,
   },
 })
 // Infer the `RootState` and `AppDispatch` types from the store itself
