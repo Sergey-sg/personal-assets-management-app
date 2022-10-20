@@ -3,7 +3,7 @@ import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserEntity } from '../../user/entities/user.entity';
 import { Base } from 'src/common/dto/base.dto';
-import { CostsCategories } from '../enums/costs-category.enum';
+import { CostsCategories } from '../enums/costsCategory.enum';
 
 @Entity('costs')
 export class CostEntity extends Base {

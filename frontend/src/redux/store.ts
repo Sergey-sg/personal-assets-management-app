@@ -7,6 +7,9 @@ import {
   messagesSlice,
   successSlice,
   userProfileSlice,
+  walletsSlice,
+  incomeSlice,
+  costsSlice,
 } from './slice'
 import refreshPasswordSlice from './slice/refreshPasswordSlice'
 
@@ -17,6 +20,9 @@ export const store = configureStore({
     success: successSlice,
     error: errorSlice,
     loader: loaderSlice,
+    wallets: walletsSlice,
+    incomes: incomeSlice,
+    costs: costsSlice,
     refreshPasswordSlice,
     messages: messagesSlice,
     conversations: conversationsSlice,

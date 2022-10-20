@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
-import { WalletCurrency } from '../../wallet/enums/wallet-currency.enum';
-import { WalletStatus } from '../../wallet/enums/wallet-status.enum';
+import { WalletCurrency } from '../../wallet/enums/walletCurrency.enum';
+import { WalletStatus } from '../../wallet/enums/walletStatus.enum';
 import { WalletEntity } from '../../wallet/entities/wallet.entity';
 import dataSource from '../dataSource';
 import {

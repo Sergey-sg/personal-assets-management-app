@@ -1,7 +1,7 @@
-import { CostEntity } from './../entities/cost.entity';
-import { WalletEntity } from './../../wallet/entities/wallet.entity';
+import { CostEntity } from '../entities/cost.entity';
+import { WalletEntity } from '../../wallet/entities/wallet.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserEntity } from './../../user/entities/user.entity';
+import { UserEntity } from '../../user/entities/user.entity';
 
 export class AllUserCostsResponseDto extends UserEntity {
   @ApiProperty({ type: [WalletEntity], description: `User's wallets` })

@@ -1,5 +1,5 @@
 import { UserEntity } from '../../user/entities/user.entity';
-import { IRequestWithUser } from '../../interfaces/request-with-user.interface';
+import { IRequestWithUser } from '../../interfaces/requestWithUser.interface';
 import { verify } from 'jsonwebtoken';
 import { NextFunction } from 'express';
 import { NestMiddleware, UnauthorizedException } from '@nestjs/common';

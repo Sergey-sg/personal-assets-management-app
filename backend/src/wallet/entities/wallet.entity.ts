@@ -3,8 +3,8 @@ import { UserEntity } from '../../user/entities/user.entity';
 import { Entity, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { IncomeEntity } from '../../income/entities/income.entity';
 import { CostEntity } from '../../costs/entities/cost.entity';
-import { WalletStatus } from '../enums/wallet-status.enum';
-import { WalletCurrency } from '../enums/wallet-currency.enum';
+import { WalletStatus } from '../enums/walletStatus.enum';
+import { WalletCurrency } from '../enums/walletCurrency.enum';
 import { Base } from 'src/common/dto/base.dto';
 
 @Entity('wallet')

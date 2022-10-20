@@ -1,4 +1,4 @@
-import { AllUserCostsResponseDto } from '../dto/all-user-costs-response.dto';
+import { AllUserCostsResponseDto } from '../dto/allUserCostsResponse.dto';
 
 export type AllUserCostsResponseType = Omit<
   AllUserCostsResponseDto,

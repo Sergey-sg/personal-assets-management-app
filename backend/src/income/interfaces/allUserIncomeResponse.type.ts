@@ -1,4 +1,4 @@
-import { AllUserIncomeResponseDto } from '../dto/all-user-income-response.dto';
+import { AllUserIncomeResponseDto } from '../dto/allUserIncomeResponse.dto';
 
 export type AllUserIncomeResponseType = Omit<
   AllUserIncomeResponseDto,

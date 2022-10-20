@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsDate,
   IsEnum,
@@ -7,7 +8,7 @@ import {
   IsOptional,
   IsPositive,
 } from 'class-validator';
-import { CostsCategories } from '../enums/costs-category.enum';
+import { CostsCategories } from '../enums/costsCategory.enum';
 
 export class UpdateCostDto {
   @ApiProperty({
@@ -45,6 +46,7 @@ export class UpdateCostDto {
     required: false,
   })
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   readonly createdAt?: Date;
 }

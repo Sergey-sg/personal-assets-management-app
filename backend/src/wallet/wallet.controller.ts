@@ -1,5 +1,5 @@
 import { WalletEntity } from 'src/wallet/entities/wallet.entity';
-import { CreateWalletDto } from './dto/create-wallet.dto';
+import { CreateWalletDto } from './dto/createWallet.dto';
 import { WalletService } from './wallet.service';
 import {
   Body,
@@ -16,7 +16,7 @@ import {
 } from '@nestjs/common';
 import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from '../user/decorators/user.decorator';
-import { UpdateWalletDto } from './dto/update-wallet.dto';
+import { UpdateWalletDto } from './dto/updateWallet.dto';
 
 @ApiTags('Wallets')
 @ApiHeader({ name: 'authorization', description: 'must be token' })

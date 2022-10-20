@@ -41,7 +41,7 @@ export const SideBar: React.FC<SideBarProps> = ({
       console.log(e, 'error with logout')
     }
   }, [])
-  
+
   return (
     <div
       className={clsx(

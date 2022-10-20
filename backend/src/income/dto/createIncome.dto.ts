@@ -7,25 +7,25 @@ import {
   IsOptional,
   IsPositive,
 } from 'class-validator';
-import { CostsCategories } from '../enums/costs-category.enum';
+import { IncomeCategories } from '../enums/incomesCategory.enum';
 
-export class CreateCostDto {
+export class CreateIncomeDto {
   @ApiProperty({ example: 'salary', description: 'Income category' })
   @IsNotEmpty({ message: `Income category can't be empti` })
-  @IsEnum(CostsCategories)
-  readonly category_name: CostsCategories;
+  @IsEnum(IncomeCategories)
+  readonly category_name: IncomeCategories;
 
-  @ApiProperty({ example: 'My cost', description: 'Cost name' })
-  @IsNotEmpty({ message: `Cost name can't be empti` })
-  readonly cost_name: string;
+  @ApiProperty({ example: 'My income', description: 'Income name' })
+  @IsNotEmpty({ message: `Income name can't be empti` })
+  readonly income_name: string;
 
   @ApiProperty({
-    example: 154,
-    description: 'Cost sum is integer number',
+    example: 700,
+    description: 'Income sum is integer number',
   })
   @IsInt()
   @IsPositive()
-  readonly cost_sum: number;
+  readonly income_sum: number;
 
   @ApiProperty({
     example: false,
@@ -38,10 +38,10 @@ export class CreateCostDto {
 
   @ApiProperty({
     example: 42,
-    description: 'To which user the transaction',
+    description: 'From which user the transaction',
     required: false,
   })
   @IsOptional()
   @IsInt()
-  readonly to_user_id?: number;
+  readonly from_user_id?: number;
 }

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty } from 'class-validator';
-import { WalletCurrency } from '../enums/wallet-currency.enum';
+import { WalletCurrency } from '../enums/walletCurrency.enum';
 
 export class CreateWalletDto {
   @ApiProperty({ example: 'MyWallet', description: 'Wallet name' })

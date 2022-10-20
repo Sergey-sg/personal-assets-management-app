@@ -1,13 +1,13 @@
 import { CostEntity } from './entities/cost.entity';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateCostDto } from './dto/create-cost.dto';
-import { UpdateCostDto } from './dto/update-cost.dto';
+import { CreateCostDto } from './dto/createCost.dto';
+import { UpdateCostDto } from './dto/updateCost.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, EntityManager, In, Repository } from 'typeorm';
 import { WalletEntity } from '../wallet/entities/wallet.entity';
 import { UserEntity } from '../user/entities/user.entity';
-import { AllWalletCostsResponseDto } from './dto/all-wallet-costs-response.dto';
-import { AllUserCostsResponseType } from './interfaces/all-user-costs-response.type';
+import { AllWalletCostsResponseDto } from './dto/allWalletCostsResponse.dto';
+import { AllUserCostsResponseType } from './interfaces/allUserCostsResponse.type';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @Injectable()

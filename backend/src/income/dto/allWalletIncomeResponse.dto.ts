@@ -1,6 +1,6 @@
 import { IncomeEntity } from '../entities/income.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { WalletEntity } from './../../wallet/entities/wallet.entity';
+import { WalletEntity } from '../../wallet/entities/wallet.entity';
 
 export class AllWalletIncomeResponseDto extends WalletEntity {
   @ApiProperty({ type: [IncomeEntity], description: `Wallet's income` })

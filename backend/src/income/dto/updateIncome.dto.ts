@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsDate,
   IsEnum,
@@ -7,7 +8,7 @@ import {
   IsOptional,
   IsPositive,
 } from 'class-validator';
-import { IncomeCategories } from '../enums/incomes-category.enum';
+import { IncomeCategories } from '../enums/incomesCategory.enum';
 
 export class UpdateIncomeDto {
   @ApiProperty({
@@ -45,6 +46,7 @@ export class UpdateIncomeDto {
     required: false,
   })
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   readonly createdAt?: Date;
 }
