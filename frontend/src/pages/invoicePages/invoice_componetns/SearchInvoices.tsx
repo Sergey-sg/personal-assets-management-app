@@ -1,9 +1,11 @@
+import { useAppSelector } from 'hooks/useAppDispatch'
 import React, { useCallback, useState } from 'react'
 import { MdOutlineCancel } from 'react-icons/md'
 import { RiSearchLine } from 'react-icons/ri'
 
 export const SearchInvoices = (props: any) => {
   const [searchString, setSearchString] = useState(props.searcheString)
+  const loader = useAppSelector((state) => state.loader)
 
   function searchInvoices(event: any, reset: boolean) {
     event.preventDefault()
@@ -13,7 +15,10 @@ export const SearchInvoices = (props: any) => {
   return (
     <form className="col-span-4">
       <label className="relative block flex my-4 w-min font-light">
-        <button onClick={(e) => searchInvoices(e, false)}>
+        <button
+          disabled={loader ? true : false}
+          onClick={(e) => searchInvoices(e, false)}
+        >
           <span className="absolute inset-y-0 left-0 flex items-center pl-3 hover:text-green">
             <RiSearchLine />
           </span>
@@ -30,6 +35,7 @@ export const SearchInvoices = (props: any) => {
           value={searchString}
         />
         <button
+          disabled={loader ? true : false}
           onClick={useCallback(
             (e: any) => {
               setSearchString('')

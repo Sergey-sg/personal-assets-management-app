@@ -81,7 +81,9 @@ export const UserInputModal = (props: any) => {
                     type="submit"
                     onClick={() => {
                       props.setShowModal(false)
-                      props.getCustomer(customerParams)
+                      if (customerParams.email || customerParams.phone) {
+                        props.getCustomer(customerParams)
+                      }
                     }}
                   >
                     Submit

@@ -33,6 +33,7 @@ export const InvoicesList = (props: any) => {
   const invoices = useAppSelector((state) => state.invoices.invoices)
   const pagination = useAppSelector((state) => state.pagination.pagination)
   const currentUser = useAppSelector((state) => state.userProfile)
+  const loader = useAppSelector((state) => state.loader)
 
   function removeInvoice(invoiceId: number) {
     dispatch(fetchRemoveInvoice(invoiceId))
@@ -104,6 +105,7 @@ export const InvoicesList = (props: any) => {
       )}
       {pagination.hasNextPage && (
         <button
+          disabled={loader ? true : false}
           className="container bg-green-light hover:bg-green-hover rounded-xl font-semibold text-base p-3 mt-8 mb-4"
           onClick={() => {
             const page = parseInt(pagination.page.toString()) + 1 //  otherwise, the typescript does plus as a string and does not allow it to lead to a number

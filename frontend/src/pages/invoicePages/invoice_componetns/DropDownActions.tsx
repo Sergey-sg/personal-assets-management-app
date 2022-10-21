@@ -10,6 +10,7 @@ function classNames(...classes: string[]) {
 export default function DropDownActions(props: any) {
   const dateNow = new Date()
   const currentUser = useAppSelector((state) => state.userProfile)
+  const loader = useAppSelector((state) => state.loader)
 
   return (
     <Menu as="div" className="relative inline-block text-left">
@@ -68,8 +69,8 @@ export default function DropDownActions(props: any) {
               )}
             <Menu.Item>
               {({ active }) => (
-                <a
-                  href="#"
+                <button
+                  disabled={loader ? true : false}
                   className={classNames(
                     active
                       ? 'bg-gray-medium text-gray-default'
@@ -79,7 +80,7 @@ export default function DropDownActions(props: any) {
                   onClick={props.removeInvoice}
                 >
                   Remove
-                </a>
+                </button>
               )}
             </Menu.Item>
           </div>

@@ -8,6 +8,7 @@ import {
 
 export function BasicInfo(props: any) {
   const currentUser = useAppSelector((state) => state.userProfile)
+  const loader = useAppSelector((state) => state.loader)
 
   function setValidInvoiceDateAndDueDate(date: {
     invoiceDate: string
@@ -123,6 +124,7 @@ export function BasicInfo(props: any) {
           )
         ) : (
           <button
+            disabled={loader ? true : false}
             onClick={() => props.sendInvoice()}
             className="bg-green-light rounded-xl w-full font-semibold text-base py-4 my-4 hover:bg-green-hover"
           >

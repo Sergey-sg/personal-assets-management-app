@@ -19,6 +19,7 @@ const InvoicesListPage = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const pagination = useAppSelector((state) => state.pagination.pagination)
   const queryParamsFromUrl = new URLSearchParams(useLocation().search)
+  const loader = useAppSelector((state) => state.loader)
   const [filters, setFilters] = useState({
     search: queryParamsFromUrl.get('search')
       ? queryParamsFromUrl.get('search')
@@ -82,7 +83,7 @@ const InvoicesListPage = () => {
           />
           <div className="col-span-8">
             <div className="float-right">
-              <button>
+              <button disabled={loader ? true : false}>
                 <a
                   href={`${AppRoute.INVOICES}/${AppRoute.INVOICE_CREATE}`}
                   className="flex justify-center bg-green-light hover:bg-green-hover rounded-xl font-semibold text-base p-4 my-4"

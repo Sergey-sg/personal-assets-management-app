@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useFormik } from 'formik'
 
 export function InputItem(props: any) {
   const [item, setItem] = useState({
@@ -16,6 +17,18 @@ export function InputItem(props: any) {
       setItem({ id: Date.now(), name: '', amount: 0, price: 0 })
     }
   }
+
+  const formik = useFormik({
+    initialValues: { item },
+    onSubmit: () => {
+      const subTotal = (item.price * item.amount) | 0
+
+      if (item.name && item.price && item.amount) {
+        props.setItem({ ...item, subTotal })
+        setItem({ id: Date.now(), name: '', amount: 0, price: 0 })
+      }
+    },
+  })
 
   return (
     <div className="container grid grid-cols-12 gap-4">

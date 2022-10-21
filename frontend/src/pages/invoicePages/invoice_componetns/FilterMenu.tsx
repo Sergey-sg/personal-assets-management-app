@@ -1,4 +1,5 @@
 import { Typography } from 'components/common/Typography'
+import { useAppSelector } from 'hooks/useAppDispatch'
 import React, { useState } from 'react'
 import { MdOutlineCancel, MdOutlineFilterList } from 'react-icons/md'
 
@@ -21,6 +22,7 @@ const getCurrentLabel = (label: string) => {
 
 function FilterMenu(props: any) {
   const [showSidebar, setShowSidebar] = useState(false)
+  const loader = useAppSelector((state) => state.loader)
   const [filters, setFilters] = useState({
     minDate: props.filters.minDate,
     maxDate: props.filters.maxDate,
@@ -186,12 +188,14 @@ function FilterMenu(props: any) {
 
             <div>
               <button
+                disabled={loader ? true : false}
                 onClick={() => props.setFilters(filters)}
                 className="w-5/12 bg-green-light hover:bg-green-hover rounded-xl font-semibold text-base p-4 my-4 mx-3 text-text"
               >
                 filter
               </button>
               <button
+                disabled={loader ? true : false}
                 onClick={() => resetFilters()}
                 className="w-5/12 bg-green-light hover:bg-green-hover rounded-xl font-semibold text-base p-4 my-4 mx-3 text-text"
               >
