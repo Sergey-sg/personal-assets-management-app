@@ -27,6 +27,7 @@ const InvoiceDetailPage = () => {
     ? sum(invoice.items?.map((item: any) => item.subTotal))
     : 0
   const navigate = useNavigate()
+  const currentUser = useAppSelector((state) => state.userProfile)
 
   useEffect(() => {
     console.log('satrt useEffect')
@@ -74,7 +75,15 @@ const InvoiceDetailPage = () => {
             </div>
           </div>
           <div className="container lg:col-span-3 col-span-1">
-            <ClientDetails billedTo={invoice.billedTo} />
+            {currentUser.email && (
+              <ClientDetails
+                client={
+                  currentUser.email !== invoice.billedTo.email
+                    ? invoice.billedTo
+                    : invoice.createdBy
+                }
+              />
+            )}
             <br />
             <BasicInfo
               invoice={invoice}

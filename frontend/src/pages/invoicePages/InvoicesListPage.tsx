@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
 import { notifyError, notifySuccess } from 'components/common/notifications'
 import { resetError } from 'redux/slice/error/error.slice'
 import { resetSuccess } from 'redux/slice/success/success.slice'
-import { InvoicesList } from './invoice_componetns/ListInvices'
+import { InvoicesList } from './invoice_componetns/ListInvoices'
 import { HeaderInvoicesTable } from './invoice_componetns/HeaderInvoicesTable'
 import { SearchInvoices } from './invoice_componetns/SearchInvoices'
 import { useLocation, useSearchParams } from 'react-router-dom'
@@ -39,11 +39,8 @@ const InvoicesListPage = () => {
     status: queryParamsFromUrl.get('status')
       ? queryParamsFromUrl.get('status')
       : '',
-    toUser: queryParamsFromUrl.get('toUser')
-      ? queryParamsFromUrl.get('toUser')
-      : '',
-    fromUser: queryParamsFromUrl.get('fromUser')
-      ? queryParamsFromUrl.get('fromUser')
+    target: queryParamsFromUrl.get('target')
+      ? queryParamsFromUrl.get('target')
       : '',
   })
 

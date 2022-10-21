@@ -77,39 +77,67 @@ export class InvoicesService {
     }
   }
 
-  private getParamsForFilters(filters: any) {
-    const params = {};
+  private getParamsForFilters(filters: any, userId: number) {
+    let params = [{displayForUsers: {id: userId}}];
     if (filters.search) {
       if (parseInt(filters.search)) {
-        params['id'] = In([filters.search]);
+        params[0]['id'] = In([filters.search]);
       } else if (filters.search.includes('@')) {
-        params['billedTo'] = {email: ILike(filters.search)};
+        params[1] = {...params[0]}
+        params[0]['billedTo'] = [{email: Like(filters.search)}];
+        params[1]['createdBy'] = [{email: Like(filters.search)}];
       } else {
-        params['billedTo'] = [{firstName: ILike(In(filters.search.split(' ')))}, {lastName: ILike(In(filters.search.split(' ')))}];
+        params[1] = {...params[0]}
+        params[0]['billedTo'] = [{firstName: ILike(In(filters.search.split(' ')))}, {lastName: ILike(In(filters.search.split(' ')))}];
+        params[1]['createdBy'] = [{firstName: ILike(In(filters.search.split(' ')))}, {lastName: ILike(In(filters.search.split(' ')))}];
       }
     }
     if (filters.minDate || filters.maxDate) {
-      const minDate = filters.minDate? new Date(filters.minDate) : new Date('1990-01-01')
-      const maxDate = filters.maxDate? new Date(filters.maxDate) : new Date('2090-01-01') 
-      params['invoiceDate'] = Between(minDate, maxDate);
+      params.forEach((param) => {
+        const minDate = filters.minDate? new Date(filters.minDate) : new Date('1990-01-01')
+        const maxDate = filters.maxDate? new Date(filters.maxDate) : new Date('2090-01-01') 
+        param['invoiceDate'] = Between(minDate, maxDate);
+      });
     }
     if (filters.minPrice || filters.maxPrice) {
-      params['total'] = Between(filters.minPrice? parseInt(filters.minPrice) : 0, filters.maxPrice? parseInt(filters.maxPrice) : 1000000000);
+      params.forEach((param) => {
+        param['total'] = Between(filters.minPrice? parseInt(filters.minPrice) : 0, filters.maxPrice? parseInt(filters.maxPrice) : 1000000000);
+      });
     }
     if (filters.status) {
-      switch(filters.status) {
-        case 'paid':
-          params['paid'] = true;
-          break;
-        case 'unpaid':
-          params['dueDate'] = LessThanOrEqual(new Date);
-          params['paid'] = false;
-          break;
-        case 'pending':
-          params['dueDate'] = MoreThanOrEqual(new Date);
-          params['paid'] = false; 
-          break;
-      }
+      params.forEach((param) => {
+        switch(filters.status) {
+          case 'paid':
+            param['paid'] = true;
+            break;
+          case 'unpaid':
+            param['dueDate'] = LessThanOrEqual(new Date);
+            param['paid'] = false;
+            break;
+          case 'pending':
+            param['dueDate'] = MoreThanOrEqual(new Date);
+            param['paid'] = false; 
+            break;
+        }
+      });
+    }
+    if (filters.target) {
+      params.forEach((param) => {
+        switch(filters.target) {
+          case 'toUser':
+            param['billedTo'] = {id: userId};
+            if (param['createdBy']) {
+              params = [param]
+            }
+            break;
+          case 'fromUser':
+            param['createdBy'] = {id: userId};
+            if (param['billedTo']) {
+              params = [param]
+            }
+            break;
+        }
+      });
     }
     return params;
   }
@@ -217,9 +245,9 @@ export class InvoicesService {
     filters: any,
     pageOptionsDto: PageOptionsDto  
   ): Promise<PageDto<InvoiceDto>> {   
-    const params = this.getParamsForFilters(filters);
+    const params = this.getParamsForFilters(filters, currentUser.id);
     const listInvoices = await this.invoiceRepository.findAndCount({
-      where: {displayForUsers: {id: currentUser.id}, ...params},
+      where: params,
       relations: { items: true, createdBy: true, billedTo: true },
       order: {invoiceDate: filters.firstNew? 'DESC' : 'ASC' },
       skip: pageOptionsDto.skip,

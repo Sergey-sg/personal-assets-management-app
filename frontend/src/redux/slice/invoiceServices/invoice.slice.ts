@@ -4,6 +4,7 @@ import { IUserProfile } from '../userProfile/userProfile.slice'
 export interface IInvoice {
   id: number
   billedTo: IUserProfile
+  createdBy: IUserProfile
   createdAt: string
   updatedAt: string
   items: object[]

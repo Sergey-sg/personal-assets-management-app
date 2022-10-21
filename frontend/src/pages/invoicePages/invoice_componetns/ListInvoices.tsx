@@ -4,19 +4,11 @@ import {
   fetchLoadNextPageInvoices,
   fetchRemoveInvoice,
 } from 'redux/slice/invoiceServices/invoiceActions'
-import { CONSTANTS } from 'shared/constants'
 import DropDownActions from './DropDownActions'
 import { InvoiceStatus } from './statics'
 import { fetchSetPagination } from 'redux/slice/pagination/paginationActions'
 import { AppRoute } from 'common/enums/app-route.enum'
-
-export function currentImagesPath(path: string) {
-  const currentPath = path.includes('MyFinance')
-    ? `${CONSTANTS.CLOUDINARY_FILE_STORAGE}${path}`
-    : path
-
-  return currentPath
-}
+import { currentImagesPath } from '../secondaryFunctions/secondaryFunctions'
 
 function convertDate(dateString: string) {
   const date = new Intl.DateTimeFormat('en-GB', {
@@ -40,9 +32,23 @@ export const InvoicesList = (props: any) => {
   const dispatch = useAppDispatch()
   const invoices = useAppSelector((state) => state.invoices.invoices)
   const pagination = useAppSelector((state) => state.pagination.pagination)
+  const currentUser = useAppSelector((state) => state.userProfile)
 
   function removeInvoice(invoiceId: number) {
     dispatch(fetchRemoveInvoice(invoiceId))
+  }
+
+  const ClientInfo = (props: any) => {
+    return (
+      <>
+        <img
+          className="float-left pr-4"
+          src={currentImagesPath(props.client.avatarPath)}
+          alt={props.client.email}
+        />
+        {`${props.client.firstName} ${props.client.lastName}`}
+      </>
+    )
   }
 
   return (
@@ -54,15 +60,22 @@ export const InvoicesList = (props: any) => {
             className="container grid grid-cols-12 gap-4 text-left text-sm mb-4 font-medium text-text"
           >
             <a
-              className="col-span-3 mt-2"
+              className={`col-span-3 mt-2 rounded-xl ${
+                currentUser.email === invoice.billedTo.email
+                  ? 'bg-green-ultralight'
+                  : 'bg-orange-ultralight'
+              }`}
               href={`${AppRoute.INVOICES}/${AppRoute.INVOICE_DETAILS}/${invoice.id}`}
             >
-              <img
-                className="float-left pr-4"
-                src={currentImagesPath(invoice.billedTo.avatarPath)}
-                alt={invoice.billedTo.email}
-              />
-              {`${invoice.billedTo.firstName} ${invoice.billedTo.lastName}`}
+              {currentUser.email && (
+                <ClientInfo
+                  client={
+                    currentUser.email !== invoice.billedTo.email
+                      ? invoice.billedTo
+                      : invoice.createdBy
+                  }
+                />
+              )}
               <p className="text-xs text-text-ultralight font-normal">
                 Inv: MGL {invoice.id}
               </p>

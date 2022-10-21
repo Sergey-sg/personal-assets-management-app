@@ -148,7 +148,7 @@ const InvoiceUpdatePage: React.FC = () => {
             </div>
             <div className="container lg:col-span-3 col-span-1">
               <ClientDetails
-                billedTo={invoice.billedTo}
+                client={invoice.billedTo}
                 setCustomer={(customer: any) =>
                   setInvoice({ ...invoice, billedTo: customer })
                 }

@@ -2,7 +2,7 @@ import { AppRoute } from 'common/enums/app-route.enum'
 import { useAppSelector } from 'hooks/useAppDispatch'
 import React from 'react'
 import {
-  convertDate,
+  convertDateTime,
   getCorrectDateFormat,
 } from '../secondaryFunctions/secondaryFunctions'
 
@@ -65,13 +65,13 @@ export function BasicInfo(props: any) {
           <span className="text-text-light">Invoice Date</span>
           {props.invoice ? (
             <div className="w-full border border-gray-medium rounded-xl p-3.5">
-              {convertDate(props.invoice.invoiceDate)}
+              {convertDateTime(props.invoice.invoiceDate)}
             </div>
           ) : (
             <input
               name="invoice-date"
-              className="w-full border border-gray-medium rounded-xl p-3.5"
-              type={'date'}
+              className="w-full p-3.5 border border-gray-medium rounded-xl focus:outline-none focus:border-green-hover focus:ring-green-hover focus:ring-0"
+              type={'datetime-local'}
               value={
                 props.date.invoiceDate
                   ? getCorrectDateFormat(props.date.invoiceDate)
@@ -79,7 +79,7 @@ export function BasicInfo(props: any) {
               }
               onChange={(e) =>
                 setValidInvoiceDateAndDueDate({
-                  invoiceDate: e.target.value,
+                  invoiceDate: new Date(e.target.value).toISOString(),
                   dueDate: '',
                 })
               }
@@ -90,13 +90,13 @@ export function BasicInfo(props: any) {
           <span className="text-text-light">Due Date</span>
           {props.invoice ? (
             <div className="w-full border border-gray-medium rounded-xl p-3.5">
-              {convertDate(props.invoice.dueDate)}
+              {convertDateTime(props.invoice.dueDate)}
             </div>
           ) : (
             <input
               name="due-date"
-              className="w-full border border-gray-medium rounded-xl p-3.5"
-              type={'date'}
+              className="w-full p-3.5 border border-gray-medium rounded-xl focus:outline-none focus:border-green-hover focus:ring-green-hover focus:ring-0"
+              type={'datetime-local'}
               value={
                 props.date.dueDate
                   ? getCorrectDateFormat(props.date.dueDate)
@@ -105,7 +105,7 @@ export function BasicInfo(props: any) {
               onChange={(e) =>
                 setValidInvoiceDateAndDueDate({
                   invoiceDate: '',
-                  dueDate: e.target.value,
+                  dueDate: new Date(e.target.value).toISOString(),
                 })
               }
             />

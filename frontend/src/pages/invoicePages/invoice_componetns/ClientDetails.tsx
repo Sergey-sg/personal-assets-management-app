@@ -1,12 +1,12 @@
 import React, { useCallback, useState } from 'react'
 import { getUserByParams } from 'redux/slice/invoiceServices/invoiceActions'
-import { currentImagesPath } from './ListInvices'
+import { currentImagesPath } from '../secondaryFunctions/secondaryFunctions'
 import { UserInputModal } from './UserInputModal'
 
 export function ClientDetails(props: any) {
-  const [billedTo, setBilledTo] = useState(
-    props.billedTo
-      ? props.billedTo
+  const [client, setClient] = useState(
+    props.client
+      ? props.client
       : {
           firstName: '',
           lastName: '',
@@ -18,13 +18,11 @@ export function ClientDetails(props: any) {
   )
   const [error, setError] = useState('')
   const [showModal, setShowModal] = useState(false)
-  const [userAllReady, setUserAllReady] = useState(
-    props.billedTo ? true : false,
-  )
-  const userFullName = billedTo.firstName
-    ? `${billedTo.firstName} ${billedTo.lastName}`
-    : billedTo.email
-  const address = billedTo.address ? billedTo.address.split(',') : ''
+  const [userAllReady, setUserAllReady] = useState(props.client ? true : false)
+  const userFullName = client.firstName
+    ? `${client.firstName} ${client.lastName}`
+    : client.email
+  const address = client.address ? client.address.split(',') : ''
 
   async function getUser(params: any) {
     let correctParams = {}
@@ -38,7 +36,7 @@ export function ClientDetails(props: any) {
     try {
       const user = await getUserByParams(correctParams)
 
-      setBilledTo(user)
+      setClient(user)
       props.setCustomer(user)
       setError('')
       setUserAllReady(true)
@@ -56,14 +54,14 @@ export function ClientDetails(props: any) {
       <div className="container columns-1">
         <img
           className="px-5 mb-2 float-left"
-          src={currentImagesPath(billedTo.avatarPath)}
+          src={currentImagesPath(client.avatarPath)}
           alt={userFullName}
         />
         <div className="text-base font-semibold text-lg px-4">
           {userFullName}
         </div>
         <div className="text-base font-normal text-text-ultralight px-4">
-          {billedTo.email}
+          {client.email}
         </div>
       </div>
       <br />

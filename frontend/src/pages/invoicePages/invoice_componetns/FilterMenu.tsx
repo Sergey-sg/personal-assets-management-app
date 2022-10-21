@@ -2,6 +2,23 @@ import { Typography } from 'components/common/Typography'
 import React, { useState } from 'react'
 import { MdOutlineCancel, MdOutlineFilterList } from 'react-icons/md'
 
+const resetAllFilters = {
+  minDate: '',
+  maxDate: '',
+  minPrice: 0,
+  maxPrice: 0,
+  status: '',
+  target: '',
+}
+
+const getCurrentLabel = (label: string) => {
+  const outLabel = label.split('U')
+
+  return outLabel[1]
+    ? `${outLabel[0]} U${outLabel[1]}`
+    : `${outLabel[0].toLocaleUpperCase()}`
+}
+
 function FilterMenu(props: any) {
   const [showSidebar, setShowSidebar] = useState(false)
   const [filters, setFilters] = useState({
@@ -10,19 +27,12 @@ function FilterMenu(props: any) {
     minPrice: props.filters.minPrice,
     maxPrice: props.filters.maxPrice,
     status: props.filters.status,
+    target: props.filters.target,
   })
 
   function resetFilters() {
-    const resetFilters = {
-      minDate: '',
-      maxDate: '',
-      minPrice: '',
-      maxPrice: '',
-      status: '',
-    }
-
-    setFilters(resetFilters)
-    props.setFilters(resetFilters)
+    setFilters(resetAllFilters)
+    props.setFilters(resetAllFilters)
   }
 
   return (
@@ -116,11 +126,11 @@ function FilterMenu(props: any) {
                         min
                           ? setFilters({
                               ...filters,
-                              minPrice: parseFloat(e.target.value) * 100,
+                              minPrice: (parseFloat(e.target.value) * 100) | 0,
                             })
                           : setFilters({
                               ...filters,
-                              maxPrice: parseFloat(e.target.value) * 100,
+                              maxPrice: (parseFloat(e.target.value) * 100) | 0,
                             })
                       }}
                       className="w-full border border-gray-light rounded-xl p-2 focus:outline-none focus:border-green-hover focus:ring-green-hover focus:ring-0"
@@ -129,6 +139,46 @@ function FilterMenu(props: any) {
                         min ? filters.minPrice / 100 : filters.maxPrice / 100
                       }
                     />
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            <ul className="items-center w-full text-sm font-medium text-text-ultralight bg-white rounded-lg border border-gray-light sm:flex mb-4">
+              {['toUser', 'fromUser', 'all'].map((target: string) => (
+                <li key={target} className="w-full">
+                  <div className="flex items-center pl-3">
+                    <input
+                      onChange={(e) => {
+                        setFilters({
+                          ...filters,
+                          target: target === 'all' ? '' : e.target.value,
+                        })
+                      }}
+                      id={target}
+                      name="target"
+                      type="radio"
+                      value={target}
+                      className="w-4 h-4 text-green bg-gray-ultralight rounded-xl border-gray-light focus:ring-transparent"
+                      checked={
+                        filters.target === target
+                          ? true
+                          : filters.target === '' && target === 'all'
+                      }
+                    />
+                    <label
+                      htmlFor={target}
+                      className={`my-3 rounded-xl text-center mx-2 w-full text-sm font-medium text-text 
+                        ${
+                          target === 'toUser'
+                            ? 'bg-green-ultralight'
+                            : target === 'fromUser'
+                            ? 'bg-orange-ultralight'
+                            : 'bg-gray-ultralight'
+                        }`}
+                    >
+                      {getCurrentLabel(target)}
+                    </label>
                   </div>
                 </li>
               ))}
