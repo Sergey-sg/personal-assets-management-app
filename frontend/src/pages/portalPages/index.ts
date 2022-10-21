@@ -4,6 +4,16 @@ import MyWallet from './MyWallet'
 import MoneyBox from './MoneyBox'
 import Widgets from './Widgets'
 import Settings from './Settings'
+import DashboardOverview from './DashboardOverview'
 import Chats from './Chats'
 
-export { Dashboard, Transactions, MyWallet, MoneyBox, Widgets, Chats, Settings }
+export {
+  Dashboard,
+  DashboardOverview,
+  Transactions,
+  MyWallet,
+  MoneyBox,
+  Widgets,
+  Chats,
+  Settings,
+}

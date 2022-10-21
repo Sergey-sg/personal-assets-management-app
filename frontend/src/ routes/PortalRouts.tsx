@@ -9,6 +9,7 @@ import {
   Settings,
   Transactions,
   Widgets,
+  DashboardOverview,
 } from 'pages/portalPages'
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
@@ -18,7 +19,7 @@ const PortalRouts = () => {
     <Routes>
       <Route path={AppRoute.HOME} element={<PortalPage />}>
         <Route index element={<Dashboard />} />
-        <Route path={AppRoute.DASHBOARD} element={<Dashboard />} />
+        <Route path={AppRoute.DASHBOARD} element={<DashboardOverview />} />
         <Route path={AppRoute.TRANSACTIONS} element={<Transactions />} />
         <Route path={AppRoute.MY_WALLETS} element={<MyWallet />} />
         <Route path={AppRoute.WIDGETS} element={<Widgets />} />

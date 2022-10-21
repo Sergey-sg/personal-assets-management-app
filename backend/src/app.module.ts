@@ -21,6 +21,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { InvoicesModule } from './invoices/invoices.module';
 import { ToDoModule } from './todo/todo.module';
 import { WalletLimitModule } from './walletLimit/walletLimit.module';
+import { ReportsModule } from './reports/reports.module';
 
 @Module({
   imports: [
@@ -62,7 +63,8 @@ import { WalletLimitModule } from './walletLimit/walletLimit.module';
     EventEmitterModule.forRoot(),
     InvoicesModule,
     ToDoModule,
-    WalletLimitModule
+    WalletLimitModule,
+    ReportsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
