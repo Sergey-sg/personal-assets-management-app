@@ -1,5 +1,5 @@
 import { IncomeEntity } from './entities/income.entity';
-import { CreateIncomeDto } from './dto/create-income.dto';
+import { CreateIncomeDto } from './dto/createIncome.dto';
 import {
   Controller,
   Get,
@@ -16,10 +16,10 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { IncomeService } from './income.service';
-import { UpdateIncomeDto } from './dto/update-income.dto';
-import { AllWalletIncomeResponseDto } from './dto/all-wallet-income-response.dto';
-import { AllUserIncomeResponseDto } from './dto/all-user-income-response.dto';
-import { AllUserIncomeResponseType } from './interfaces/all-user-income-response.type';
+import { UpdateIncomeDto } from './dto/updateIncome.dto';
+import { AllWalletIncomeResponseDto } from './dto/allWalletIncomeResponse.dto';
+import { AllUserIncomeResponseDto } from './dto/allUserIncomeResponse.dto';
+import { AllUserIncomeResponseType } from './interfaces/allUserIncomeResponse.type';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @ApiTags('Income')

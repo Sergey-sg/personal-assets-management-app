@@ -7,25 +7,12 @@ import { SectionTitle } from './SectionTitle'
 import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
 import { updateUserProfile } from 'redux/slice/userProfile/actionCreators'
 import { IUserProfile } from 'redux/slice/userProfile/userProfile.slice'
-import { notifyError, notifySuccess } from 'components/common/notifications'
-import { resetError } from 'redux/slice/error/error.slice'
-import { resetSuccess } from 'redux/slice/success/success.slice'
-import { ToastContainer, Zoom } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import { PhoneInput } from 'components/common/inputs/PhoneInput'
 
 const PersonalInfoForm: React.FC = () => {
   const dispatch = useAppDispatch()
 
   const userProfile = useAppSelector((state) => state.userProfile)
-  const error = useAppSelector((state) => state.error.message)
-  const success = useAppSelector((state) => state.success.message)
-
-  useEffect(() => {
-    error && notifyError(error)
-    success && notifySuccess(success)
-    dispatch(resetError())
-    dispatch(resetSuccess())
-  }, [error, success])
 
   const InitialValues: IUserProfile = {
     firstName: userProfile.firstName || '',
@@ -47,7 +34,7 @@ const PersonalInfoForm: React.FC = () => {
       onSubmit={handleSubmit}
       enableReinitialize
     >
-      {({ dirty, isValid }) => {
+      {({ dirty, isValid, setFieldValue, errors }) => {
         return (
           <>
             <SectionTitle title={'Personal Information'} />
@@ -96,12 +83,13 @@ const PersonalInfoForm: React.FC = () => {
                     placeholder={'e.g. 22.05.2000'}
                     className="sm:w-1/2"
                   />
-                  <InputField
-                    label={'Mobile Number'}
+                  <PhoneInput
+                    label={'Phone'}
                     type={'tel'}
                     name={'phone'}
                     placeholder={'e.g.+380 99 999 99 99'}
-                    className="sm:w-1/2"
+                    setFieldValue={setFieldValue}
+                    error={errors.phone}
                   />
                 </div>
               </div>
@@ -111,7 +99,6 @@ const PersonalInfoForm: React.FC = () => {
                 btnName={'primary'}
                 disabled={!(isValid && dirty)}
               />
-              <ToastContainer transition={Zoom} />
             </Form>
           </>
         )

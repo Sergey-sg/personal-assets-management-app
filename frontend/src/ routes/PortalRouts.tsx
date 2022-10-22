@@ -13,6 +13,7 @@ import {
   Settings,
   Transactions,
   Widgets,
+  DashboardOverview,
 } from 'pages/portalPages'
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
@@ -20,9 +21,10 @@ import { Route, Routes } from 'react-router-dom'
 const PortalRouts = () => {
   return (
     <Routes>
+      <Route path={AppRoute.HOME} element={<PortalPage />} />
       <Route path={AppRoute.PORTAL} element={<PortalPage />}>
         <Route index element={<Dashboard />} />
-        <Route path={AppRoute.DASHBOARD} element={<Dashboard />} />
+        <Route path={AppRoute.DASHBOARD} element={<DashboardOverview />} />
         <Route path={AppRoute.TRANSACTIONS} element={<Transactions />} />
         <Route path={AppRoute.INVOICES}>
           <Route path="" element={<InvoicesListPage />} />

@@ -6,7 +6,7 @@ interface LayoutProps {
 
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div className="flex flex-col justify-start p-10 overflow-y-auto h-5/6">
+    <div className="flex flex-col justify-start p-10 overflow-y-auto h-5/6 relative">
       {children}
     </div>
   )

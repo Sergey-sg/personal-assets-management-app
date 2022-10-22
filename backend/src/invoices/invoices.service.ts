@@ -63,7 +63,11 @@ export class InvoicesService {
     return invoice;
   }
 
-  private validateTotalPrice(items: InvoiceItemDto[], discount: number, entryTotalPrice: number) {
+  private validateTotalPrice(
+    items: InvoiceItemDto[],
+    discount: number,
+    entryTotalPrice: number,
+  ) {
     const subTotal = items.reduce(
       (total, item) => item.price * item.amount + total,
       0,
@@ -169,7 +173,11 @@ export class InvoicesService {
     currentUser: UserEntity,
   ): Promise<InvoiceEntity> {
     const billedTo = await this.getUser(invoiceDto.billedTo);
-    this.validateTotalPrice(invoiceDto.items, invoiceDto.discount, invoiceDto.total);
+    this.validateTotalPrice(
+      invoiceDto.items,
+      invoiceDto.discount,
+      invoiceDto.total,
+    );
     const oldInvoice = await this.getInvoiceByIdForUser(
       { id: invoiceId, createdBy: { id: currentUser.id }, displayForUsers: {id: currentUser.id} },
       {billedTo: true},
@@ -193,8 +201,8 @@ export class InvoicesService {
       displayForUsers: [currentUser, billedTo],
     });
     const oldItems = await this.itemRepository.find({
-      select: {id: true},
-      where: {invoice: { id: invoiceId }},
+      select: { id: true },
+      where: { invoice: { id: invoiceId } },
     });
     return await this.dataSource.transaction(
       async (entityManager: EntityManager) => {
@@ -203,7 +211,9 @@ export class InvoicesService {
             .withRepository(this.itemRepository)
             .delete(oldItems.map((item) => item.id));
         }
-        return await entityManager.withRepository(this.invoiceRepository).save(newInvoice);
+        return await entityManager
+          .withRepository(this.invoiceRepository)
+          .save(newInvoice);
       },
     );
   }
@@ -214,15 +224,19 @@ export class InvoicesService {
   ): Promise<void> {
     const invoice = await this.getInvoiceByIdForUser(
       { id: invoiceId },
-      {displayForUsers: true},
+      { displayForUsers: true },
     );
-    if (!invoice.displayForUsers.map(user => user.id).includes(currentUser.id)) {
+    if (
+      !invoice.displayForUsers.map((user) => user.id).includes(currentUser.id)
+    ) {
       throw new HttpException(
         `Invoice does not found for user: ${currentUser.email}`,
         HttpStatus.NOT_FOUND,
       );
     }
-    invoice.displayForUsers = invoice.displayForUsers.filter((user) => user.id !== currentUser.id);
+    invoice.displayForUsers = invoice.displayForUsers.filter(
+      (user) => user.id !== currentUser.id,
+    );
     await this.invoiceRepository.save(invoice);
   }
 

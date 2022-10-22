@@ -1,10 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UserEntity } from '../../user/entities/user.entity';
+import { WalletLimitEntity } from '../../walletLimit/entities/walletLimit.entity';
 import { Entity, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { IncomeEntity } from '../../income/entities/income.entity';
 import { CostEntity } from '../../costs/entities/cost.entity';
-import { WalletStatus } from '../enums/wallet-status.enum';
-import { WalletCurrency } from '../enums/wallet-currency.enum';
+import { WalletStatus } from '../enums/walletStatus.enum';
+import { WalletCurrency } from '../enums/walletCurrency.enum';
 import { Base } from 'src/common/dto/base.dto';
 
 @Entity('wallet')
@@ -17,6 +18,8 @@ export class WalletEntity extends Base {
   @Column({ type: 'enum', enum: WalletStatus, default: WalletStatus.OPEN })
   status: WalletStatus;
 
+  @ManyToOne(() => UserEntity, (user) => user.wallet)
+  userWallet: UserEntity;
   @ApiProperty({ example: 1000, description: 'Wallet total balance' })
   @Column({ type: 'int', default: 0 })
   total_balance: number;
@@ -40,4 +43,14 @@ export class WalletEntity extends Base {
     onDelete: 'CASCADE',
   })
   costs: CostEntity[];
+
+  @ApiProperty()
+  @OneToMany(
+    () => WalletLimitEntity,
+    (walletLimit: WalletLimitEntity) => walletLimit.wallet,
+    {
+      onDelete: 'CASCADE',
+    },
+  )
+  walletLimits: WalletLimitEntity[];
 }

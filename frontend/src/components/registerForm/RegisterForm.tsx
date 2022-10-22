@@ -4,10 +4,14 @@ import { useAppDispatch } from '../../hooks/useAppDispatch'
 import InputUI from '../../ui/input/InputUI'
 import { Form, Formik } from 'formik'
 import { validationsSchemaRegister } from './schemasAuth/ValidationSchemaAuth'
-import { Registration } from 'redux/slice/authSlice'
+import { Registration } from 'redux/thunk/authThunk'
+import { Link } from 'react-router-dom'
+import { AppRoute } from 'common/enums/app-route.enum'
+import { Typography } from 'components/common/Typography'
+import { GoogleLink } from 'components/common/GoogleLink/GoogleLink'
 
 type PropsRegisterForm = {
-  toggleFunction: React.MouseEventHandler<HTMLButtonElement>
+  toggleFunction?: React.MouseEventHandler<HTMLButtonElement>
 }
 
 const RegisterForm: React.FC<PropsRegisterForm> = ({ toggleFunction }: any) => {
@@ -24,10 +28,10 @@ const RegisterForm: React.FC<PropsRegisterForm> = ({ toggleFunction }: any) => {
   )
 
   return (
-    <div className="p-4" style={{ margin: 'auto', width: '100%' }}>
-      <h1 className="text-3xl font-semibold text-center mb-10">
-        Sing up for an account
-      </h1>
+    <div className="w-full h-full px-14">
+      <Typography type={'h1'} className="text-center mb-8">
+        Create new account
+      </Typography>
 
       <Formik
         initialValues={{
@@ -55,10 +59,10 @@ const RegisterForm: React.FC<PropsRegisterForm> = ({ toggleFunction }: any) => {
             <Form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <label
-                  className="block text-gray-700 text-xl font-medium mb-2"
+                  className="block text-gray-700 text-xl font-medium mb-1"
                   htmlFor="username"
                 >
-                  First name
+                  <Typography type={'Ag-16-medium'}> First name</Typography>
                 </label>
                 <InputUI
                   type={'text'}
@@ -73,10 +77,10 @@ const RegisterForm: React.FC<PropsRegisterForm> = ({ toggleFunction }: any) => {
 
               <div className="mb-4">
                 <label
-                  className="block text-gray-700 text-xl font-medium mb-2"
+                  className="block text-gray-700 text-xl font-medium mb-1"
                   htmlFor="username"
                 >
-                  Last name
+                  <Typography type={'Ag-16-medium'}> Last name</Typography>
                 </label>
                 <InputUI
                   type={'text'}
@@ -91,10 +95,10 @@ const RegisterForm: React.FC<PropsRegisterForm> = ({ toggleFunction }: any) => {
 
               <div className="mb-4">
                 <label
-                  className="block text-gray-700 text-xl font-medium mb-2"
+                  className="block text-gray-700 text-xl font-medium mb-1"
                   htmlFor="username"
                 >
-                  Email
+                  <Typography type={'Ag-16-medium'}>Email</Typography>
                 </label>
                 <InputUI
                   type={'email'}
@@ -117,10 +121,10 @@ const RegisterForm: React.FC<PropsRegisterForm> = ({ toggleFunction }: any) => {
 
               <div className="mb-4">
                 <label
-                  className="block text-gray-700 text-xl font-medium mb-2"
+                  className="block text-gray-700 text-xl font-medium mb-1"
                   htmlFor="username"
                 >
-                  Password
+                  <Typography type={'Ag-16-medium'}>Password</Typography>
                 </label>
                 <InputUI
                   type={'password'}
@@ -141,12 +145,14 @@ const RegisterForm: React.FC<PropsRegisterForm> = ({ toggleFunction }: any) => {
                 </p>
               )}
 
-              <div className="mb-4">
+              <div className="mb-4 w-full p-0">
                 <label
-                  className="block text-gray-700 text-xl font-medium mb-2"
+                  className="block text-gray-700 text-xl font-medium mb-1"
                   htmlFor="username"
                 >
-                  Confirm password
+                  <Typography type={'Ag-16-medium'}>
+                    Confirm password
+                  </Typography>
                 </label>
                 <InputUI
                   type={'password'}
@@ -174,21 +180,19 @@ const RegisterForm: React.FC<PropsRegisterForm> = ({ toggleFunction }: any) => {
                 disabled={!isValid && !dirty}
                 type={'submit'}
                 btnName={'primary'}
-                label={'Register'}
-              >
-                Register
-              </Button>
-              <hr className="m-2" />
+                label={'Create account'}
+                className="w-full m-0 mt-10"
+              />
             </Form>
           </div>
         )}
       </Formik>
-      <div
-        onClick={toggleFunction}
-        className="italic cursor-pointer hover: text-slate-500"
-      >
-        You already have an account?
+
+      {/* <Link to={`${AppRoute.HOME}`}> */}
+      <div onClick={toggleFunction} className="mt-5 text-center cursor-pointer">
+        <GoogleLink type={'sign-in'} to={AppRoute.HOME} />
       </div>
+      {/* </Link> */}
     </div>
   )
 }

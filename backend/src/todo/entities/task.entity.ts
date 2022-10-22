@@ -18,6 +18,6 @@ export class Task extends Base {
   })
   isDone: boolean;
 
-  @ManyToOne((type) => TaskList, (list) => list.tasks)
+  @ManyToOne((type) => TaskList, (list) => list.tasks, { onDelete: 'CASCADE' })
   list: TaskList;
 }

@@ -14,8 +14,8 @@ export const GoogleLink: React.FC<GoogleLinkProps> = ({ type, to }) => {
     <>
       <div className="flex flex-row items-center justify-center ">
         <Typography type={'Ag-14-medium'} className="text-text-ultralight">
-          {type === 'sign-in' && 'Don’t have an account?'}
-          {type === 'sign-up' && 'Already have an account?'}
+          {type === 'sign-up' && 'Don’t have an account?'}
+          {type === 'sign-in' && 'Already have an account?'}
         </Typography>
 
         <div className="relative">

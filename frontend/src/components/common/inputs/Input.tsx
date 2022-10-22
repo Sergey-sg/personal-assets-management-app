@@ -5,7 +5,7 @@ import clsx from 'clsx'
 export interface InputProps extends React.HTMLProps<HTMLInputElement> {
   className?: string
   label?: string
-  type: 'text' | 'email' | 'password' | 'number' | 'tel' | 'date'
+  type: 'text' | 'email' | 'password' | 'number' | 'tel' | 'date' | 'search'
   name: string
   placeholder?: string
   disabled?: boolean
@@ -35,7 +35,7 @@ export const Input: React.FC<InputProps> = ({
       </label>
 
       <input
-        className={`form-input rounded-lg min-w-full text-base font-medium text-green-dark placeholder:italic placeholder:text-slate-400 placeholder:text-sm placeholder:font-medium  opacity-70  focus:border-2 focus:border-lime-500 focus:ring-0 ${borderStyle}`}
+        className={`form-input rounded-lg min-w-full text-base font-medium text-green-dark placeholder:italic placeholder:text-slate-400 placeholder:text-sm placeholder:font-medium  opacity-70  focus:border focus:border-lime-500 focus:ring-0 hover:border hover:border-lime-500 ${borderStyle}`}
         type={type}
         name={name}
         value={value}

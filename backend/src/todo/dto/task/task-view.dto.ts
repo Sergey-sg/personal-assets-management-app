@@ -13,11 +13,15 @@ export class TaskViewDto {
   })
   isDone: boolean;
 
-  static fromEntity(task: Task): TaskViewDto {
+  @ApiProperty()
+  listId: number;
+
+  static fromEntity(task: Task, listId?: number): TaskViewDto {
     const dto = new TaskViewDto();
     dto.id = task.id;
     dto.description = task.description;
     dto.isDone = task.isDone;
+    dto.listId = task.list?.id || listId;
     return dto;
   }
 }

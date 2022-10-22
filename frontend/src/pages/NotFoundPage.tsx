@@ -17,7 +17,7 @@ const NotFoundPage: React.FC = () => {
       </div>
       <button className="mt-5">
         <Link
-          to={AppRoute.PORTAL}
+          to={AppRoute.HOME}
           className="relative inline-block text-sm font-medium text-error group active:text-orange-500 focus:outline-none focus:ring"
         >
           <span className="absolute inset-0 transition-transform translate-x-0.5 translate-y-0.5 bg-error group-hover:translate-y-0 group-hover:translate-x-0"></span>

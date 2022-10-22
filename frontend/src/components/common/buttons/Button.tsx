@@ -7,7 +7,14 @@ import { STYLES } from './Button.style'
 interface ButtonProps {
   label?: string
   type: 'button' | 'submit' | 'reset'
-  btnName: 'primary' | 'secondary' | 'tertiary' | 'tertiary2' | 'google'
+  btnName:
+    | 'primary'
+    | 'secondary'
+    | 'secondaryWithoutFocus'
+    | 'tertiary'
+    | 'tertiary2'
+    | 'google'
+    | 'delete'
   className?: string
   disabled?: boolean
   children?: React.ReactNode | React.ReactNode[]

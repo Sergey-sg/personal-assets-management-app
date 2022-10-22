@@ -12,6 +12,7 @@ api.interceptors.request.use((config: any) => {
 })
 
 export const apiCreden = axios.create({
+  baseURL: process.env.BACKEND_URL || 'http://localhost:3001/api',
   withCredentials: true,
 })
 export default api

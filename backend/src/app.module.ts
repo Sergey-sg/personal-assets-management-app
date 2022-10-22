@@ -2,18 +2,26 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { join } from 'path';
 import TypeormConfig from './config/typeorm.config';
+import { ExchangeModule } from './exchange/exchange.module';
+import { WalletModule } from './wallet/wallet.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
-import { WalletModule } from './wallet/wallet.module';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { IncomeModule } from './income/income.module';
 import { CostsModule } from './costs/costs.module';
+import { ConversationsModule } from './conversations/conversations.module';
+import { MessagesModule } from './messages/messages.module';
+import { GatewayModule } from './gateway/gateway.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { InvoicesModule } from './invoices/invoices.module';
 import { ToDoModule } from './todo/todo.module';
+import { WalletLimitModule } from './walletLimit/walletLimit.module';
+import { ReportsModule } from './reports/reports.module';
 
 @Module({
   imports: [
@@ -46,10 +54,17 @@ import { ToDoModule } from './todo/todo.module';
     UserModule,
     AuthModule,
     WalletModule,
+    ExchangeModule,
     IncomeModule,
     CostsModule,
+    ConversationsModule,
+    MessagesModule,
+    GatewayModule,
+    EventEmitterModule.forRoot(),
     InvoicesModule,
     ToDoModule,
+    WalletLimitModule,
+    ReportsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

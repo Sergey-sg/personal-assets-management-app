@@ -14,6 +14,8 @@ enum AppRoute {
   INVOICE_CREATE = 'new-invoice',
   INVOICE_UPDATE = 'update-invoice',
   INVOICE_DETAILS = 'invoice-details',
+  FORGOT_PASSWORD = 'forgotPassword',
+  VERIFY_CODE = 'verify-code',
 }
 
 export { AppRoute }

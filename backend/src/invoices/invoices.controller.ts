@@ -75,11 +75,7 @@ export class InvoicesController {
     @Param('invoiceId') invoiceId: number,
     @Body() invoice: UpdateInvoiceDto,
   ): Promise<InvoiceDto> {
-    return this.invoicesService.updateInvoice(
-      invoiceId,
-      invoice,
-      currentUser,
-    );
+    return this.invoicesService.updateInvoice(invoiceId, invoice, currentUser);
   }
 
   @Delete('/:invoiceId')
@@ -88,10 +84,7 @@ export class InvoicesController {
     @User() currentUser: UserEntity,
     @Param('invoiceId') invoiceId: number,
   ): Promise<void> {
-    return this.invoicesService.removeInvoiceForUser(
-      invoiceId,
-      currentUser,
-    );
+    return this.invoicesService.removeInvoiceForUser(invoiceId, currentUser);
   }
 
   @Post('/customer')

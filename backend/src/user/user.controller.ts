@@ -20,18 +20,36 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
   OmitType,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
 import { UserService } from './user.service';
 import { User } from '../user/decorators/user.decorator';
+import { FilterDto } from './dto/filter.dto';
 
 @ApiTags('User')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
+  @Get()
+  @ApiOperation({ summary: 'Find user by email or name and return it.' })
+  @ApiOkResponse({
+    description: 'User has been successfully returned',
+    type: UserEntity,
+  })
+  @ApiQuery({
+    name: 'email',
+    type: 'string',
+    description: 'User email',
+  })
+  async findByEmailOrName(
+    @User('id') id: number,
+    @Query() searchQuery: FilterDto,
+  ) {
+    return await this.userService.findByEmailOrName(searchQuery, id);
+  }
   @Get()
   @ApiOperation({ summary: 'Get all users and return an array of them.' })
   @ApiOkResponse({

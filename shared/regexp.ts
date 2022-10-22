@@ -15,6 +15,8 @@ const PHONE_RULE = /^\+?3?8?(0\d{9})$/
 
 const USER_NAME_RULE = /^[a-zA-ZА-ЯҐЄІЇа-яієїґ0-9\s'-]+$/
 
+const POSITIVE_DECIMAL_NUMBER = /^(?=.*\d)\d*(?:\.\d{0,2})?$/g
+
 const PASSWORD_RULE_MESSAGE =
   'The password must contain uppercase and lowercase letters'
 
@@ -33,6 +35,7 @@ export const REGEX = {
   FILE_TYPE_RULE,
   PHONE_RULE,
   USER_NAME_RULE,
+  POSITIVE_DECIMAL_NUMBER
 }
 
 export const MESSAGES = {

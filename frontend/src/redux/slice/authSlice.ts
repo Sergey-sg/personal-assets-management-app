@@ -1,80 +1,46 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import api, { apiCreden } from '../../axios/axios'
-export const fetchLogin = createAsyncThunk(
-  'users/fetchById',
-  async (params: any) => {
-    const { data } = await api.post('/auth/login', params)
+import { createSlice } from '@reduxjs/toolkit'
+import {
+  authWithGoogle,
+  checkAuth,
+  fetchLogin,
+  Logout,
+  Registration,
+  verifyCodeAuth,
+} from '../thunk/authThunk'
 
-    return data
-  },
-)
-export const Registration = createAsyncThunk(
-  'users/fetchRegistration',
-  async (params: any): Promise<any> => {
-    const { data } = await api.post('auth/register', params)
-    // localStorage.setItem('token', data.tokens.access_token)
-
-    return data
-  },
-)
-export const Logout = createAsyncThunk('users/fetchLogout', async () => {
-  const { data } = await api.post('/auth/logout')
-
-  window.localStorage.removeItem('token')
-
-  return data
-})
-export const GetAllUsers = createAsyncThunk('users/fetchAll', async () => {
-  const { data } = await api.get('users')
-
-  return data
-})
-export const checkAuth = createAsyncThunk('users/check', async () => {
-  const { data } = await apiCreden.post(
-    'http://localhost:3001/api/auth/refresh',
-  )
-
-  return data
-})
-export const authWithGoogle = createAsyncThunk(
-  'users/google',
-  async (credentialResponse: object) => {
-    const { data } = await apiCreden.post(
-      'http://localhost:3001/api/auth/google/auth',
-      {
-        token: credentialResponse,
-      },
-    )
-
-    return data
-  },
-)
-//
-//
-//
 interface typeInfo {
   user: object
   status: string
   isAuth: boolean
+  isVerify: boolean
+  sendAuthMessage: boolean
 }
 const initialState: typeInfo = {
   user: {},
   status: 'SUCCESS',
   isAuth: false,
+  isVerify: false,
+  sendAuthMessage: false,
 }
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    toggleSendAuthMessage(state) {
+      state.sendAuthMessage = true
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchLogin.pending, (state) => {
       state.status = 'LOADING'
     })
     builder.addCase(fetchLogin.fulfilled, (state, action) => {
       state.status = 'SUCCESS'
-      state.isAuth = true
-      state.user = action.payload
-      localStorage.setItem('token', action.payload.tokens.access_token)
+      const statusCode = action.payload['status']
+
+      if (statusCode === 201) {
+        state.isVerify = true
+      }
     })
     builder.addCase(fetchLogin.rejected, (state) => {
       state.status = 'ERROR'
@@ -107,9 +73,20 @@ const authSlice = createSlice({
     })
     builder.addCase(checkAuth.fulfilled, (state, action) => {
       state.status = 'SUCCESS'
-      state.user = action.payload
-      localStorage.setItem('token', action.payload.tokens.access_token)
-      state.isAuth = true
+
+      if (action.payload['status'] === 200) {
+        state.user = action.payload['data'].user
+        localStorage.setItem(
+          'token',
+          action.payload['data'].tokens.access_token,
+        )
+        state.isAuth = true
+      }
+      if (action.payload['status'] > 201) {
+        state.user = {}
+        localStorage.removeItem('token')
+        state.isAuth = false
+      }
     })
     builder.addCase(checkAuth.rejected, (state) => {
       state.status = 'ERROR'
@@ -129,9 +106,35 @@ const authSlice = createSlice({
       state.status = 'ERROR'
       state.isAuth = false
     })
+    builder.addCase(verifyCodeAuth.pending, (state) => {
+      state.status = 'LOADING'
+    })
+    builder.addCase(verifyCodeAuth.fulfilled, (state, action) => {
+      state.status = 'SUCCESS'
+      const statusCode = action.payload['status']
+
+      console.log(statusCode)
+
+      if (statusCode !== 201) {
+        state.sendAuthMessage = true
+      }
+      const userData = action.payload['data']
+
+      state.user = userData.user
+
+      localStorage.setItem('token', userData.tokens.access_token)
+      sessionStorage.clear()
+      state.isAuth = true
+      state.isVerify = false
+    })
+    builder.addCase(verifyCodeAuth.rejected, (state, action) => {
+      state.sendAuthMessage = true
+      state.status = 'ERROR'
+      state.isAuth = false
+    })
   },
 })
 
-export const {} = authSlice.actions
+export const { toggleSendAuthMessage } = authSlice.actions
 
 export default authSlice.reducer

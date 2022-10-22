@@ -20,7 +20,7 @@ export class TaskListViewDto {
     dto.id = list.id;
     dto.createdAt = list.createdAt;
     dto.title = list.title;
-    dto.tasks = list.tasks.map((task) => TaskViewDto.fromEntity(task));
+    dto.tasks = list.tasks.map((task) => TaskViewDto.fromEntity(task, list.id));
     return dto;
   }
 }

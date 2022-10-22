@@ -3,11 +3,11 @@ import { IncomeEntity } from './entities/income.entity';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, EntityManager, In, Repository } from 'typeorm';
-import { CreateIncomeDto } from './dto/create-income.dto';
+import { CreateIncomeDto } from './dto/createIncome.dto';
 import { WalletEntity } from '../wallet/entities/wallet.entity';
-import { UpdateIncomeDto } from './dto/update-income.dto';
-import { AllWalletIncomeResponseDto } from './dto/all-wallet-income-response.dto';
-import { AllUserIncomeResponseType } from './interfaces/all-user-income-response.type';
+import { UpdateIncomeDto } from './dto/updateIncome.dto';
+import { AllWalletIncomeResponseDto } from './dto/allWalletIncomeResponse.dto';
+import { AllUserIncomeResponseType } from './interfaces/allUserIncomeResponse.type';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @Injectable()

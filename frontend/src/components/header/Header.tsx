@@ -8,6 +8,7 @@ import { Modal } from 'components/sideBar/Modal/Modal'
 import { SideBar } from 'components/sideBar/SideBar'
 import { menuStructure } from 'pages/PortalPage'
 import { AppRoute } from 'common/enums/app-route.enum'
+import { ReactComponent as MenuIcon } from 'assets/icons/menu.svg'
 
 export const Header: React.FC = () => {
   const [open, setOpen] = useState(false)
@@ -21,8 +22,12 @@ export const Header: React.FC = () => {
     <>
       <header className="sticky w-full h-[90px] flex justify-between items-center py-6 px-11 pl-9 border-b border-b-neutral-200">
         <div>
-          <div className="block md:hidden">
-            <Logo size={'mobile'} onClick={() => setOpen(true)} />
+          <div
+            className="flex justify-center items-center gap-3 md:hidden"
+            onClick={() => setOpen(true)}
+          >
+            <MenuIcon className="w-10 h-10" />
+            <Logo size={'mobile'} />
           </div>
           <div className="hidden md:block">
             <Typography type={'h2'} className=" capitalize">

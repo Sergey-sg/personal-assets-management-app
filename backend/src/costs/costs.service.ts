@@ -1,13 +1,14 @@
 import { CostEntity } from './entities/cost.entity';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateCostDto } from './dto/create-cost.dto';
-import { UpdateCostDto } from './dto/update-cost.dto';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { CreateCostDto } from './dto/createCost.dto';
+import { UpdateCostDto } from './dto/updateCost.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, EntityManager, In, Repository } from 'typeorm';
 import { WalletEntity } from '../wallet/entities/wallet.entity';
+import { WalletLimitService } from '../walletLimit/walletLimit.service';
 import { UserEntity } from '../user/entities/user.entity';
-import { AllWalletCostsResponseDto } from './dto/all-wallet-costs-response.dto';
-import { AllUserCostsResponseType } from './interfaces/all-user-costs-response.type';
+import { AllWalletCostsResponseDto } from './dto/allWalletCostsResponse.dto';
+import { AllUserCostsResponseType } from './interfaces/allUserCostsResponse.type';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @Injectable()
@@ -20,6 +21,8 @@ export class CostsService {
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
     private dataSource: DataSource,
+    @Inject(WalletLimitService)
+    private walletLimitService: WalletLimitService,
   ) {}
 
   async createCost(
@@ -36,6 +39,38 @@ export class CostsService {
         `Wallet with id: ${walletId} doesn't find`,
         HttpStatus.NOT_FOUND,
       );
+    }
+
+    const limit = await this.walletLimitService.getWalletLimitByWalletId(
+      walletId,
+    );
+
+    if (limit) {
+      const currentDate = new Date();
+      const dayInMilisec = 24 * 60 * 60 * 1000;
+      const startDate4CalculateSumMilisec =
+        currentDate.getTime() - limit.wallet_duration * dayInMilisec;
+      const startDate4CalculateSum = new Date(startDate4CalculateSumMilisec);
+
+      const { sum } = await this.dataSource
+        .getRepository(WalletEntity)
+        .createQueryBuilder('wallet')
+        .leftJoinAndSelect('wallet.costs', 'cost')
+        .select('SUM(cost.cost_sum)', 'sum')
+        .where('wallet.id = :id AND cost.createdAt >= :after', {
+          id: walletId,
+          after: startDate4CalculateSum,
+        })
+        .getRawOne();
+
+      const predictableBalance = Number(sum) + Number(createCostDto.cost_sum);
+
+      if (predictableBalance >= limit.wallet_limit) {
+        throw new HttpException(
+          `Max sum that allow to use = ${limit.wallet_limit} for ${limit.wallet_duration} days`,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
     }
 
     const newCost = this.costRepository.create(createCostDto);

@@ -5,6 +5,7 @@ import {
   ChangePasswordForm,
   DeleteAccountForm,
 } from 'components/settings'
+import WalletLimitsForm from 'components/settings/WalletLimitsForm'
 
 const Settings: React.FC = () => {
   return (
@@ -17,6 +18,7 @@ const Settings: React.FC = () => {
         <PersonalInfoForm />
         <ChangePasswordForm />
         <DeleteAccountForm />
+        <WalletLimitsForm />
       </div>
     </>
   )

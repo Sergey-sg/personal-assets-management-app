@@ -15,11 +15,11 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CostsService } from './costs.service';
-import { CreateCostDto } from './dto/create-cost.dto';
-import { UpdateCostDto } from './dto/update-cost.dto';
-import { AllWalletCostsResponseDto } from './dto/all-wallet-costs-response.dto';
-import { AllUserCostsResponseDto } from './dto/all-user-costs-response.dto';
-import { AllUserCostsResponseType } from './interfaces/all-user-costs-response.type';
+import { CreateCostDto } from './dto/createCost.dto';
+import { UpdateCostDto } from './dto/updateCost.dto';
+import { AllWalletCostsResponseDto } from './dto/allWalletCostsResponse.dto';
+import { AllUserCostsResponseDto } from './dto/allUserCostsResponse.dto';
+import { AllUserCostsResponseType } from './interfaces/allUserCostsResponse.type';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @ApiTags('Costs')

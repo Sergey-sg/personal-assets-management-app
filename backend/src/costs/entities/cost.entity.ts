@@ -3,9 +3,18 @@ import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserEntity } from '../../user/entities/user.entity';
 import { Base } from 'src/common/dto/base.dto';
+import { CostsCategories } from '../enums/costsCategory.enum';
 
 @Entity('costs')
 export class CostEntity extends Base {
+  @ApiProperty({ example: 'salary', description: 'Income category' })
+  @Column({
+    type: 'enum',
+    enum: CostsCategories,
+    default: CostsCategories.OTHER,
+  })
+  category_name: CostsCategories;
+
   @ApiProperty({ example: 'My cost', description: 'Cost name' })
   @Column({ type: 'varchar', length: 50 })
   cost_name: string;
@@ -30,10 +39,6 @@ export class CostEntity extends Base {
   )
   @JoinColumn({ name: 'to_user_id' })
   to_user: UserEntity;
-
-  @ApiProperty({ example: null, description: 'Cost alternative date' })
-  @Column({ type: 'date', default: null, nullable: true })
-  alternative_date: Date;
 
   @ManyToOne(() => WalletEntity, (wallet: WalletEntity) => wallet.costs, {
     onDelete: 'CASCADE',
