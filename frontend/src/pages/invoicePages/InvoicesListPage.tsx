@@ -4,9 +4,6 @@ import FilterMenu from 'pages/invoicePages/invoice_componetns/FilterMenu'
 import { AppRoute } from 'common/enums/app-route.enum'
 import { fetchAllInvoices } from 'redux/slice/invoiceServices/invoiceActions'
 import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
-import { notifyError, notifySuccess } from 'components/common/notifications'
-import { resetError } from 'redux/slice/error/error.slice'
-import { resetSuccess } from 'redux/slice/success/success.slice'
 import { InvoicesList } from './invoice_componetns/ListInvoices'
 import { HeaderInvoicesTable } from './invoice_componetns/HeaderInvoicesTable'
 import { SearchInvoices } from './invoice_componetns/SearchInvoices'
@@ -14,8 +11,6 @@ import { useLocation, useSearchParams } from 'react-router-dom'
 
 const InvoicesListPage = () => {
   const dispatch = useAppDispatch()
-  const error = useAppSelector((state) => state.error.message)
-  const success = useAppSelector((state) => state.success.message)
   const [searchParams, setSearchParams] = useSearchParams()
   const pagination = useAppSelector((state) => state.pagination.pagination)
   const queryParamsFromUrl = new URLSearchParams(useLocation().search)
@@ -46,13 +41,8 @@ const InvoicesListPage = () => {
   })
 
   useEffect(() => {
-    console.log('satrt useEffect')
     dispatch(fetchAllInvoices({ ...filters, page: 1, take: pagination.take }))
-    error && notifyError(error)
-    success && notifySuccess(success)
-    dispatch(resetError())
-    dispatch(resetSuccess())
-  }, [error, filters])
+  }, [filters])
 
   const getInvoicesWithFilters = useCallback(
     (newFilters: any) => {

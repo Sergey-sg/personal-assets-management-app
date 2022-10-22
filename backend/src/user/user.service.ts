@@ -236,4 +236,27 @@ export class UserService {
 
     return recipient;
   }
+
+  public async findCustomerByParams(params: any) {
+    const user = await this.userRepository.findAndCount({
+      where: params,
+      select: ['id', 'firstName', 'lastName', 'email', 'address', 'avatarPath']
+    });
+
+    if (user[1] === 0) {
+      throw new HttpException(
+        'User with these parameters not found.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (user[1] > 1) {
+      throw new HttpException(
+        'You need to make a more precise request. This request is available to several users.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    return user[0][0];
+  }
 }

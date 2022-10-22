@@ -1,12 +1,9 @@
 import { AppRoute } from 'common/enums/app-route.enum'
-import { notifyError, notifySuccess } from 'components/common/notifications'
 import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ReactTextareaAutosize from 'react-textarea-autosize'
-import { resetError } from 'redux/slice/error/error.slice'
 import { fetchCreateInvoice } from 'redux/slice/invoiceServices/invoiceActions'
-import { resetSuccess } from 'redux/slice/success/success.slice'
 import { BasicInfo } from './invoice_componetns/BasicInfo'
 import { ClientDetails } from './invoice_componetns/ClientDetails'
 import { FooterItems } from './invoice_componetns/FooterItems'
@@ -21,7 +18,6 @@ import { sum } from './secondaryFunctions/secondaryFunctions'
 
 const InvoiceCreatePage: React.FC = () => {
   const dispatch = useAppDispatch()
-  const error = useAppSelector((state) => state.error.message)
   const success = useAppSelector((state) => state.success.message)
   const createdInvoice = useAppSelector((state) => state.invoices.invoices[0])
   const navigate = useNavigate()
@@ -38,17 +34,12 @@ const InvoiceCreatePage: React.FC = () => {
   const issuedDate = new Date()
 
   useEffect(() => {
-    console.log('satrt useEffect')
-    error && notifyError(error)
-    success && notifySuccess(success)
     if (success === 'Invoice created successfully' && createdInvoice) {
       navigate(
         `/${AppRoute.PORTAL}/${AppRoute.INVOICES}/${AppRoute.INVOICE_DETAILS}/${createdInvoice.id}`,
       )
     }
-    dispatch(resetError())
-    dispatch(resetSuccess())
-  }, [error, success, createdInvoice])
+  }, [success, createdInvoice])
 
   const setNewItem = useCallback(
     (item: {

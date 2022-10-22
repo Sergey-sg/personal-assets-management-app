@@ -86,12 +86,4 @@ export class InvoicesController {
   ): Promise<void> {
     return this.invoicesService.removeInvoiceForUser(invoiceId, currentUser);
   }
-
-  @Post('/customer')
-  @ApiOperation({ summary: `get customer user by params` })
-  async getCustomerByParams(
-    @Body() params: any
-  ): Promise<UserEntity> {
-    return this.invoicesService.findCustomerByParams(params)
-  }
 }

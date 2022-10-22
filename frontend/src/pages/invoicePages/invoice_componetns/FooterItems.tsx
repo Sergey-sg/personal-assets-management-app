@@ -4,7 +4,6 @@ export function FooterItems(props: any) {
   const [inputDiscount, setInputDiscount] = useState(
     props.invoice.discount ? true : false,
   )
-  const [inputTax, setInputTax] = useState(false)
   const [discount, setDiscount] = useState(props.invoice.discount)
 
   function sendDiscountToInvoice(value: number) {
@@ -36,7 +35,7 @@ export function FooterItems(props: any) {
           <div className="mr-8">Subtotal</div>
           <div className="mx-auto">${props.subTotal / 100}</div>
         </div>
-        <div className="flex px-3">
+        <div className="flex px-3 mb-4">
           <div className="mt-2 mr-8">Discount</div>
           {!props.setDiscount ? (
             <div className="mx-auto mt-2">{props.invoice.discount}%</div>
@@ -46,23 +45,6 @@ export function FooterItems(props: any) {
             <button
               onClick={() => setInputDiscount(true)}
               className="text-green-medium w-2/4 mx-auto mt-2"
-            >
-              Add
-            </button>
-          )}
-        </div>
-        <div className="flex px-3 mt-4">
-          <div className="mr-16 pr-2">Tax</div>
-          {props.invoice ? (
-            <div className="mx-auto">
-              {props.invoice.tax ? props.invoice.tax : 0}%
-            </div>
-          ) : inputTax ? (
-            <InputDiscount />
-          ) : (
-            <button
-              className="text-green-medium text-rigth w-2/4 mx-auto"
-              // onClick={() => setInputTax(true)}
             >
               Add
             </button>

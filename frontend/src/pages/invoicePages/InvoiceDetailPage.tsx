@@ -1,11 +1,8 @@
 import { AppRoute } from 'common/enums/app-route.enum'
-import { notifyError, notifySuccess } from 'components/common/notifications'
 import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
 import React, { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { resetError } from 'redux/slice/error/error.slice'
 import { fetchGetInvoiceById } from 'redux/slice/invoiceServices/invoiceActions'
-import { resetSuccess } from 'redux/slice/success/success.slice'
 import { BasicInfo } from './invoice_componetns/BasicInfo'
 import { ClientDetails } from './invoice_componetns/ClientDetails'
 import { FooterItems } from './invoice_componetns/FooterItems'
@@ -21,7 +18,6 @@ const InvoiceDetailPage = () => {
   const dispatch = useAppDispatch()
   const { invoiceId } = useParams()
   const error = useAppSelector((state) => state.error.message)
-  const success = useAppSelector((state) => state.success.message)
   const invoice = useAppSelector((state) => state.invoices.invoices[0])
   const subTotal = invoice
     ? sum(invoice.items?.map((item: any) => item.subTotal))
@@ -30,15 +26,10 @@ const InvoiceDetailPage = () => {
   const currentUser = useAppSelector((state) => state.userProfile)
 
   useEffect(() => {
-    console.log('satrt useEffect')
     dispatch(fetchGetInvoiceById(`${invoiceId}`, false))
     if (error === 'Invoice does not found for user') {
       navigate(`/${AppRoute.PORTAL}/${AppRoute.INVOICES}`)
     }
-    error && notifyError(error)
-    success && notifySuccess(success)
-    dispatch(resetError())
-    dispatch(resetSuccess())
   }, [error])
 
   return (

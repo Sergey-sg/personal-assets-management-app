@@ -45,7 +45,7 @@ const updateInvoice = (invoiceId: string, invoice: any) => {
 
 export const getUserByParams = async (params: any) => {
   return await api
-    .post('/invoices/customer', params)
+    .post('/user/by-params', params)
     .then((response) => response.data)
 }
 
@@ -61,7 +61,6 @@ export const fetchUpdateInvoice = (invoiceId: string, invoice: any) => {
       dispatch(updateInvoiceSuccess(response.data))
       dispatch(successAction({ message: 'Invoice updated successfully' }))
     } catch (e) {
-      console.log(e)
       const axiosErr = e as AxiosError
       const status = axiosErr.response?.status
       const message = axiosErr.message
@@ -85,7 +84,6 @@ export const fetchCreateInvoice = (invoice: any) => {
       dispatch(updateInvoiceSuccess(response.data))
       dispatch(successAction({ message: 'Invoice created successfully' }))
     } catch (e: any) {
-      console.log(e.response.data.message)
       const axiosErr = e as AxiosError
       const status = axiosErr.response?.status
       const message = axiosErr.message

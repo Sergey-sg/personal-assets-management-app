@@ -1,15 +1,12 @@
 import { AppRoute } from 'common/enums/app-route.enum'
-import { notifyError, notifySuccess } from 'components/common/notifications'
 import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import ReactTextareaAutosize from 'react-textarea-autosize'
-import { resetError } from 'redux/slice/error/error.slice'
 import {
   fetchGetInvoiceById,
   fetchUpdateInvoice,
 } from 'redux/slice/invoiceServices/invoiceActions'
-import { resetSuccess } from 'redux/slice/success/success.slice'
 import { BasicInfo } from './invoice_componetns/BasicInfo'
 import { ClientDetails } from './invoice_componetns/ClientDetails'
 import { FooterItems } from './invoice_componetns/FooterItems'
@@ -33,7 +30,6 @@ const InvoiceUpdatePage: React.FC = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    console.log('satrt useEffect')
     if (!invoice) {
       dispatch(fetchGetInvoiceById(`${invoiceId}`, true))
     }
@@ -56,11 +52,6 @@ const InvoiceUpdatePage: React.FC = () => {
         `/${AppRoute.PORTAL}/${AppRoute.INVOICES}/${AppRoute.INVOICE_DETAILS}/${invoiceId}`,
       )
     }
-
-    error && notifyError(error)
-    success && notifySuccess(success)
-    dispatch(resetError())
-    dispatch(resetSuccess())
   }, [success, error, invoice])
 
   const setNewItem = useCallback(
