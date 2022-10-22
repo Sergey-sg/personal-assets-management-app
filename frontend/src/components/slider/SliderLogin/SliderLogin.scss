@@ -1,8 +1,7 @@
 .slider {
   overflow: hidden;
   position: relative;
-  border-bottom-right-radius: 30px;
-  border-top-right-radius: 30px;
+  height: 100vh;
 
   .wrapper {
     transition: 0.5s all linear;

@@ -63,20 +63,21 @@ const AddWalletLimitsForm: React.FC = (props) => {
           return (
             <>
               <Form onSubmit={props.handleSubmit}>
-                <div className="flex flex-col gap-5 sm:flex-row">
+                <div className="flex flex-col justify-between items-center gap-5 sm:flex-row">
                   <Select
                     type={'select'}
                     name={'walletId'}
                     value={props.values.walletId}
                     optionArray={walletsArray}
                     onChange={handleChange}
-                    className={'w-1/2'}
+                    className={'w-full sm:w-1/2'}
                   />
                   <Button
-                    label={'Add'}
+                    label={'Add wallet limit'}
                     type={'submit'}
                     btnName={'primary'}
-                    className={'w-1/2'}
+                    className={'sm:w-1/2'}
+                    disabled={!dirty || !isValid}
                   />
                 </div>
               </Form>

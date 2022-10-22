@@ -14,6 +14,8 @@ import { validationsSchemaLogin } from 'components/registerForm/schemasAuth/Vali
 import { Link } from 'react-router-dom'
 import { AppRoute } from 'common/enums/app-route.enum'
 import CheckCode from 'components/forgotPaswordForm/CheckCode'
+import { GoogleLink } from 'components/common/GoogleLink/GoogleLink'
+import { Typography } from 'components/common/Typography'
 
 type PropsLoginForm = {
   toggleFunction?: React.MouseEventHandler<HTMLButtonElement>
@@ -32,7 +34,7 @@ const LoginForm: React.FC<PropsLoginForm> = ({ toggleFunction }: any) => {
   }, [])
 
   return (
-    <div>
+    <div className=" px-10">
       {!isVerify ? (
         <div className="p-4" style={{ margin: 'auto', width: '100%' }}>
           <h1 className="text-3xl font-semibold text-center mb-10">Sing in</h1>
@@ -59,10 +61,10 @@ const LoginForm: React.FC<PropsLoginForm> = ({ toggleFunction }: any) => {
                 <Form onSubmit={handleSubmit}>
                   <div className="mb-4">
                     <label
-                      className="block text-gray-700 text-xl font-medium mb-2"
+                      className="block text-gray-700 text-xl font-medium mb-1"
                       htmlFor="username"
                     >
-                      Email
+                      <Typography type={'Ag-16-medium'}>Email</Typography>
                     </label>
                     <InputUI
                       type={'email'}
@@ -87,12 +89,12 @@ const LoginForm: React.FC<PropsLoginForm> = ({ toggleFunction }: any) => {
                     </p>
                   )}
 
-                  <div className="mb-4">
+                  <div>
                     <label
-                      className="block text-gray-700 text-xl font-medium mb-2"
+                      className="block text-gray-700 text-xl font-medium mb-1"
                       htmlFor="username"
                     >
-                      Password
+                      <Typography type={'Ag-16-medium'}>Password</Typography>
                     </label>
                     <InputUI
                       type={'password'}
@@ -117,39 +119,33 @@ const LoginForm: React.FC<PropsLoginForm> = ({ toggleFunction }: any) => {
                     </p>
                   )}
 
-                  <div className="flex items-center justify-between">
-                    <Link to={AppRoute.SIGN_UP}>
-                      <Button
-                        type={'button'}
-                        btnName={'primary'}
-                        label={"Don't have an account?"}
-                      >
-                        Register
-                      </Button>
+                  <div className="flex items-center justify-end mt-1">
+                    <Link
+                      className="inline-block align-baseline font-bold text-sm  text-green-dark opacity-50 hover:opacity-100"
+                      to={AppRoute.FORGOT_PASSWORD}
+                    >
+                      Forgot Password?
                     </Link>
+                  </div>
 
+                  <div className="flex flex-col items-start justify-center w-full mt-8 ">
                     <Button
                       type={'submit'}
                       btnName={'primary'}
                       label={'Sing in'}
-                      className="w-2/5"
                       disabled={!isValid && !dirty}
+                      className="w-full m-0"
                     >
                       Login
                     </Button>
                   </div>
-                  <hr className="m-2" />
-                  <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <GoogleButton></GoogleButton>
-                  </div>
 
-                  <Link
-                    className="inline-block align-baseline font-bold text-sm mt-4 text-blue-500 hover:text-blue-800"
-                    to={AppRoute.FORGOT_PASSWORD}
-                  >
-                    Forgot Password?
-                  </Link>
-                  <hr className="m-2" />
+                  <div className="flex flex-col justify-center items-center w-full gap-3 mt-5">
+                    <GoogleButton />
+                  </div>
+                  <div className="mt-5">
+                    <GoogleLink type={'sign-up'} to={AppRoute.SIGN_UP} />
+                  </div>
                 </Form>
               </div>
             )}

@@ -33,7 +33,6 @@ export class MessagingGateway implements OnGatewayConnection {
 
   @OnEvent('message.created')
   handleMessageCreated(payload: any) {
-    console.log('inside message created', payload);
     this.server.emit('onMessage', payload);
   }
 }

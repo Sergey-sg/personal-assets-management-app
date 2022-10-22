@@ -13,7 +13,7 @@ export const Search: React.FC<SearchProps> = ({ onSearch, searchQuery }) => {
       <input
         type="search"
         placeholder={'Search'}
-        className="form-input border-0 bg-transparent focus:ring-transparent shadow-none px-2 w-full"
+        className="form-input border-0 bg-transparent focus:ring-transparent shadow-none px-2 w-full placeholder:opacity-70"
         onChange={onSearch}
         value={searchQuery}
       />

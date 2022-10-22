@@ -24,7 +24,6 @@ const PersonalInfoForm: React.FC = () => {
   }
 
   const handleSubmit = (values: typeof InitialValues) => {
-    console.log(values)
     dispatch(updateUserProfile(values))
   }
 

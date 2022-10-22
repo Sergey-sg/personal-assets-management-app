@@ -17,7 +17,8 @@ import { Route, Routes } from 'react-router-dom'
 const PortalRouts = () => {
   return (
     <Routes>
-      <Route path={AppRoute.HOME} element={<PortalPage />}>
+      <Route path={AppRoute.HOME} element={<PortalPage />} />
+      <Route path={AppRoute.PORTAL} element={<PortalPage />}>
         <Route index element={<Dashboard />} />
         <Route path={AppRoute.DASHBOARD} element={<DashboardOverview />} />
         <Route path={AppRoute.TRANSACTIONS} element={<Transactions />} />

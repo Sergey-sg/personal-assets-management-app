@@ -26,7 +26,7 @@ export const PhoneInput = ({
   const borderStyle = error ? 'border-error' : 'border-green-light'
 
   return (
-    <div className={'flex flex-col w-1/2  gap-1'}>
+    <div className={'flex flex-col sm:w-1/2  gap-1'}>
       <label htmlFor={name}>
         <Typography type={'Ag-14-regular'}>{label}</Typography>
       </label>

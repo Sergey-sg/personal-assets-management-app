@@ -26,7 +26,7 @@ export const ChannelCard: React.FC<MessageCardProps> = ({
       onClick={onClick}
       className={
         (isActiveChannel ? 'bg-gray-ultralight ' : '') +
-        'w-full min-h-[74px] flex flex-row p-4 gap-2 hover:bg-gray-light hover:cursor-pointer rounded-lg'
+        'w-full min-h-[74px] flex flex-col justify-center items-center lg:flex-row px-4 py-2 lg:p-4 gap-2 hover:bg-gray-light hover:cursor-pointer rounded-lg transition-all duration-200'
       }
     >
       <div className="flex items-center justify-center w-12 h-12 bg-green-light mr-3 rounded-full overflow-hidden shrink-0">
@@ -45,17 +45,17 @@ export const ChannelCard: React.FC<MessageCardProps> = ({
       <div className="flex flex-col w-full">
         <Typography
           type="Ag-13-bold"
-          className="w-full whitespace-nowrap  mb-2"
+          className=" text-center lg:text-left w-full whitespace-nowrap  lg:mb-2"
         >
           {name}
         </Typography>
-        <div className="flex flex-row justify-between">
+        <div className="hidden lg:flex flex-row justify-between">
           <Typography type="Ag-13-medium" className="w-full">
             {lastMessage || 'No messages yet'}
           </Typography>
           <Typography
             type="Ag-12-normal"
-            className="w-full text-end text-gray-400"
+            className="w-full lg:text-end text-gray-400"
           >
             {/* {timeStamp} */}
             {formatRelative(new Date(timeStamp), new Date()) || ''}

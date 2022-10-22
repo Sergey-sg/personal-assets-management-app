@@ -28,7 +28,11 @@ export const UploadAvatarButton = ({
     if (!imgUrl) {
       return
     }
-    setImg(`${CONSTANTS.CLOUDINARY_FILE_STORAGE}${imgUrl}`)
+    const avatar = imgUrl.includes('googleusercontent')
+      ? imgUrl
+      : `${CONSTANTS.CLOUDINARY_FILE_STORAGE}${imgUrl}`
+
+    setImg(avatar)
   }, [imgUrl])
 
   const onImageUpload = (event: ChangeEvent<HTMLInputElement>) => {

@@ -51,7 +51,7 @@
   left: 50%;
   bottom: 9px;
   -webkit-transform: translateX(-50%);
-          transform: translateX(-50%);
+  transform: translateX(-50%);
   z-index: 10;
   list-style-type: none;
 }

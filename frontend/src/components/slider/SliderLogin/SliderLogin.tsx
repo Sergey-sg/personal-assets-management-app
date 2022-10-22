@@ -1,16 +1,17 @@
 import React from 'react'
 import './SliderLogin.scss'
-import grenPhoto from '../../../assets/sliderPhoto/Rectangle2.jpg'
+import greenPhoto from 'assets/images/slider.png'
+import banner from 'assets/images/banner.jpeg'
 
 const slides = [
   {
-    eachSlide: grenPhoto,
+    eachSlide: greenPhoto,
   },
   {
-    eachSlide: grenPhoto,
+    eachSlide: banner,
   },
   {
-    eachSlide: grenPhoto,
+    eachSlide: banner,
   },
 ]
 

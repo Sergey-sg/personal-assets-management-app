@@ -56,16 +56,11 @@ const Chats: React.FC = () => {
   }, [conversationId, dispatch])
 
   useEffect(() => {
-    console.log('Socket', socket)
-
     socket.on('connect', () => {
-      console.log('Connected')
+      console.log('Connected to socket')
     })
     socket.on('onMessage', (payload: IMessageEventPayload) => {
-      console.log('Message received', payload)
       const { conversation, ...message } = payload
-
-      console.log('Message', message, conversation)
 
       setMessages((prev) => [...prev, message])
     })
@@ -85,7 +80,7 @@ const Chats: React.FC = () => {
   return (
     <>
       <div className="w-full  flex flex-row h-full border-4 rounded-lg border-gray-ultralight">
-        <div className="w-1/2 h-full p-4 border-r relative">
+        <div className="w-1/3 lg:w-1/2 h-full p-4 border-r relative">
           {showModal && (
             <CreateConversationModal
               showModal={showModal}
@@ -100,7 +95,7 @@ const Chats: React.FC = () => {
             conversationId={conversationId}
           />
         </div>
-        <div className="w-1/2 h-full p-4">
+        <div className="w-2/3 lg:w-1/2 h-full p-4">
           <ChatPanel
             user={user}
             conversationId={conversationId}

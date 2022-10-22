@@ -61,8 +61,6 @@ export const createNewConversation = ({
       dispatch(startLoading())
       const response = await createConversation({ recipientId, message })
 
-      console.log(response.data)
-
       dispatch(setCurrentConversation(response.data.id))
 
       dispatch(successAction({ message: 'Conversation created' }))

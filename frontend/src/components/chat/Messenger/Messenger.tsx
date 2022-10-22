@@ -23,7 +23,7 @@ export const Messenger: React.FC<Props> = ({ messages, conversationId }) => {
           ))}
         </div>
       </div>
-      <div className="pt-4 border-t ">
+      <div className="pt-4 border-t relative ">
         <MessengerForm conversationId={conversationId} />
       </div>
     </div>

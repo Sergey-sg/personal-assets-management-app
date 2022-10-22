@@ -17,7 +17,7 @@ const GoogleButton = (props: any) => {
           onSuccess={(credentialResponse) =>
             googleAuth(credentialResponse.credential)
           }
-          type="icon"
+          type="standard"
           onError={() => {
             console.log('Login Failed')
           }}

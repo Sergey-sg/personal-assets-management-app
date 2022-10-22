@@ -88,7 +88,10 @@ const WalletLimitsForm: React.FC = () => {
 
   return (
     <>
-      <SectionTitle title={'Wallets settings'} />
+      <SectionTitle
+        title={'Wallets settings'}
+        subTitle={'Create and edit wallets limits'}
+      />
 
       <AddWalletLimitsForm />
 
@@ -96,7 +99,7 @@ const WalletLimitsForm: React.FC = () => {
         return (
           <div key={row.id}>
             <SectionTitle
-              title={row.wallet.wallet_name}
+              title={`Change limits for: ${row.wallet.wallet_name}`}
               subTitle={
                 'Wallet limit: ' +
                 row.wallet_limit.toString() +
@@ -154,7 +157,7 @@ const WalletLimitsForm: React.FC = () => {
                             onBlur={handleBlur}
                             onChange={handleChange}
                             component={Input}
-                            className="sm:w-1/2"
+                            className="w-full sm:w-1/2"
                           />
                           <br />
                           <div className="flex flex-col gap-5 sm:flex-row">

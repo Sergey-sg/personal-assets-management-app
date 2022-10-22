@@ -23,7 +23,9 @@ const InputUI: React.FC<inputProps> = ({
   return (
     <div>
       <input
-        className={error ? style.input : style.inputError}
+        className={` placeholder:opacity-50 text-sm ${
+          error ? style.input : style.inputError
+        }`}
         id="password"
         type={type}
         value={value}
