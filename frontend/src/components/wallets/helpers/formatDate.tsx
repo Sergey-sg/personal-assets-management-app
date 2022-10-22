@@ -1,4 +1,4 @@
-export const formatDate = (date: Date): string => {
+export const formatDate = (date: Date | string): string => {
   const setDate = new Date(date)
 
   return `${setDate.getDate()}.${
@@ -6,7 +6,7 @@ export const formatDate = (date: Date): string => {
   }.${setDate.getFullYear()}`
 }
 
-export const formatCurrentDate = (date: Date): string => {
+export const formatCurrentDate = (date: Date | string): string => {
   const setDate = new Date(date)
 
   return `${setDate.getFullYear()}-${

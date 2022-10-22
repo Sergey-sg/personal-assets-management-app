@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from './hooks/useAppDispatch'
 import LoginPage from './pages/login/LoginPage'
 
@@ -15,14 +15,21 @@ import { AppRoute } from 'common/enums/app-route.enum'
 import NotFoundPage from 'pages/NotFoundPage'
 import LoginRouts from ' routes/LoginRouts'
 import { socket, SocketContext } from 'utils/context/SocketContext'
+import { fetchWallets } from 'redux/slice/walletsSlice'
 
 export default function App() {
   const { isAuth, status } = useAppSelector((store) => store.authSlice)
   const dispatch = useAppDispatch()
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (localStorage.getItem('token')) {
       dispatch(checkAuth())
+    }
+  }, [])
+
+  useEffect(() => {
+    if (isAuth) {
+      dispatch(fetchWallets(''))
     }
   }, [])
 

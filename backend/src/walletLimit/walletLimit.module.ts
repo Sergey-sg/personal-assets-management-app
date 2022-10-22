@@ -1,4 +1,9 @@
-import { forwardRef, MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
+import {
+  forwardRef,
+  MiddlewareConsumer,
+  Module,
+  RequestMethod,
+} from '@nestjs/common';
 import { WalletLimitService } from './walletLimit.service';
 import { WalletLimitController } from './walletLimit.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -11,7 +16,9 @@ import { UserEntity } from 'src/user/entities/user.entity';
   controllers: [WalletLimitController],
   providers: [WalletLimitService],
   exports: [WalletLimitService],
-  imports: [TypeOrmModule.forFeature([WalletLimitEntity, WalletEntity, UserEntity])],
+  imports: [
+    TypeOrmModule.forFeature([WalletLimitEntity, WalletEntity, UserEntity]),
+  ],
 })
 export class WalletLimitModule {
   configure(consumer: MiddlewareConsumer) {

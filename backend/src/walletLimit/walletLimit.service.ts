@@ -1,11 +1,11 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { UserEntity } from "src/user/entities/user.entity";
-import { WalletEntity } from "src/wallet/entities/wallet.entity";
-import { Any, Repository } from "typeorm";
-import { CreateWalletLimitDto } from "./dto/create-walletLimit.dto";
-import { UpdateWalletLimitDto } from "./dto/update-walletLimit.dto";
-import { WalletLimitEntity } from "./entities/walletLimit.entity";
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UserEntity } from 'src/user/entities/user.entity';
+import { WalletEntity } from 'src/wallet/entities/wallet.entity';
+import { Any, Repository } from 'typeorm';
+import { CreateWalletLimitDto } from './dto/create-walletLimit.dto';
+import { UpdateWalletLimitDto } from './dto/update-walletLimit.dto';
+import { WalletLimitEntity } from './entities/walletLimit.entity';
 
 @Injectable()
 export class WalletLimitService {
@@ -16,7 +16,7 @@ export class WalletLimitService {
     private walletRepository: Repository<WalletEntity>,
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
-  ) { }
+  ) {}
 
   async createNewWalletLimit(
     walletId: number,
@@ -55,8 +55,10 @@ export class WalletLimitService {
     }
 
     await this.walletLimitRepository.update(
-      { id: walletLimitId }, updateWalletLimitDto);
-    return currentWalletLimit
+      { id: walletLimitId },
+      updateWalletLimitDto,
+    );
+    return currentWalletLimit;
   }
 
   async getAllWalletLimits(userId: number): Promise<any> {
@@ -67,7 +69,7 @@ export class WalletLimitService {
         id: 'ASC',
       },
       // relations: ['walletLimits'],
-    })
+    });
 
     if (!tmp) {
       throw new HttpException(
@@ -78,8 +80,8 @@ export class WalletLimitService {
 
     const res = {
       tmp: tmp,
-      userId: userId
-    }
+      userId: userId,
+    };
 
     return res;
   }
@@ -88,13 +90,10 @@ export class WalletLimitService {
     const walletLimit = await this.walletLimitRepository.findOne({
       where: { wallet: { id: walletId } },
       relations: { wallet: true },
-    })
+    });
 
     if (!walletLimit) {
-      throw new HttpException(
-        `wallet limit with id: ${walletId} doesn't find`,
-        HttpStatus.NOT_FOUND,
-      );
+      return null;
     }
 
     return walletLimit;
@@ -102,7 +101,7 @@ export class WalletLimitService {
 
   async removeCost(walletLimitId: number): Promise<any> {
     const walletLimit = await this.walletLimitRepository.findOne({
-      where: { id: walletLimitId }
+      where: { id: walletLimitId },
     });
 
     if (!walletLimit) {
@@ -111,9 +110,6 @@ export class WalletLimitService {
         HttpStatus.NOT_FOUND,
       );
     }
-    await this
-      .walletLimitRepository
-      .delete({ id: walletLimitId });
-
+    await this.walletLimitRepository.delete({ id: walletLimitId });
   }
 }

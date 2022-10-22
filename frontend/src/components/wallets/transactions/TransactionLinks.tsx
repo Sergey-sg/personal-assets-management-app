@@ -4,21 +4,24 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { ShowTransactionFragment } from '../helpers/enums/showTransactionFragment.enum'
 
-interface ITransactionLinksProps {
-  show: ShowTransactionFragment
-  setShow: (value: ShowTransactionFragment) => void
+interface IDetails {
   title: string
   listName: string
   createName: string
+}
+interface ITransactionLinksProps {
+  show: ShowTransactionFragment
+  setShow: (value: ShowTransactionFragment) => void
+  details: IDetails
 }
 
 export const TransactionLinks: React.FC<ITransactionLinksProps> = ({
   show,
   setShow,
-  title,
-  listName,
-  createName,
+  details,
 }) => {
+  const { title, listName, createName } = details
+
   return (
     <>
       <Typography type="h4">{title}</Typography>

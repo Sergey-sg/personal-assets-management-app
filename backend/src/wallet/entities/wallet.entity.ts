@@ -45,9 +45,12 @@ export class WalletEntity extends Base {
   costs: CostEntity[];
 
   @ApiProperty()
-  @OneToMany(() => WalletLimitEntity, (walletLimit: WalletLimitEntity) => walletLimit.wallet, {
-    onDelete: 'CASCADE',
-  })
+  @OneToMany(
+    () => WalletLimitEntity,
+    (walletLimit: WalletLimitEntity) => walletLimit.wallet,
+    {
+      onDelete: 'CASCADE',
+    },
+  )
   walletLimits: WalletLimitEntity[];
-
 }

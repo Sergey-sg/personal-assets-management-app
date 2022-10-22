@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { CurrencyEntity } from './entities/currency.entity';
-import { CurrencyFilterQueryDto } from "../dto/currency-filter-query.dto";
+import { CurrencyFilterQueryDto } from '../dto/currency-filter-query.dto';
 
 @Injectable()
 export class CurrenciesService {

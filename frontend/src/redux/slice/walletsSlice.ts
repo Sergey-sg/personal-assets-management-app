@@ -156,7 +156,9 @@ const walletsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchWallets.fulfilled, (state, action) => {
-        state.wallets = action.payload.sort((a, b) => (a.id > b.id ? 1 : -1))
+        if (action.payload.length > 0) {
+          state.wallets = action.payload.sort((a, b) => (a.id > b.id ? 1 : -1))
+        }
         if (action.payload.length > 0 && state.activeWallet === null) {
           state.activeWallet = action.payload[0].id
         }

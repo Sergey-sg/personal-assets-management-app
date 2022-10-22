@@ -1,6 +1,5 @@
 import React from 'react'
 import { Form, Formik } from 'formik'
-import * as Yup from 'yup'
 import { InputField } from 'components/common/inputs/InputField'
 import { Button } from 'components/common/buttons/Button'
 import { ReactComponent as Cross } from 'assets/icons/cross-icon.svg'
@@ -9,6 +8,7 @@ import { updateWallet, IWallet } from 'redux/slice/walletsSlice'
 import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
 import { ShowWalletFooter } from './Wallet'
 import { LoadingStatus } from 'common/enums/loading-status'
+import { updateWalletValidateSchema } from './validationSchemas/walletValidationSchem'
 
 interface IUpdateWalletFormProps {
   wallet: IWallet
@@ -22,26 +22,19 @@ export const UpdateWalletForm: React.FC<IUpdateWalletFormProps> = ({
   const dispatch = useAppDispatch()
   const loading = useAppSelector((state) => state.wallets.loading)
 
-  const InitialValues = {
+  const initialValues = {
     wallet_name: wallet.wallet_name,
   }
 
-  const ValidationSchema = Yup.object({
-    wallet_name: Yup.string()
-      .min(3, 'Must be at least 3 letters')
-      .max(32, 'Must be max 32 letters')
-      .required('Enter your wallet name'),
-  })
-
-  const handleSubmit = (values: typeof InitialValues) => {
+  const handleSubmit = (values: typeof initialValues) => {
     dispatch(updateWallet({ data: values, walletId: wallet.id }))
     setWalletFooter(ShowWalletFooter.CLOSE)
   }
 
   return (
     <Formik
-      initialValues={InitialValues}
-      validationSchema={ValidationSchema}
+      initialValues={initialValues}
+      validationSchema={updateWalletValidateSchema}
       onSubmit={handleSubmit}
     >
       {({ dirty, isValid }) => {

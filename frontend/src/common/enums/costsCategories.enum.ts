@@ -18,3 +18,5 @@ export enum CostsCategories {
   ENTERTAINMENT = 'entertainment',
   OTHER = 'other',
 }
+
+export const CostsCategoryValues = Object.values(CostsCategories)

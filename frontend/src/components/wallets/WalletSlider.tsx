@@ -14,13 +14,9 @@ export const WalletSlider: React.FC<IWalletSliderProps> = ({
 }) => {
   const dispatch = useAppDispatch()
 
-  const wallets = useAppSelector((state) => state.wallets.wallets)
-  const firstWalletIndex = useAppSelector(
-    (state) => state.wallets.firstWalletIndex,
-  )
-  const lastWalletIndex = useAppSelector(
-    (state) => state.wallets.lastWalletIndex,
-  )
+  const { wallets,
+    firstWalletIndex,
+    lastWalletIndex } = useAppSelector((state) => state.wallets)
 
   const nextWallet = () => {
     if (lastWalletIndex >= wallets.length - 1) {

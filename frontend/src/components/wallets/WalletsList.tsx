@@ -18,24 +18,24 @@ export const WalletsList: React.FC = () => {
 
   const dispatch = useAppDispatch()
 
-  const wallets = useAppSelector((state) => state.wallets.wallets)
-  const activeWallet = useAppSelector((state) => state.wallets.activeWallet)
-  const incomes = useAppSelector((state) => state.incomes.incomes)
-  const costs = useAppSelector((state) => state.costs.costs)
-  const error = useAppSelector((state) => state.wallets.errorMessage)
-  const success = useAppSelector((state) => state.wallets.successMessage)
+  const { wallets,
+    activeWallet,
+    errorMessage,
+    successMessage } = useAppSelector((state) => state.wallets)
+  const { incomes } = useAppSelector((state) => state.incomes)
+  const { costs } = useAppSelector((state) => state.costs)
 
   useEffect(() => {
     dispatch(fetchWallets(''))
   }, [incomes, costs])
 
   useEffect(() => {
-    error && error !== '' && notifyError(error)
-  }, [error])
+    errorMessage && errorMessage !== '' && notifyError(errorMessage)
+  }, [errorMessage])
 
   useEffect(() => {
-    success && success !== '' && notifySuccess(success)
-  }, [success])
+    successMessage && successMessage !== '' && notifySuccess(successMessage)
+  }, [successMessage])
 
   const setActiveWalletId = (walletId: number) => {
     if (walletId === activeWallet) return null

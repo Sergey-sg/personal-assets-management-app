@@ -1,89 +1,108 @@
 import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
 import React, { useState } from 'react'
 import { Field, Form, Formik } from 'formik'
-import * as Yup from 'yup'
 import { Typography } from 'components/common/Typography'
 import { InputField } from 'components/common/inputs/InputField'
-import RegExp from 'assets/RegExp'
+import { REGEX } from 'shared/regexp'
 import { convertToMoney, convertToСoins } from '../helpers/convertFunction'
 import { AsyncThunk } from '@reduxjs/toolkit'
 import { CostsCategories } from 'common/enums/costsCategories.enum'
 import { IncomeCategories } from 'common/enums/incomesCategories.enum'
-import { wordToUC } from '../helpers/wordToUC'
+import { wordToUpperCase } from '../helpers/wordToUC'
 import { ReactComponent as PenIcon } from 'assets/icons/pen.svg'
 import { ReactComponent as DeleteIcon } from 'assets/icons/delete-icon.svg'
 import { formatCurrentDate } from '../helpers/formatDate'
 import { ShowTransactionFragment } from '../helpers/enums/showTransactionFragment.enum'
 import { Button } from 'components/common/buttons/Button'
+import { updateTransactionValidateSchema } from '../validationSchemas/transactionValidateSchema'
+import {
+  ICreateTransactionDto,
+  ICreateTransactionParams,
+} from './CreateTransactionForm'
 
-interface IUpdateTransactionFormProps {
-  transaction: any
-  transactionName: string
-  transactionSumName: string
-  updateFunction: AsyncThunk<any, any, { rejectValue: string }>
-  deleteFunction: AsyncThunk<any, any, { rejectValue: string }>
-  limit: number
-  isShow: (value: ShowTransactionFragment) => void
+interface IDetails {
   title: string
   labelName: string
   placeholderName: string
   labelSum: string
+}
+
+interface IUpdateTransactionFormProps {
+  type: 'cost' | 'income'
+  transaction: any
+  updateFunction: AsyncThunk<
+    any,
+    IUpdateTransactionParams,
+    { rejectValue: string }
+  >
+  deleteFunction: AsyncThunk<any, IDeleteTransaction, { rejectValue: string }>
+  limit: number
+  isShow: (value: ShowTransactionFragment) => void
+  details: IDetails
   categories: CostsCategories[] | IncomeCategories[]
 }
 
+interface IUpdateTransactionDto extends ICreateTransactionDto {
+  createdAt: Date
+}
+
+export interface IUpdateTransactionParams extends ICreateTransactionParams {
+  transactionId: number
+  data: IUpdateTransactionDto
+}
+
+export interface IDeleteTransaction {
+  transactionId: number
+  walletId: number
+  limit: number
+}
+
 export const UpdateTransactionForm: React.FC<IUpdateTransactionFormProps> = ({
+  type,
   transaction,
-  transactionName,
-  transactionSumName,
   updateFunction,
   deleteFunction,
   limit,
   isShow,
-  title,
-  labelName,
-  placeholderName,
-  labelSum,
+  details,
   categories,
 }) => {
+  const { title, labelName, placeholderName, labelSum } = details
+
+  const initialTramsactionSum =
+    type === 'cost' ? transaction.cost_sum : transaction.income_sum
+
   const [tramsactionSum, setTramsactionSum] = useState(
-    convertToMoney(transaction[transactionSumName]),
+    convertToMoney(initialTramsactionSum),
   )
   const [isPositiveSum, setIsPositiveSum] = useState(true)
 
   const dispatch = useAppDispatch()
   const currentWalletId = useAppSelector((state) => state.wallets.activeWallet)
 
-  const InitialValues = {
-    [transactionName]: transaction[transactionName],
-    [transactionSumName]: convertToMoney(transaction[transactionSumName]),
-    category_name: transaction.category_name,
+  const initialValues = {
+    name: type === 'cost' ? transaction.cost_name : transaction.income_name,
+    sum: tramsactionSum,
+    categoryName: transaction.category_name,
     createdAt: formatCurrentDate(transaction.createdAt),
   }
 
-  const ValidationSchema = Yup.object({
-    [transactionName]: Yup.string()
-      .min(3, 'Must be at least 3 letters')
-      .max(32, 'Must be max 32 letters')
-      .required('Enter income name'),
-    createdAt: Yup.date().max(new Date(), 'Cant be future'),
-  })
-
   const checkSum = (value: string) => {
-    if (!value.match(RegExp.POSITIVE_DECIMAL_NUMBER)) {
+    if (!value.match(REGEX.POSITIVE_DECIMAL_NUMBER)) {
       return setTramsactionSum(tramsactionSum)
     }
     setTramsactionSum(+value)
   }
 
-  const handleSubmit = (values: typeof InitialValues) => {
-    if (transaction.id) {
-      const forSubmit = {
+  const handleSubmit = (values: typeof initialValues) => {
+    if (transaction.id && currentWalletId) {
+      const forSubmit: IUpdateTransactionParams = {
         transactionId: transaction.id,
         walletId: currentWalletId,
         limit,
         data: {
           ...values,
-          [transactionSumName]: convertToСoins(tramsactionSum),
+          sum: convertToСoins(tramsactionSum),
           createdAt: new Date(values.createdAt),
         },
       }
@@ -98,8 +117,8 @@ export const UpdateTransactionForm: React.FC<IUpdateTransactionFormProps> = ({
       {transaction && (
         <div className="min-h-min">
           <Formik
-            initialValues={InitialValues}
-            validationSchema={ValidationSchema}
+            initialValues={initialValues}
+            validationSchema={updateTransactionValidateSchema}
             onSubmit={handleSubmit}
           >
             {({ isValid }) => {
@@ -111,7 +130,7 @@ export const UpdateTransactionForm: React.FC<IUpdateTransactionFormProps> = ({
                   <div className="flex justify-start mb-5 gap-5">
                     <InputField
                       label={labelName}
-                      name={transactionName}
+                      name="name"
                       type="text"
                       placeholder={placeholderName}
                       className="w-5/12"
@@ -125,7 +144,7 @@ export const UpdateTransactionForm: React.FC<IUpdateTransactionFormProps> = ({
                       }}
                       label={labelSum}
                       value={+tramsactionSum}
-                      name={transactionSumName}
+                      name="sum"
                       type="number"
                       className="w-5/12"
                     />
@@ -143,7 +162,7 @@ export const UpdateTransactionForm: React.FC<IUpdateTransactionFormProps> = ({
                       </label>
                       <Field
                         id="category"
-                        name="category_name"
+                        name="categoryName"
                         as="select"
                         className="rounded-md border-green-light text-gray-700"
                       >
@@ -153,7 +172,7 @@ export const UpdateTransactionForm: React.FC<IUpdateTransactionFormProps> = ({
                             key={category}
                             value={category}
                           >
-                            {wordToUC(category)}
+                            {wordToUpperCase(category)}
                           </option>
                         ))}
                       </Field>
@@ -173,13 +192,15 @@ export const UpdateTransactionForm: React.FC<IUpdateTransactionFormProps> = ({
                       btnName="delete"
                       label="Delete"
                       onClick={() => {
-                        dispatch(
-                          deleteFunction({
-                            transactionId: transaction.id,
-                            walletId: currentWalletId,
-                            limit,
-                          }),
-                        )
+                        if (currentWalletId) {
+                          dispatch(
+                            deleteFunction({
+                              transactionId: transaction.id,
+                              walletId: currentWalletId,
+                              limit,
+                            }),
+                          )
+                        }
                         isShow(ShowTransactionFragment.LIST)
                       }}
                     />

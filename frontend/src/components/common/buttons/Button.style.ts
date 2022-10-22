@@ -5,7 +5,7 @@ export const STYLES = {
   secondary:
     'flex justify-center items-center  text-center text-base box-border transition  duration-200 cursor-pointer p-4 rounded text-green bg-green-ultralight hover:bg-green focus:bg-green hover:text-white focus:text-white disabled:bg-gray-ultralight disabled:text-gray-light w-full',
 
-  secondary2:
+  secondaryWithoutFocus:
     'flex justify-center items-center  text-center text-base box-border transition  duration-200 cursor-pointer p-4 rounded text-green bg-green-ultralight hover:bg-green hover:text-white disabled:bg-gray-ultralight disabled:text-gray-light w-full',
 
   tertiary:

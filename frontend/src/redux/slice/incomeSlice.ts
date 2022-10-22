@@ -12,6 +12,11 @@ import { Currencies } from 'common/enums/currency.enum'
 import { IncomeCategories } from 'common/enums/incomesCategories.enum'
 import { LoadingStatus } from 'common/enums/loading-status'
 import { IWallet } from './walletsSlice'
+import { ICreateTransactionParams } from 'components/wallets/transactions/CreateTransactionForm'
+import {
+  IDeleteTransaction,
+  IUpdateTransactionParams,
+} from 'components/wallets/transactions/UpdateTransactionForm'
 
 const incomesLimit = 5
 
@@ -25,34 +30,17 @@ export interface IIncome {
   is_transaction: boolean
 }
 
-export interface ICreateIncomeDto {
+interface ICreateIncomeDto {
   income_name: string
-  category_name: IncomeCategories
   income_sum: number
+  category_name: IncomeCategories
 }
 
-export interface IUpdateIncomeDto {
+interface IUpdateIncomeDto {
   income_name: string
-  category_name: IncomeCategories
   income_sum: number
+  category_name: IncomeCategories
   createdAt: Date
-}
-
-export interface ICreateIncome {
-  walletId: number
-  limit: number
-  data: ICreateIncomeDto
-}
-
-interface IUpdateIncome extends ICreateIncome {
-  transactionId: number
-  data: IUpdateIncomeDto
-}
-
-interface IDeleteIncome {
-  transactionId: number
-  walletId: number
-  limit: number
 }
 
 export interface IGetWalletIncomes extends IWallet {
@@ -133,11 +121,17 @@ export const fetchMoreIncomes = createAsyncThunk<
 
 export const addNewIncome = createAsyncThunk<
   IGetWalletIncomes,
-  ICreateIncome,
+  ICreateTransactionParams,
   { rejectValue: string }
 >('incomes/addIncome', async (params, { rejectWithValue }) => {
   try {
-    await api.post(`/income/wallet/${params.walletId}`, params.data)
+    const newIncome: ICreateIncomeDto = {
+      income_name: params.data.name,
+      income_sum: params.data.sum,
+      category_name: params.data.categoryName as IncomeCategories,
+    }
+
+    await api.post(`/income/wallet/${params.walletId}`, newIncome)
 
     const { data } = await api.get(
       `/income/wallet/${params.walletId}?limit=${params.limit}`,
@@ -153,11 +147,18 @@ export const addNewIncome = createAsyncThunk<
 
 export const updateIncome = createAsyncThunk<
   IGetWalletIncomes,
-  IUpdateIncome,
+  IUpdateTransactionParams,
   { rejectValue: string }
 >('incomes/updateIncome', async (params, { rejectWithValue }) => {
   try {
-    await api.patch(`/income/${params.transactionId}`, params.data)
+    const updated: IUpdateIncomeDto = {
+      income_name: params.data.name,
+      income_sum: params.data.sum,
+      category_name: params.data.categoryName as IncomeCategories,
+      createdAt: params.data.createdAt,
+    }
+
+    await api.patch(`/income/${params.transactionId}`, updated)
 
     const { data } = await api.get(
       `/income/wallet/${params.walletId}?limit=${params.limit}`,
@@ -173,7 +174,7 @@ export const updateIncome = createAsyncThunk<
 
 export const deleteIncome = createAsyncThunk<
   IGetWalletIncomes,
-  IDeleteIncome,
+  IDeleteTransaction,
   { rejectValue: string }
 >('incomes/deleteIncome', async (params, { rejectWithValue }) => {
   try {

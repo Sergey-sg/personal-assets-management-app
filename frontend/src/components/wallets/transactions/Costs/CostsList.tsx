@@ -17,7 +17,7 @@ import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
 import { Button } from 'components/common/buttons/Button'
 import { Typography } from 'components/common/Typography'
 import { Link } from 'react-router-dom'
-import { CostsCategories } from 'common/enums/costsCategories.enum'
+import { CostsCategoryValues } from 'common/enums/costsCategories.enum'
 import { ShowTransactionFragment } from 'components/wallets/helpers/enums/showTransactionFragment.enum'
 import { UpdateTransactionForm } from '../UpdateTransactionForm'
 import { notifyError, notifySuccess } from 'components/common/notifications'
@@ -29,18 +29,22 @@ export const CostsList: React.FC = () => {
   )
 
   const dispatch = useAppDispatch()
-  const limit = useAppSelector((state) => state.costs.limit)
-  const offset = useAppSelector((state) => state.costs.offset)
-  const costs = useAppSelector((state) => state.costs.costs)
-  const currency = useAppSelector((state) => state.costs.currency)
-  const currentWalletId = useAppSelector((state) => state.wallets.activeWallet)
-  const wallets = useAppSelector((state) => state.wallets.wallets)
-  const costsCount = useAppSelector((state) => state.costs.costs_count)
-  const error = useAppSelector((state) => state.costs.errorMessage)
-  const currentCost = useAppSelector((state) => state.costs.currentCost)
-  const loading = useAppSelector((state) => state.costs.loading)
-  const success = useAppSelector((state) => state.costs.successMessage)
-  const categories = Object.values(CostsCategories)
+
+  const {
+    costs,
+    currency,
+    limit,
+    offset,
+    costs_count: costsCount,
+    currentCost,
+    loading,
+    errorMessage: error,
+    successMessage: success,
+  } = useAppSelector((state) => state.costs)
+
+  const { wallets, activeWallet: currentWalletId } = useAppSelector(
+    (state) => state.wallets,
+  )
 
   useEffect(() => {
     setShowFragment(ShowTransactionFragment.LIST)
@@ -81,9 +85,11 @@ export const CostsList: React.FC = () => {
           <TransactionLinks
             show={showFragment}
             setShow={setShowFragment}
-            title={'My Costs'}
-            listName={'Wallets Costs'}
-            createName={'Cleate Cost'}
+            details={{
+              title: 'My Costs',
+              listName: 'Wallets Costs',
+              createName: 'Cleate Cost',
+            }}
           />
           <div className="bg-gray-300 h-px my-3"></div>
           {costs?.length === 0 &&
@@ -114,14 +120,13 @@ export const CostsList: React.FC = () => {
             <ul>
               {costs.map((cost) => (
                 <TransactionsItem
+                  key={cost.id}
                   type="cost"
                   currency={currency}
-                  name={cost.cost_name}
-                  key={cost.id}
-                  sum={cost.cost_sum}
-                  date={cost.createdAt}
-                  isTransaction={cost.is_transaction}
-                  category={cost.category_name}
+                  details={{
+                    name: cost.cost_name,
+                    sum: cost.cost_sum,
+                  }}
                   setShow={setShowFragment}
                   transaction={cost}
                   setTransaction={setCurrentCost}
@@ -132,7 +137,7 @@ export const CostsList: React.FC = () => {
               <Button
                 label="Show more"
                 type="button"
-                btnName="secondary2"
+                btnName="secondaryWithoutFocus"
                 disabled={loading === LoadingStatus.LOADING}
                 onClick={() => {
                   if (currentWalletId) {
@@ -147,33 +152,34 @@ export const CostsList: React.FC = () => {
             )}
           </div>
           <CreateTransactionForm
-            transactionName="cost_name"
-            transactionSumName="cost_sum"
             submitFunction={addNewCost}
             limit={limit}
-            title="Add cost"
-            labelName="Cost name"
-            placeholderName="My Cost"
-            labelSum="Cost amount"
-            buttonLabel="Create Cost"
+            details={{
+              title: 'Add cost',
+              labelName: 'Cost name',
+              placeholderName: 'My Cost',
+              labelSum: 'Cost amount',
+              buttonLabel: 'Create Cost',
+            }}
             isShow={showFragment === ShowTransactionFragment.CREATE}
-            categories={categories}
+            categories={CostsCategoryValues}
             loading={loading === LoadingStatus.LOADING}
           />
           {showFragment === ShowTransactionFragment.UPDATE && currentCost && (
             <UpdateTransactionForm
+              type="cost"
               transaction={currentCost}
-              transactionName="cost_name"
-              transactionSumName="cost_sum"
               updateFunction={updateCost}
               deleteFunction={deleteCost}
               limit={limit}
               isShow={setShowFragment}
-              title="Update cost"
-              labelName="Cost name"
-              placeholderName="My Cost"
-              labelSum="Cost amount"
-              categories={categories}
+              details={{
+                title: 'Update cost',
+                labelName: 'Cost name',
+                placeholderName: 'My Cost',
+                labelSum: 'Cost amount',
+              }}
+              categories={CostsCategoryValues}
             />
           )}
         </>

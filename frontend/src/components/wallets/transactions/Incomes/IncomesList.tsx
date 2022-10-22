@@ -17,7 +17,7 @@ import clsx from 'clsx'
 import { Button } from 'components/common/buttons/Button'
 import { Typography } from 'components/common/Typography'
 import { Link } from 'react-router-dom'
-import { IncomeCategories } from 'common/enums/incomesCategories.enum'
+import { IncomesCategoryValues } from 'common/enums/incomesCategories.enum'
 import { UpdateTransactionForm } from '../UpdateTransactionForm'
 import { ShowTransactionFragment } from 'components/wallets/helpers/enums/showTransactionFragment.enum'
 import { notifyError, notifySuccess } from 'components/common/notifications'
@@ -29,18 +29,22 @@ export const IncomesList: React.FC = () => {
   )
 
   const dispatch = useAppDispatch()
-  const limit = useAppSelector((state) => state.incomes.limit)
-  const offset = useAppSelector((state) => state.incomes.offset)
-  const incomes = useAppSelector((state) => state.incomes.incomes)
-  const currency = useAppSelector((state) => state.incomes.currency)
-  const currentWalletId = useAppSelector((state) => state.wallets.activeWallet)
-  const wallets = useAppSelector((state) => state.wallets.wallets)
-  const incomeCount = useAppSelector((state) => state.incomes.income_count)
-  const error = useAppSelector((state) => state.incomes.errorMessage)
-  const currentIncome = useAppSelector((state) => state.incomes.currentIncome)
-  const loading = useAppSelector((state) => state.incomes.loading)
-  const success = useAppSelector((state) => state.incomes.successMessage)
-  const categories = Object.values(IncomeCategories)
+
+  const {
+    incomes,
+    currency,
+    limit,
+    offset,
+    income_count: incomeCount,
+    currentIncome,
+    loading,
+    errorMessage: error,
+    successMessage: success,
+  } = useAppSelector((state) => state.incomes)
+
+  const { wallets, activeWallet: currentWalletId } = useAppSelector(
+    (state) => state.wallets,
+  )
 
   useEffect(() => {
     setShowFragment(ShowTransactionFragment.LIST)
@@ -81,9 +85,11 @@ export const IncomesList: React.FC = () => {
           <TransactionLinks
             show={showFragment}
             setShow={setShowFragment}
-            title={'My Incomes'}
-            listName={'Wallets Income'}
-            createName={'Cleate Income'}
+            details={{
+              title: 'My Incomes',
+              listName: 'Wallets Income',
+              createName: 'Cleate Income',
+            }}
           />
           <div className="bg-gray-300 h-px my-3"></div>
           {incomes?.length === 0 &&
@@ -114,14 +120,13 @@ export const IncomesList: React.FC = () => {
             <ul>
               {incomes?.map((income) => (
                 <TransactionsItem
+                  key={income.id}
                   type="income"
                   currency={currency}
-                  name={income.income_name}
-                  key={income.id}
-                  sum={income.income_sum}
-                  date={income.createdAt}
-                  isTransaction={income.is_transaction}
-                  category={income.category_name}
+                  details={{
+                    name: income.income_name,
+                    sum: income.income_sum,
+                  }}
                   setShow={setShowFragment}
                   transaction={income}
                   setTransaction={setCurrentIncome}
@@ -132,7 +137,7 @@ export const IncomesList: React.FC = () => {
               <Button
                 label="Show more"
                 type="button"
-                btnName="secondary2"
+                btnName="secondaryWithoutFocus"
                 disabled={loading === LoadingStatus.LOADING}
                 onClick={() => {
                   if (currentWalletId) {
@@ -147,33 +152,34 @@ export const IncomesList: React.FC = () => {
             )}
           </div>
           <CreateTransactionForm
-            transactionName="income_name"
-            transactionSumName="income_sum"
             submitFunction={addNewIncome}
             limit={limit}
-            title="Add income"
-            labelName="Income name"
-            placeholderName="My Income"
-            labelSum="Income amount"
-            buttonLabel="Create Income"
+            details={{
+              title: 'Add income',
+              labelName: 'Income name',
+              placeholderName: 'My Income',
+              labelSum: 'Income amount',
+              buttonLabel: 'Create Income',
+            }}
             isShow={showFragment === ShowTransactionFragment.CREATE}
-            categories={categories}
+            categories={IncomesCategoryValues}
             loading={loading === LoadingStatus.LOADING}
           />
           {showFragment === ShowTransactionFragment.UPDATE && currentIncome && (
             <UpdateTransactionForm
+              type="income"
               transaction={currentIncome}
-              transactionName="income_name"
-              transactionSumName="income_sum"
               updateFunction={updateIncome}
               deleteFunction={deleteIncome}
               limit={limit}
               isShow={setShowFragment}
-              title="Update income"
-              labelName="Income name"
-              placeholderName="My Income"
-              labelSum="Income amount"
-              categories={categories}
+              details={{
+                title: 'Update income',
+                labelName: 'Income name',
+                placeholderName: 'My Income',
+                labelSum: 'Income amount',
+              }}
+              categories={IncomesCategoryValues}
             />
           )}
         </>

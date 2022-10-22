@@ -2,7 +2,10 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsPositive, Min, Max, IsNotEmpty } from 'class-validator';
 
 export class CreateWalletLimitDto {
-  @ApiProperty({ example: 5000, description: 'Amount costs for target duration' })
+  @ApiProperty({
+    example: 5000,
+    description: 'Amount costs for target duration',
+  })
   @IsNotEmpty({ message: `wallet_limit can't be empty. For disable set 0` })
   @IsInt()
   @IsPositive()

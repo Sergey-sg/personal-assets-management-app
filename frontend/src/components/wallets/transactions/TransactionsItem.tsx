@@ -8,37 +8,42 @@ import { Currencies } from 'common/enums/currency.enum'
 import { currencyIcon } from '../helpers/currencyIcon'
 import { convertToMoney } from '../helpers/convertFunction'
 import { formatDate } from '../helpers/formatDate'
-import { IncomeCategories } from 'common/enums/incomesCategories.enum'
-import { CostsCategories } from 'common/enums/costsCategories.enum'
-import { wordToUC } from '../helpers/wordToUC'
+import { wordToUpperCase } from '../helpers/wordToUC'
 import { ShowTransactionFragment } from '../helpers/enums/showTransactionFragment.enum'
 import { useAppDispatch } from 'hooks/useAppDispatch'
+import { ICost } from 'redux/slice/costsSlice'
+import { IIncome } from 'redux/slice/incomeSlice'
+
+interface IDetails {
+  name: string
+  sum: number
+}
 
 interface ITransactionsItemProps {
   type: 'income' | 'cost'
   currency: Currencies
-  name: string
-  sum: number
-  date: Date
-  isTransaction: boolean
-  category: IncomeCategories | CostsCategories
+  details: IDetails
   setShow: (value: ShowTransactionFragment) => void
-  transaction: any
+  transaction: ICost | IIncome
   setTransaction: any
 }
 
 export const TransactionsItem: React.FC<ITransactionsItemProps> = ({
   type,
   currency,
-  name,
-  sum,
-  date,
-  isTransaction,
-  category,
+  details,
   setShow,
   transaction,
   setTransaction,
 }) => {
+  const {
+    createdAt: date,
+    is_transaction: isTransaction,
+    category_name: category,
+  } = transaction
+
+  const { name, sum } = details
+
   const dispatch = useAppDispatch()
 
   return (
@@ -54,7 +59,7 @@ export const TransactionsItem: React.FC<ITransactionsItemProps> = ({
         </Typography>
       </div>
       <Typography className="col-span-2 text-slate-500" type="Ag-16-semibold">
-        {wordToUC(category)}
+        {wordToUpperCase(category)}
       </Typography>
       <Typography
         className={`col-span-2 ${

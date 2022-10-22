@@ -1,43 +1,53 @@
 import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
 import React, { useState } from 'react'
 import { Field, Form, Formik, FormikHelpers } from 'formik'
-import * as Yup from 'yup'
 import { Typography } from 'components/common/Typography'
 import { InputField } from 'components/common/inputs/InputField'
 import { Button } from 'components/common/buttons/Button'
-import RegExp from 'assets/RegExp'
+import { REGEX } from 'shared/regexp'
 import { convertToСoins } from '../helpers/convertFunction'
 import { AsyncThunk } from '@reduxjs/toolkit'
 import clsx from 'clsx'
 import { CostsCategories } from 'common/enums/costsCategories.enum'
 import { IncomeCategories } from 'common/enums/incomesCategories.enum'
-import { wordToUC } from '../helpers/wordToUC'
+import { wordToUpperCase } from '../helpers/wordToUC'
+import { createTransactionValidateSchema } from '../validationSchemas/transactionValidateSchema'
 
-interface ICreateTransactionFormProps {
-  transactionName: 'income_name' | 'cost_name'
-  transactionSumName: 'income_sum' | 'cost_sum'
-  submitFunction: AsyncThunk<any, any, { rejectValue: string }>
-  limit: number
+interface IDetails {
   title: string
   labelName: string
   placeholderName: string
   labelSum: string
   buttonLabel: string
+}
+
+interface ICreateTransactionFormProps {
+  submitFunction: AsyncThunk<
+    any,
+    ICreateTransactionParams,
+    { rejectValue: string }
+  >
+  limit: number
+  details: IDetails
   isShow: boolean
   categories: CostsCategories[] | IncomeCategories[]
   loading: boolean
 }
+export interface ICreateTransactionDto {
+  name: string
+  sum: number
+  categoryName: CostsCategories | IncomeCategories
+}
+export interface ICreateTransactionParams {
+  walletId: number
+  limit: number
+  data: ICreateTransactionDto
+}
 
 export const CreateTransactionForm: React.FC<ICreateTransactionFormProps> = ({
-  transactionName,
-  transactionSumName,
   submitFunction,
   limit,
-  title,
-  labelName,
-  placeholderName,
-  labelSum,
-  buttonLabel,
+  details,
   isShow,
   categories,
   loading,
@@ -45,34 +55,29 @@ export const CreateTransactionForm: React.FC<ICreateTransactionFormProps> = ({
   const [tramsactionSum, setTramsactionSum] = useState(0)
   const [isPositiveSum, setIsPositiveSum] = useState(false)
 
+  const { title, labelName, placeholderName, labelSum, buttonLabel } = details
+
   const dispatch = useAppDispatch()
+
   const currentWalet = useAppSelector((state) => state.wallets.activeWallet)
 
-  const InitialValues = {
-    [transactionName]: '',
-    [transactionSumName]: tramsactionSum,
-    category_name: categories[0],
+  const initialValues: ICreateTransactionDto = {
+    name: '',
+    sum: tramsactionSum,
+    categoryName: categories[0],
   }
 
-  const ValidationSchema = Yup.object({
-    [transactionName]: Yup.string()
-      .min(3, 'Must be at least 3 letters')
-      .max(32, 'Must be max 32 letters')
-      .required('Enter income name'),
-    [transactionSumName]: Yup.number(),
-  })
-
   const handleSubmit = (
-    values: typeof InitialValues,
-    actions: FormikHelpers<typeof InitialValues>,
+    values: ICreateTransactionDto,
+    actions: FormikHelpers<ICreateTransactionDto>,
   ) => {
     if (currentWalet) {
-      const forSubmit = {
+      const forSubmit: ICreateTransactionParams = {
         walletId: currentWalet,
         limit,
         data: {
           ...values,
-          [transactionSumName]: convertToСoins(tramsactionSum),
+          sum: convertToСoins(tramsactionSum),
         },
       }
 
@@ -81,9 +86,9 @@ export const CreateTransactionForm: React.FC<ICreateTransactionFormProps> = ({
 
     actions.resetForm({
       values: {
-        [transactionName]: '',
-        [transactionSumName]: 0,
-        category_name: categories[0],
+        name: '',
+        sum: 0,
+        categoryName: categories[0],
       },
     })
     setTramsactionSum(0)
@@ -91,7 +96,7 @@ export const CreateTransactionForm: React.FC<ICreateTransactionFormProps> = ({
   }
 
   const checkSum = (value: string) => {
-    if (!value.match(RegExp.POSITIVE_DECIMAL_NUMBER)) {
+    if (!value.match(REGEX.POSITIVE_DECIMAL_NUMBER)) {
       return setTramsactionSum(tramsactionSum)
     }
     setTramsactionSum(+value)
@@ -100,8 +105,8 @@ export const CreateTransactionForm: React.FC<ICreateTransactionFormProps> = ({
   return (
     <div className={clsx('min-h-min', isShow ? 'block' : 'hidden')}>
       <Formik
-        initialValues={InitialValues}
-        validationSchema={ValidationSchema}
+        initialValues={initialValues}
+        validationSchema={createTransactionValidateSchema}
         onSubmit={handleSubmit}
       >
         {({ dirty, isValid }) => {
@@ -112,7 +117,7 @@ export const CreateTransactionForm: React.FC<ICreateTransactionFormProps> = ({
               </Typography>
               <InputField
                 label={labelName}
-                name={transactionName}
+                name="name"
                 type="text"
                 placeholder={placeholderName}
               />
@@ -126,7 +131,7 @@ export const CreateTransactionForm: React.FC<ICreateTransactionFormProps> = ({
                   }}
                   label={labelSum}
                   value={+tramsactionSum}
-                  name={transactionSumName}
+                  name="sum"
                   type="number"
                   className="w-7/12"
                 />
@@ -136,7 +141,7 @@ export const CreateTransactionForm: React.FC<ICreateTransactionFormProps> = ({
                   </label>
                   <Field
                     id="category"
-                    name="category_name"
+                    name="categoryName"
                     as="select"
                     className="rounded-md border-green-light text-gray-700"
                   >
@@ -146,7 +151,7 @@ export const CreateTransactionForm: React.FC<ICreateTransactionFormProps> = ({
                         key={category}
                         value={category}
                       >
-                        {wordToUC(category)}
+                        {wordToUpperCase(category)}
                       </option>
                     ))}
                   </Field>

@@ -12,6 +12,11 @@ import { CostsCategories } from 'common/enums/costsCategories.enum'
 import { Currencies } from 'common/enums/currency.enum'
 import { LoadingStatus } from 'common/enums/loading-status'
 import { IWallet } from './walletsSlice'
+import { ICreateTransactionParams } from 'components/wallets/transactions/CreateTransactionForm'
+import {
+  IDeleteTransaction,
+  IUpdateTransactionParams,
+} from 'components/wallets/transactions/UpdateTransactionForm'
 
 const costsLimit = 5
 
@@ -25,33 +30,17 @@ export interface ICost {
   is_transaction: boolean
 }
 
-export interface ICreateCostDto {
+interface ICreateCostDto {
   cost_name: string
   cost_sum: number
-}
-
-export interface IUpdateCostDto {
-  cost_name: string
   category_name: CostsCategories
+}
+
+interface IUpdateCostDto {
+  cost_name: string
   cost_sum: number
+  category_name: CostsCategories
   createdAt: Date
-}
-
-export interface ICreateCost {
-  walletId: number
-  limit: number
-  data: ICreateCostDto
-}
-
-interface IUpdateCost extends ICreateCost {
-  transactionId: number
-  data: IUpdateCostDto
-}
-
-interface IDeleteCost {
-  transactionId: number
-  walletId: number
-  limit: number
 }
 
 export interface IGetWalletCosts extends IWallet {
@@ -132,11 +121,17 @@ export const fetchMoreCosts = createAsyncThunk<
 
 export const addNewCost = createAsyncThunk<
   IGetWalletCosts,
-  ICreateCost,
+  ICreateTransactionParams,
   { rejectValue: string }
 >('costs/addCost', async (params, { rejectWithValue }) => {
   try {
-    await api.post(`/costs/wallet/${params.walletId}`, params.data)
+    const newCost: ICreateCostDto = {
+      cost_name: params.data.name,
+      cost_sum: params.data.sum,
+      category_name: params.data.categoryName as CostsCategories,
+    }
+
+    await api.post(`/costs/wallet/${params.walletId}`, newCost)
 
     const { data } = await api.get(
       `/costs/wallet/${params.walletId}?limit=${params.limit}`,
@@ -152,11 +147,18 @@ export const addNewCost = createAsyncThunk<
 
 export const updateCost = createAsyncThunk<
   IGetWalletCosts,
-  IUpdateCost,
+  IUpdateTransactionParams,
   { rejectValue: string }
 >('costs/updateCost', async (params, { rejectWithValue }) => {
   try {
-    await api.patch(`/costs/${params.transactionId}`, params.data)
+    const updatedCost: IUpdateCostDto = {
+      cost_name: params.data.name,
+      cost_sum: params.data.sum,
+      category_name: params.data.categoryName as CostsCategories,
+      createdAt: params.data.createdAt,
+    }
+
+    await api.patch(`/costs/${params.transactionId}`, updatedCost)
 
     const { data } = await api.get(
       `/costs/wallet/${params.walletId}?limit=${params.limit}`,
@@ -172,7 +174,7 @@ export const updateCost = createAsyncThunk<
 
 export const deleteCost = createAsyncThunk<
   IGetWalletCosts,
-  IDeleteCost,
+  IDeleteTransaction,
   { rejectValue: string }
 >('costs/deleteCost', async (parans, { rejectWithValue }) => {
   try {

@@ -10,7 +10,7 @@ interface ButtonProps {
   btnName:
     | 'primary'
     | 'secondary'
-    | 'secondary2'
+    | 'secondaryWithoutFocus'
     | 'tertiary'
     | 'tertiary2'
     | 'google'

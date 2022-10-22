@@ -9,3 +9,5 @@ export enum IncomeCategories {
   TRADES = 'trades',
   OTHER = 'other',
 }
+
+export const IncomesCategoryValues = Object.values(IncomeCategories)
