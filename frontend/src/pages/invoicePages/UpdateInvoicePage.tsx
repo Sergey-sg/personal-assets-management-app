@@ -13,7 +13,7 @@ import { resetSuccess } from 'redux/slice/success/success.slice'
 import { BasicInfo } from './invoice_componetns/BasicInfo'
 import { ClientDetails } from './invoice_componetns/ClientDetails'
 import { FooterItems } from './invoice_componetns/FooterItems'
-import { InputItem } from './invoice_componetns/InputItem'
+import { InputItemForm } from './invoice_componetns/InputItemForm'
 import {
   HeaderItems,
   InvoiceInfoBaner,
@@ -34,7 +34,6 @@ const InvoiceUpdatePage: React.FC = () => {
 
   useEffect(() => {
     console.log('satrt useEffect')
-    console.log(error)
     if (!invoice) {
       dispatch(fetchGetInvoiceById(`${invoiceId}`, true))
     }
@@ -74,7 +73,7 @@ const InvoiceUpdatePage: React.FC = () => {
     }) => {
       const sumSubTotal =
         sum(invoice.items.map((item: any) => item.subTotal)) + item.subTotal
-      const total = (sumSubTotal * (100 - invoice.discount)) / 100
+      const total = Math.round((sumSubTotal * (100 - invoice.discount)) / 100)
 
       setSubTotal(sumSubTotal)
       setInvoice({ ...invoice, items: [...invoice.items, item], total: total })
@@ -93,7 +92,7 @@ const InvoiceUpdatePage: React.FC = () => {
 
   const setDiscount = useCallback(
     (discount: number) => {
-      const total = (subTotal * (100 - discount)) / 100
+      const total = Math.round((subTotal * (100 - discount)) / 100)
 
       setInvoice({ ...invoice, total: total, discount: discount })
     },
@@ -136,7 +135,7 @@ const InvoiceUpdatePage: React.FC = () => {
                   )}
                 </div>
                 <br />
-                <InputItem setItem={(item: any) => setNewItem(item)} />
+                <InputItemForm setItem={(item: any) => setNewItem(item)} />
                 <br />
                 <FooterItems
                   invoice={invoice}

@@ -68,7 +68,7 @@ export class InvoicesService {
       (total, item) => item.price * item.amount + total,
       0,
     );
-    const total = (subTotal * (100 - discount)) / 100;
+    const total = Math.round((subTotal * (100 - discount)) / 100);
     if (total !== entryTotalPrice) {
       throw new HttpException(
         'total price is not valid',

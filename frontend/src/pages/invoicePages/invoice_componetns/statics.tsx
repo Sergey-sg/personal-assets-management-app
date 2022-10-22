@@ -24,7 +24,7 @@ export const MagloBaner: React.FC = () => {
 export const HeaderItems: React.FC = () => {
   return (
     <div className="container py-4 grid grid-cols-12 gap-4 text-text-ultralight font-semibold">
-      <div className="text-left pl-4 col-span-5">ITEM</div>
+      <div className="text-left pl-4 col-span-5">NAMES</div>
       <div className="text-center col-span-3">NUMBER OF ITEMS</div>
       <div className="text-center col-span-2">PRICE</div>
       <div className="text-right pr-4 col-span-2">TOTAL PRICE</div>

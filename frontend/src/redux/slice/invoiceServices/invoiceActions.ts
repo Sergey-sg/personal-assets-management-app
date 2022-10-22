@@ -84,7 +84,8 @@ export const fetchCreateInvoice = (invoice: any) => {
 
       dispatch(updateInvoiceSuccess(response.data))
       dispatch(successAction({ message: 'Invoice created successfully' }))
-    } catch (e) {
+    } catch (e: any) {
+      console.log(e.response.data.message)
       const axiosErr = e as AxiosError
       const status = axiosErr.response?.status
       const message = axiosErr.message

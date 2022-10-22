@@ -1,8 +1,7 @@
-import { useAppSelector } from 'hooks/useAppDispatch'
 import React, { useCallback, useState } from 'react'
 import { getUserByParams } from 'redux/slice/invoiceServices/invoiceActions'
 import { currentImagesPath } from '../secondaryFunctions/secondaryFunctions'
-import { UserInputModal } from './UserInputModal'
+import { UserInputModalForm } from './UserInputModalForm'
 
 export function ClientDetails(props: any) {
   const [client, setClient] = useState(
@@ -53,29 +52,37 @@ export function ClientDetails(props: any) {
         Client Details
       </div>
       <div className="container columns-1">
-        <img
-          className="px-5 mb-2 float-left"
-          src={currentImagesPath(client.avatarPath)}
-          alt={userFullName}
-        />
-        <div className="text-base font-semibold text-lg px-4">
-          {userFullName}
-        </div>
-        <div className="text-base font-normal text-text-ultralight px-4">
-          {client.email}
-        </div>
+        {client.email && (
+          <>
+            <img
+              className="px-5 mb-2 float-left"
+              src={currentImagesPath(client.avatarPath)}
+              alt={userFullName}
+            />
+            <div className="text-base font-semibold text-lg px-4">
+              {userFullName}
+            </div>
+            <div className="text-base font-normal text-text-ultralight px-4">
+              {client.email}
+            </div>
+          </>
+        )}
       </div>
       <br />
       <hr className="border-gray-border w-11/12 mx-auto" />
       <div className="container columns-1 p-5">
-        <div className="text-base font-semibold text-lg">{address[1]}</div>
-        <div className="text-base font-normal text-text-ultralight">
-          {address[0]}, {address[2]}
-        </div>
+        {client.address && (
+          <>
+            <div className="text-base font-semibold text-lg">{address[1]}</div>
+            <div className="text-base font-normal text-text-ultralight">
+              {address[0]}, {address[2]}
+            </div>
+          </>
+        )}
         {props.setCustomer && (
           <>
             <br />
-            <UserInputModal
+            <UserInputModalForm
               getCustomer={useCallback(
                 (params: { email: string; phone: string }) => getUser(params),
                 [],
