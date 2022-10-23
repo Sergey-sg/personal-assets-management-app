@@ -1,22 +1,22 @@
 import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
 import React from 'react'
-import { setFirstIndex, setLastIndex } from 'redux/slice/walletsSlice'
+import { IWallet, setFirstIndex, setLastIndex } from 'redux/slice/walletsSlice'
 import { ReactComponent as Down } from '../../assets/icons/slide-down.svg'
 import { ReactComponent as Up } from '../../assets/icons/slide-up.svg'
 import { Wallet } from './Wallet'
 
 interface IWalletSliderProps {
-  setActiveWalletId: (value: number) => void
+  setActiveWallet: (value: IWallet) => void
 }
 
 export const WalletSlider: React.FC<IWalletSliderProps> = ({
-  setActiveWalletId,
+  setActiveWallet,
 }) => {
   const dispatch = useAppDispatch()
 
-  const { wallets,
-    firstWalletIndex,
-    lastWalletIndex } = useAppSelector((state) => state.wallets)
+  const { wallets, firstWalletIndex, lastWalletIndex } = useAppSelector(
+    (state) => state.wallets,
+  )
 
   const nextWallet = () => {
     if (lastWalletIndex >= wallets.length - 1) {
@@ -55,7 +55,7 @@ export const WalletSlider: React.FC<IWalletSliderProps> = ({
                 <Wallet
                   key={wallet.id}
                   wallet={wallet}
-                  onClick={setActiveWalletId}
+                  onClick={() => setActiveWallet(wallet)}
                 />
               ),
           )}

@@ -73,7 +73,7 @@ export const CreateTransactionForm: React.FC<ICreateTransactionFormProps> = ({
   ) => {
     if (currentWalet) {
       const forSubmit: ICreateTransactionParams = {
-        walletId: currentWalet,
+        walletId: currentWalet.id,
         limit,
         data: {
           ...values,

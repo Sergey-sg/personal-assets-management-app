@@ -62,7 +62,7 @@ export interface IGetMoreCostsParams {
 interface ICostsState {
   costs: ICost[]
   loading: LoadingStatus
-  errorMessage: string
+  errorMessage: string | null
   successMessage: string | null
   costs_count: number
   currency: Currencies
@@ -74,7 +74,7 @@ interface ICostsState {
 const initialState: ICostsState = {
   costs: [],
   loading: LoadingStatus.SUCCESS,
-  errorMessage: '',
+  errorMessage: null,
   successMessage: null,
   costs_count: 0,
   currency: Currencies.UAH,
@@ -224,6 +224,12 @@ const costSlice = createSlice({
     setCurrentCost(state, action: PayloadAction<ICost>) {
       state.currentCost = action.payload
     },
+    setCostSuccess(state, action: PayloadAction<string | null>) {
+      state.successMessage = action.payload
+    },
+    setCostError(state, action: PayloadAction<string | null>) {
+      state.errorMessage = action.payload
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -256,12 +262,12 @@ const costSlice = createSlice({
       })
       .addMatcher(isAllSuccess, (state) => {
         state.loading = LoadingStatus.SUCCESS
-        state.errorMessage = ''
+        state.errorMessage = null
       })
       .addMatcher(isAllLoading, (state) => {
         state.loading = LoadingStatus.LOADING
         state.successMessage = null
-        state.errorMessage = ''
+        state.errorMessage = null
       })
       .addMatcher(isAllError, (state, action: PayloadAction<string>) => {
         state.errorMessage = action.payload
@@ -270,6 +276,7 @@ const costSlice = createSlice({
   },
 })
 
-export const { setOffset, setCurrentCost } = costSlice.actions
+export const { setOffset, setCurrentCost, setCostSuccess, setCostError } =
+  costSlice.actions
 
 export default costSlice.reducer

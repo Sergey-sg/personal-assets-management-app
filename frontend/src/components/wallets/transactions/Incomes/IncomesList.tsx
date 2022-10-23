@@ -7,6 +7,8 @@ import {
   fetchMoreIncomes,
   IGetMoreIncomesParams,
   setCurrentIncome,
+  setIncomeError,
+  setIncomeSuccess,
   setOffset,
   updateIncome,
 } from 'redux/slice/incomeSlice'
@@ -42,28 +44,36 @@ export const IncomesList: React.FC = () => {
     successMessage: success,
   } = useAppSelector((state) => state.incomes)
 
-  const { wallets, activeWallet: currentWalletId } = useAppSelector(
+  const { wallets, activeWallet: currentWallet } = useAppSelector(
     (state) => state.wallets,
   )
 
   useEffect(() => {
     setShowFragment(ShowTransactionFragment.LIST)
-    if (currentWalletId) {
+    if (currentWallet) {
       dispatch(
         fetchIncomes({
-          walletId: currentWalletId,
+          walletId: currentWallet.id,
           limit,
         }),
       )
     }
-  }, [currentWalletId])
+  }, [currentWallet])
 
   useEffect(() => {
-    error && error !== '' && notifyError(error)
+    error && notifyError(error)
+
+    return () => {
+      dispatch(setIncomeError(null))
+    }
   }, [error])
 
   useEffect(() => {
-    success && success !== '' && notifySuccess(success)
+    success && notifySuccess(success)
+
+    return () => {
+      dispatch(setIncomeSuccess(null))
+    }
   }, [success])
 
   const getMoreIncomes = (params: IGetMoreIncomesParams) => {
@@ -80,9 +90,10 @@ export const IncomesList: React.FC = () => {
 
   return (
     <div className="col-span-2 px-4">
-      {currentWalletId && wallets?.length > 0 ? (
+      {currentWallet && wallets?.length > 0 ? (
         <>
           <TransactionLinks
+            type="income"
             show={showFragment}
             setShow={setShowFragment}
             details={{
@@ -140,9 +151,9 @@ export const IncomesList: React.FC = () => {
                 btnName="secondaryWithoutFocus"
                 disabled={loading === LoadingStatus.LOADING}
                 onClick={() => {
-                  if (currentWalletId) {
+                  if (currentWallet) {
                     getMoreIncomes({
-                      walletId: currentWalletId,
+                      walletId: currentWallet.id,
                       limit,
                       offset,
                     })
@@ -184,7 +195,13 @@ export const IncomesList: React.FC = () => {
           )}
         </>
       ) : (
-        <Typography type="Ag-18-semibold">Add Wallets</Typography>
+        <>
+          <Typography type="Ag-18-semibold">Add Wallets</Typography>
+          <Typography className="mt-5" type="Ag-16-regular">
+            Make a wallet and keep track of your income and costs. This is the
+            first step toward financial security.
+          </Typography>
+        </>
       )}
     </div>
   )

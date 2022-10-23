@@ -13,11 +13,11 @@ import { CostsCategories } from '../enums/costsCategory.enum';
 export class UpdateCostDto {
   @ApiProperty({
     example: 'salary',
-    description: 'Income category',
+    description: 'Cost category',
     required: false,
   })
   @IsOptional()
-  @IsNotEmpty({ message: `Income category can't be empti` })
+  @IsNotEmpty({ message: `Cost category can't be empti` })
   @IsEnum(CostsCategories)
   readonly category_name?: CostsCategories;
 

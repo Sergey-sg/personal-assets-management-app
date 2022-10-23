@@ -62,7 +62,7 @@ export interface IGetMoreIncomesParams {
 interface IIncomeState {
   incomes: IIncome[]
   loading: LoadingStatus
-  errorMessage: string
+  errorMessage: string | null
   successMessage: string | null
   income_count: number
   currency: Currencies
@@ -74,7 +74,7 @@ interface IIncomeState {
 const initialState: IIncomeState = {
   incomes: [],
   loading: LoadingStatus.SUCCESS,
-  errorMessage: '',
+  errorMessage: null,
   successMessage: null,
   income_count: 0,
   currency: Currencies.UAH,
@@ -226,6 +226,12 @@ const incomeSlice = createSlice({
     setCurrentIncome(state, action: PayloadAction<IIncome>) {
       state.currentIncome = action.payload
     },
+    setIncomeSuccess(state, action: PayloadAction<string | null>) {
+      state.successMessage = action.payload
+    },
+    setIncomeError(state, action: PayloadAction<string | null>) {
+      state.errorMessage = action.payload
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -258,12 +264,12 @@ const incomeSlice = createSlice({
       })
       .addMatcher(isAllSuccess, (state) => {
         state.loading = LoadingStatus.SUCCESS
-        state.errorMessage = ''
+        state.errorMessage = null
       })
       .addMatcher(isAllLoading, (state) => {
         state.loading = LoadingStatus.LOADING
         state.successMessage = null
-        state.errorMessage = ''
+        state.errorMessage = null
       })
       .addMatcher(isAllError, (state, action: PayloadAction<string>) => {
         state.errorMessage = action.payload
@@ -272,6 +278,7 @@ const incomeSlice = createSlice({
   },
 })
 
-export const { setOffset, setCurrentIncome } = incomeSlice.actions
+export const { setOffset, setCurrentIncome, setIncomeSuccess, setIncomeError } =
+  incomeSlice.actions
 
 export default incomeSlice.reducer

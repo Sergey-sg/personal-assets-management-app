@@ -19,6 +19,8 @@ import {
   ICreateTransactionDto,
   ICreateTransactionParams,
 } from './CreateTransactionForm'
+import clsx from 'clsx'
+import { WalletStatus } from 'common/enums/walletStatus.enum'
 
 interface IDetails {
   title: string
@@ -78,7 +80,7 @@ export const UpdateTransactionForm: React.FC<IUpdateTransactionFormProps> = ({
   const [isPositiveSum, setIsPositiveSum] = useState(true)
 
   const dispatch = useAppDispatch()
-  const currentWalletId = useAppSelector((state) => state.wallets.activeWallet)
+  const currentWallet = useAppSelector((state) => state.wallets.activeWallet)
 
   const initialValues = {
     name: type === 'cost' ? transaction.cost_name : transaction.income_name,
@@ -95,10 +97,10 @@ export const UpdateTransactionForm: React.FC<IUpdateTransactionFormProps> = ({
   }
 
   const handleSubmit = (values: typeof initialValues) => {
-    if (transaction.id && currentWalletId) {
+    if (transaction.id && currentWallet) {
       const forSubmit: IUpdateTransactionParams = {
         transactionId: transaction.id,
-        walletId: currentWalletId,
+        walletId: currentWallet.id,
         limit,
         data: {
           ...values,
@@ -146,7 +148,12 @@ export const UpdateTransactionForm: React.FC<IUpdateTransactionFormProps> = ({
                       value={+tramsactionSum}
                       name="sum"
                       type="number"
-                      className="w-5/12"
+                      className={clsx(
+                        'w-5/12',
+                        type === 'cost' &&
+                          currentWallet?.status === WalletStatus.CLOSE &&
+                          'hidden',
+                      )}
                     />
                   </div>
                   <div className="flex justify-start items-start gap-5 mb-4">
@@ -187,16 +194,21 @@ export const UpdateTransactionForm: React.FC<IUpdateTransactionFormProps> = ({
                       label="Save"
                     />
                     <Button
+                      className={clsx(
+                        type === 'cost' &&
+                          currentWallet?.status === WalletStatus.CLOSE &&
+                          'hidden',
+                      )}
                       icon={<DeleteIcon />}
                       type="button"
                       btnName="delete"
                       label="Delete"
                       onClick={() => {
-                        if (currentWalletId) {
+                        if (currentWallet) {
                           dispatch(
                             deleteFunction({
                               transactionId: transaction.id,
-                              walletId: currentWalletId,
+                              walletId: currentWallet.id,
                               limit,
                             }),
                           )
