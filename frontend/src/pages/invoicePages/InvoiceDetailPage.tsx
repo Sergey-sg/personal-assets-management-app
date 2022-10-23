@@ -1,6 +1,6 @@
 import { AppRoute } from 'common/enums/app-route.enum'
 import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { fetchGetInvoiceById } from 'redux/slice/invoiceServices/invoiceActions'
 import { BasicInfo } from './invoice_componetns/BasicInfo'
@@ -13,6 +13,7 @@ import {
   MagloBaner,
 } from './invoice_componetns/statics'
 import { sum } from './secondaryFunctions/secondaryFunctions'
+import { useReactToPrint } from 'react-to-print';
 
 const InvoiceDetailPage = () => {
   const dispatch = useAppDispatch()
@@ -24,21 +25,25 @@ const InvoiceDetailPage = () => {
     : 0
   const navigate = useNavigate()
   const currentUser = useAppSelector((state) => state.userProfile)
+  const componentRef = useRef(null)
 
   useEffect(() => {
-    if (invoiceId && parseInt(invoiceId) !== invoice.id) {
-      dispatch(fetchGetInvoiceById(`${invoiceId}`, false))
-    }
+    dispatch(fetchGetInvoiceById(`${invoiceId}`, false))
     if (error === 'Invoice does not found for user') {
       navigate(`/${AppRoute.PORTAL}/${AppRoute.INVOICES}`)
     }
   }, [error])
 
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    documentTitle: 'Maglo Invoice',
+  });
+
   return (
-    <div className="container mx-auto mb-10">
+    <div className="container mx-auto">
       {invoice && (
         <div className="container py-4 grid grid-cols-1 lg:grid-cols-10 gap-4">
-          <div className="container col-span-1 lg:col-span-7 md:col-span-7 px-10">
+          <div ref={componentRef} className="container col-span-1 lg:col-span-7 md:col-span-7 px-10">
             <MagloBaner />
             <br />
             <InvoiceInfoBaner
@@ -48,12 +53,14 @@ const InvoiceDetailPage = () => {
             />
             <br />
             <div>
-              <div className="text-base font-bold mb-3.5">Item Details</div>
-              <div className="w-full">{invoice.invoiceDetails}</div>
+              {invoice.invoiceDetails && <>
+                <div className="text-base font-bold mb-3.5">Item Details</div>
+                <div className="w-full">{invoice.invoiceDetails}</div>
+              </>}
               <br />
               <br />
               <div className="w-full">
-                <HeaderItems detailsPage={true} />
+                <HeaderItems detailsPage={true}/>
                 <br />
                 {Object.keys(invoice.items[0]).length > 0 && (
                   <InvoiceItemsList items={invoice.items} />
@@ -79,6 +86,7 @@ const InvoiceDetailPage = () => {
             )}
             <br />
             <BasicInfo
+              printPdf={handlePrint}
               invoice={invoice}
               date={{
                 dueDate: invoice.dueDate,

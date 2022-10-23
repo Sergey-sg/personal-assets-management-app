@@ -28,6 +28,19 @@ function convertDate(dateString: string) {
   )
 }
 
+const ClientInfo = (props: any) => {
+  return (
+    <>
+      <img
+        className="float-left pr-4 max-h-9 rounded-full"
+        src={currentImagesPath(props.client.avatarPath)}
+        alt={props.client.email}
+      />
+      {`${props.client.firstName} ${props.client.lastName}`}
+    </>
+  )
+}
+
 export const InvoicesList = (props: any) => {
   const dispatch = useAppDispatch()
   const invoices = useAppSelector((state) => state.invoices.invoices)
@@ -37,19 +50,6 @@ export const InvoicesList = (props: any) => {
 
   function removeInvoice(invoiceId: number) {
     dispatch(fetchRemoveInvoice(invoiceId))
-  }
-
-  const ClientInfo = (props: any) => {
-    return (
-      <>
-        <img
-          className="float-left pr-4"
-          src={currentImagesPath(props.client.avatarPath)}
-          alt={props.client.email}
-        />
-        {`${props.client.firstName} ${props.client.lastName}`}
-      </>
-    )
   }
 
   return (

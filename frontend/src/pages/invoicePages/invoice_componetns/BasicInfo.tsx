@@ -131,14 +131,14 @@ export function BasicInfo(props: any) {
             Send Invoice
           </button>
         )}
-        <div className="grid grid-cols-2 gap-4">
-          <button className="bg-gray-ultralight hover:bg-gray-border rounded-xl w-full font-semibold text-base text-green-medium col-span-1">
-            Preview
-          </button>
-          <button className="bg-gray-ultralight hover:bg-gray-border rounded-xl w-full font-semibold text-base text-green-medium py-4 col-span-1">
+        {props.printPdf && 
+          <button 
+            onClick={() => props.printPdf()}
+            className="bg-gray-ultralight hover:bg-gray-border rounded-xl w-full font-semibold text-base text-green-medium py-4 my-4"
+          >
             Download
           </button>
-        </div>
+        }
       </div>
       <br />
     </div>

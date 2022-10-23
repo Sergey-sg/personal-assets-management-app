@@ -13,11 +13,14 @@ const resetAllFilters = {
 }
 
 const getCurrentLabel = (label: string) => {
-  const outLabel = label.split('U')
-
-  return outLabel[1]
-    ? `${outLabel[0]} U${outLabel[1]}`
-    : `${outLabel[0].toLocaleUpperCase()}`
+  switch (label) {
+    case 'toUser':
+      return 'to My'
+    case 'fromUser':
+      return  'from My'
+    case 'all':
+      return 'ALL'  
+  }
 }
 
 function FilterMenu(props: any) {

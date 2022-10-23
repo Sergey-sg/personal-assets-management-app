@@ -1,7 +1,20 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../user/entities/user.entity';
-import { Between, DataSource, EntityManager, ILike, In, LessThan, LessThanOrEqual, Like, MoreThan, MoreThanOrEqual, Raw, Repository } from 'typeorm';
+import {
+  Between,
+  DataSource,
+  EntityManager,
+  ILike,
+  In,
+  LessThan,
+  LessThanOrEqual,
+  Like,
+  MoreThan,
+  MoreThanOrEqual,
+  Raw,
+  Repository,
+} from 'typeorm';
 import { InvoiceDto } from './dto/invoice.dto';
 import { InvoiceEntity } from './entities/invoice.entity';
 import { InvoiceItemEntity } from './entities/invoiceItem.entity';
@@ -10,6 +23,13 @@ import { PageOptionsDto } from 'src/pagination/dto/pageOptionsDto';
 import { PageDto } from 'src/pagination/dto/page.dto';
 import { PageMetaDto } from 'src/pagination/dto/page-meta.dto';
 import { UpdateInvoiceDto } from './dto/updateInvoice.dto';
+
+const constantsForFilters = {
+  minPrice: 0,
+  maxPrice: 1000000000,
+  minDate: '1990-01-01',
+  maxDate: '2090-01-01',
+};
 
 @Injectable()
 export class InvoicesService {
@@ -30,7 +50,14 @@ export class InvoicesService {
     const currentUser = await this.userRepository
       .findOneOrFail({
         where: user,
-        select: ['id', 'firstName', 'lastName', 'email', 'address', 'avatarPath']
+        select: [
+          'id',
+          'firstName',
+          'lastName',
+          'email',
+          'address',
+          'avatarPath',
+        ],
       })
       .catch(() => {
         throw new HttpException(
@@ -46,13 +73,20 @@ export class InvoicesService {
   private async getInvoiceByIdForUser(
     whereParams: object,
     relationsParams: object,
-  ) { 
-    const paramsUserSelect = {id: true, firstName: true, lastName: true, email: true, address: true, avatarPath: true};
+  ) {
+    const paramsUserSelect = {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      address: true,
+      avatarPath: true,
+    };
     const invoice = await this.invoiceRepository
       .findOneOrFail({
         where: whereParams,
         relations: relationsParams,
-        select: {createdBy: paramsUserSelect, billedTo: paramsUserSelect}
+        select: { createdBy: paramsUserSelect, billedTo: paramsUserSelect },
       })
       .catch(() => {
         throw new HttpException(
@@ -82,62 +116,79 @@ export class InvoicesService {
   }
 
   private getParamsForFilters(filters: any, userId: number) {
-    let params = [{displayForUsers: {id: userId}}];
+    let params = [{ displayForUsers: { id: userId } }];
     if (filters.search) {
       if (parseInt(filters.search)) {
         params[0]['id'] = In([filters.search]);
       } else if (filters.search.includes('@')) {
-        params[1] = {...params[0]}
-        params[0]['billedTo'] = [{email: Like(filters.search)}];
-        params[1]['createdBy'] = [{email: Like(filters.search)}];
+        params[1] = { ...params[0] };
+        params[0]['billedTo'] = [{ email: Like(filters.search) }];
+        params[1]['createdBy'] = [{ email: Like(filters.search) }];
       } else {
-        params[1] = {...params[0]}
-        params[0]['billedTo'] = [{firstName: ILike(In(filters.search.split(' ')))}, {lastName: ILike(In(filters.search.split(' ')))}];
-        params[1]['createdBy'] = [{firstName: ILike(In(filters.search.split(' ')))}, {lastName: ILike(In(filters.search.split(' ')))}];
+        params[1] = { ...params[0] };
+        params[0]['billedTo'] = [
+          { firstName: ILike(In(filters.search.split(' '))) },
+          { lastName: ILike(In(filters.search.split(' '))) },
+        ];
+        params[1]['createdBy'] = [
+          { firstName: ILike(In(filters.search.split(' '))) },
+          { lastName: ILike(In(filters.search.split(' '))) },
+        ];
       }
     }
     if (filters.minDate || filters.maxDate) {
       params.forEach((param) => {
-        const minDate = filters.minDate? new Date(filters.minDate) : new Date('1990-01-01')
-        const maxDate = filters.maxDate? new Date(filters.maxDate) : new Date('2090-01-01') 
+        const minDate = filters.minDate
+          ? new Date(filters.minDate)
+          : new Date(constantsForFilters.minDate);
+        const maxDate = filters.maxDate
+          ? new Date(filters.maxDate)
+          : new Date(constantsForFilters.maxDate);
         param['invoiceDate'] = Between(minDate, maxDate);
       });
     }
     if (filters.minPrice || filters.maxPrice) {
       params.forEach((param) => {
-        param['total'] = Between(filters.minPrice? parseInt(filters.minPrice) : 0, filters.maxPrice? parseInt(filters.maxPrice) : 1000000000);
+        param['total'] = Between(
+          filters.minPrice
+            ? parseInt(filters.minPrice)
+            : constantsForFilters.minPrice,
+          filters.maxPrice
+            ? parseInt(filters.maxPrice)
+            : constantsForFilters.maxPrice,
+        );
       });
     }
     if (filters.status) {
       params.forEach((param) => {
-        switch(filters.status) {
+        switch (filters.status) {
           case 'paid':
             param['paid'] = true;
             break;
           case 'unpaid':
-            param['dueDate'] = LessThanOrEqual(new Date);
+            param['dueDate'] = LessThanOrEqual(new Date());
             param['paid'] = false;
             break;
           case 'pending':
-            param['dueDate'] = MoreThanOrEqual(new Date);
-            param['paid'] = false; 
+            param['dueDate'] = MoreThanOrEqual(new Date());
+            param['paid'] = false;
             break;
         }
       });
     }
     if (filters.target) {
       params.forEach((param) => {
-        switch(filters.target) {
+        switch (filters.target) {
           case 'toUser':
-            param['billedTo'] = {id: userId};
+            param['billedTo'] = { id: userId };
             if (param['createdBy']) {
-              params = [param]
+              params = [param];
             }
             break;
           case 'fromUser':
-            param['createdBy'] = {id: userId};
+            param['createdBy'] = { id: userId };
             if (param['billedTo']) {
-              params = [param]
+              params = [param];
             }
             break;
         }
@@ -151,13 +202,17 @@ export class InvoicesService {
     currentUser: UserEntity,
   ): Promise<InvoiceEntity> {
     const billedTo = await this.getUser(invoiceDto.billedTo);
-    this.validateTotalPrice(invoiceDto.items, invoiceDto.discount, invoiceDto.total);
+    this.validateTotalPrice(
+      invoiceDto.items,
+      invoiceDto.discount,
+      invoiceDto.total,
+    );
     if (invoiceDto.dueDate < invoiceDto.invoiceDate) {
       throw new HttpException(
         'Due date must be greater than or equal to the Invoice date',
         HttpStatus.BAD_REQUEST,
       );
-    } 
+    }
     const newInvoice = this.invoiceRepository.create({
       ...invoiceDto,
       createdBy: currentUser,
@@ -179,8 +234,12 @@ export class InvoicesService {
       invoiceDto.total,
     );
     const oldInvoice = await this.getInvoiceByIdForUser(
-      { id: invoiceId, createdBy: { id: currentUser.id }, displayForUsers: {id: currentUser.id} },
-      {billedTo: true},
+      {
+        id: invoiceId,
+        createdBy: { id: currentUser.id },
+        displayForUsers: { id: currentUser.id },
+      },
+      { billedTo: true },
     );
     if (oldInvoice.paid) {
       throw new HttpException(
@@ -193,7 +252,7 @@ export class InvoicesService {
         'Due date must be greater than or equal to the Invoice date',
         HttpStatus.BAD_REQUEST,
       );
-    } 
+    }
     const newInvoice = this.invoiceRepository.create({
       ...invoiceDto,
       id: invoiceId,
@@ -246,28 +305,36 @@ export class InvoicesService {
     currentUser: UserEntity,
   ): Promise<InvoiceDto> {
     const params = forUpdate
-      ? { id: invoiceId, createdBy: {id: currentUser.id}, displayForUsers: {id: currentUser.id} }
-      : { id: invoiceId, displayForUsers: {id: currentUser.id} }
-    return await this.getInvoiceByIdForUser(
-      params,
-      { items: true, createdBy: true, billedTo: true },
-    );
+      ? {
+          id: invoiceId,
+          createdBy: { id: currentUser.id },
+          displayForUsers: { id: currentUser.id },
+        }
+      : { id: invoiceId, displayForUsers: { id: currentUser.id } };
+    return await this.getInvoiceByIdForUser(params, {
+      items: true,
+      createdBy: true,
+      billedTo: true,
+    });
   }
 
   public async getAllInvoicesForUser(
-    currentUser: UserEntity, 
+    currentUser: UserEntity,
     filters: any,
-    pageOptionsDto: PageOptionsDto  
-  ): Promise<PageDto<InvoiceDto>> {   
+    pageOptionsDto: PageOptionsDto,
+  ): Promise<PageDto<InvoiceDto>> {
     const params = this.getParamsForFilters(filters, currentUser.id);
     const listInvoices = await this.invoiceRepository.findAndCount({
       where: params,
       relations: { items: true, createdBy: true, billedTo: true },
-      order: {invoiceDate: filters.firstNew? 'DESC' : 'ASC' },
+      order: { invoiceDate: filters.firstNew ? 'DESC' : 'ASC' },
       skip: pageOptionsDto.skip,
-      take: pageOptionsDto.take
+      take: pageOptionsDto.take,
     });
-    const pageMetaDto = new PageMetaDto({ pageOptionsDto: pageOptionsDto, itemCount: listInvoices[1] });
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto: pageOptionsDto,
+      itemCount: listInvoices[1],
+    });
     const pageDto = new PageDto(listInvoices[0], pageMetaDto);
     return pageDto;
   }
