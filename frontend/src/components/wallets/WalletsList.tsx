@@ -1,11 +1,16 @@
 import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
 import React, { useEffect, useState } from 'react'
-import { fetchWallets, setActiveWallet } from 'redux/slice/walletsSlice'
+import {
+  fetchWallets,
+  IWallet,
+  setActiveWallet,
+  setWalletError,
+  setWalletSuccess,
+} from 'redux/slice/walletsSlice'
 import { Wallet } from './Wallet'
 import { Button } from 'components/common/buttons/Button'
 import { ReactComponent as AddIcon } from '../../assets/icons/add-icon.svg'
 import { AddWalletForm } from './AddWalletForm'
-import { ToastContainer, Zoom } from 'react-toastify'
 import { notifyError, notifySuccess } from 'components/common/notifications'
 import { WalletSlider } from './WalletSlider'
 
@@ -28,22 +33,30 @@ export const WalletsList: React.FC = () => {
   }, [incomes, costs])
 
   useEffect(() => {
-    errorMessage && errorMessage !== '' && notifyError(errorMessage)
+    errorMessage && notifyError(errorMessage)
+
+    return () => {
+      dispatch(setWalletError(null))
+    }
   }, [errorMessage])
 
   useEffect(() => {
-    successMessage && successMessage !== '' && notifySuccess(successMessage)
+    successMessage && notifySuccess(successMessage)
+
+    return () => {
+      dispatch(setWalletSuccess(null))
+    }
   }, [successMessage])
 
-  const setActiveWalletId = (walletId: number) => {
-    if (walletId === activeWallet) return null
-    dispatch(setActiveWallet(walletId))
+  const setActiveWalletId = (wallet: IWallet) => {
+    if (activeWallet && wallet.id === activeWallet.id) return null
+    dispatch(setActiveWallet(wallet))
   }
 
   return (
     <div className="row-span-2">
       {wallets.length > 3 && (
-        <WalletSlider setActiveWalletId={setActiveWalletId} />
+        <WalletSlider setActiveWallet={setActiveWalletId} />
       )}
 
       {wallets.length <= 3 && (
@@ -72,8 +85,6 @@ export const WalletsList: React.FC = () => {
           />
         </div>
       )}
-
-      <ToastContainer transition={Zoom} />
     </div>
   )
 }

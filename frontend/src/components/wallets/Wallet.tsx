@@ -11,6 +11,8 @@ import { convertToMoney } from './helpers/convertFunction'
 import { useAppSelector } from 'hooks/useAppDispatch'
 import { currencyIcon } from './helpers/currencyIcon'
 import { Currencies } from 'common/enums/currency.enum'
+import { wordToUpperCase } from './helpers/wordToUC'
+import { WalletStatus } from 'common/enums/walletStatus.enum'
 
 export enum ShowWalletFooter {
   CLOSE = 'close',
@@ -21,7 +23,7 @@ export enum ShowWalletFooter {
 
 interface WalletProps {
   wallet: IWallet
-  onClick: (walletId: number) => void
+  onClick: (wallet: IWallet) => void
   className?: string
 }
 
@@ -38,14 +40,14 @@ export const Wallet: React.FC<WalletProps> = ({
 
   return (
     <li
-      onClick={() => onClick(wallet.id)}
+      onClick={() => onClick(wallet)}
       className={clsx(
         'w-11/12 bg-gradient-to-b px-3 pt-3 rounded-md cursor-pointer',
         wallet.currency === Currencies.UAH && 'from-blue-300 to-yellow-200',
         wallet.currency === Currencies.EUR && 'from-orange-300 to-purple-300',
         wallet.currency === Currencies.USD && 'from-gray-200 to-green-400',
         className,
-        activeWallet === wallet.id
+        activeWallet && activeWallet.id === wallet.id
           ? 'shadow-md shadow-lime-500 scale-105'
           : null,
       )}
@@ -77,7 +79,22 @@ export const Wallet: React.FC<WalletProps> = ({
           <Typography className="text-zinc-500" type="Ag-16-regular">
             Status
           </Typography>
-          <Typography type="Ag-18-semibold">{wallet.status}</Typography>
+          <Typography
+            className={clsx(
+              wallet.status === WalletStatus.OPEN
+                ? 'text-green-600'
+                : 'text-red-600',
+            )}
+            type="Ag-18-semibold"
+          >
+            {wordToUpperCase(wallet.status)}
+          </Typography>
+          {wallet.status === WalletStatus.CLOSE && (
+            <Typography
+              className="text-red-600"
+              type="Ag-12-normal"
+            >{`You can't change costs sum`}</Typography>
+          )}
         </div>
       </div>
       <div className="bg-gray-300 h-px mt-3"></div>

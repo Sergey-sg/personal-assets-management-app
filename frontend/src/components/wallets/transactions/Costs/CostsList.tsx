@@ -7,6 +7,8 @@ import {
   fetchCosts,
   fetchMoreCosts,
   IGetMoreCostsParams,
+  setCostError,
+  setCostSuccess,
   setCurrentCost,
   setOffset,
   updateCost,
@@ -22,6 +24,7 @@ import { ShowTransactionFragment } from 'components/wallets/helpers/enums/showTr
 import { UpdateTransactionForm } from '../UpdateTransactionForm'
 import { notifyError, notifySuccess } from 'components/common/notifications'
 import { LoadingStatus } from 'common/enums/loading-status'
+import { WalletStatus } from 'common/enums/walletStatus.enum'
 
 export const CostsList: React.FC = () => {
   const [showFragment, setShowFragment] = useState<ShowTransactionFragment>(
@@ -42,28 +45,36 @@ export const CostsList: React.FC = () => {
     successMessage: success,
   } = useAppSelector((state) => state.costs)
 
-  const { wallets, activeWallet: currentWalletId } = useAppSelector(
+  const { wallets, activeWallet: currentWallet } = useAppSelector(
     (state) => state.wallets,
   )
 
   useEffect(() => {
     setShowFragment(ShowTransactionFragment.LIST)
-    if (currentWalletId) {
+    if (currentWallet) {
       dispatch(
         fetchCosts({
-          walletId: currentWalletId,
+          walletId: currentWallet.id,
           limit,
         }),
       )
     }
-  }, [currentWalletId])
+  }, [currentWallet])
 
   useEffect(() => {
-    error && error !== '' && notifyError(error)
+    error && notifyError(error)
+
+    return () => {
+      dispatch(setCostError(null))
+    }
   }, [error])
 
   useEffect(() => {
-    success && success !== '' && notifySuccess(success)
+    success && notifySuccess(success)
+
+    return () => {
+      dispatch(setCostSuccess(null))
+    }
   }, [success])
 
   const getMoreCosts = (params: IGetMoreCostsParams) => {
@@ -80,9 +91,10 @@ export const CostsList: React.FC = () => {
 
   return (
     <div className="col-span-2 px-4 mt-5">
-      {currentWalletId && wallets.length > 0 ? (
+      {currentWallet && wallets.length > 0 ? (
         <>
           <TransactionLinks
+            type="cost"
             show={showFragment}
             setShow={setShowFragment}
             details={{
@@ -98,15 +110,17 @@ export const CostsList: React.FC = () => {
                 <Typography type="Ag-18-semibold">
                   You dont have any costs yet
                 </Typography>
-                <Link
-                  className="ml-4 underline underline-offset-4 transition-colors hover:underline hover:underline-offset-4 hover:text-lime-500"
-                  to="#"
-                  onClick={() => {
-                    setShowFragment(ShowTransactionFragment.CREATE)
-                  }}
-                >
-                  Add Cost
-                </Link>
+                {currentWallet.status !== WalletStatus.CLOSE && (
+                  <Link
+                    className="ml-4 underline underline-offset-4 transition-colors hover:underline hover:underline-offset-4 hover:text-lime-500"
+                    to="#"
+                    onClick={() => {
+                      setShowFragment(ShowTransactionFragment.CREATE)
+                    }}
+                  >
+                    Add Cost
+                  </Link>
+                )}
               </div>
             )}
           <div
@@ -140,9 +154,9 @@ export const CostsList: React.FC = () => {
                 btnName="secondaryWithoutFocus"
                 disabled={loading === LoadingStatus.LOADING}
                 onClick={() => {
-                  if (currentWalletId) {
+                  if (currentWallet) {
                     getMoreCosts({
-                      walletId: currentWalletId,
+                      walletId: currentWallet.id,
                       limit,
                       offset,
                     })

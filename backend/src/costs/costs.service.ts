@@ -10,6 +10,7 @@ import { UserEntity } from '../user/entities/user.entity';
 import { AllWalletCostsResponseDto } from './dto/allWalletCostsResponse.dto';
 import { AllUserCostsResponseType } from './interfaces/allUserCostsResponse.type';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
+import { WalletStatus } from 'src/wallet/enums/walletStatus.enum';
 
 @Injectable()
 export class CostsService {
@@ -38,6 +39,13 @@ export class CostsService {
       throw new HttpException(
         `Wallet with id: ${walletId} doesn't find`,
         HttpStatus.NOT_FOUND,
+      );
+    }
+
+    if (wallet.status === WalletStatus.CLOSE) {
+      throw new HttpException(
+        `Wallet ${wallet.wallet_name} is close, you can't add new costs`,
+        HttpStatus.BAD_REQUEST,
       );
     }
 
@@ -200,6 +208,16 @@ export class CostsService {
       );
     }
 
+    if (
+      cost.wallet.status === WalletStatus.CLOSE &&
+      cost.cost_sum !== updateCostDto.cost_sum
+    ) {
+      throw new HttpException(
+        `Wallet ${cost.wallet.wallet_name} is close, you can't change your costs sum`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     if (cost.is_transaction) {
       throw new HttpException(
         `Transactions can't be updated`,
@@ -252,6 +270,13 @@ export class CostsService {
       throw new HttpException(
         `Cost with id: ${costId} doesn't find`,
         HttpStatus.NOT_FOUND,
+      );
+    }
+
+    if (cost.wallet.status === WalletStatus.CLOSE) {
+      throw new HttpException(
+        `Wallet ${cost.wallet.wallet_name} is close, you can't delete costs`,
+        HttpStatus.BAD_REQUEST,
       );
     }
 

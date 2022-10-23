@@ -48,7 +48,7 @@ export const MessengerForm: React.FC<Props> = ({ conversationId }) => {
         <label htmlFor="chat" className="sr-only">
           Your message
         </label>
-        <div className="flex items-center py-2 px-3 bg-gray-50 rounded-lg dark:bg-gray-700">
+        <div className="flex items-center py-2 bg-gray-50 rounded-lg dark:bg-gray-700">
           <label
             htmlFor="file-upload"
             className="inline-flex justify-center p-2 text-gray-500 rounded-lg cursor-pointer hover:text-green hover:bg-gray-100"

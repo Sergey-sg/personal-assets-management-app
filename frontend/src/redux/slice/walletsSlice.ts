@@ -37,8 +37,8 @@ interface IUpdateWallet {
 interface IWalletState {
   wallets: IWallet[]
   loading: LoadingStatus
-  errorMessage: string
-  activeWallet: number | null
+  errorMessage: string | null
+  activeWallet: IWallet | null
   successMessage: string | null
   firstWalletIndex: number
   lastWalletIndex: number
@@ -47,7 +47,7 @@ interface IWalletState {
 const initialState: IWalletState = {
   wallets: [],
   loading: LoadingStatus.SUCCESS,
-  errorMessage: '',
+  errorMessage: null,
   activeWallet: null,
   successMessage: null,
   firstWalletIndex: 0,
@@ -143,8 +143,14 @@ const walletsSlice = createSlice({
   name: 'wallets',
   initialState,
   reducers: {
-    setActiveWallet(state, action: PayloadAction<number>) {
+    setActiveWallet(state, action: PayloadAction<IWallet>) {
       state.activeWallet = action.payload
+    },
+    setWalletSuccess(state, action: PayloadAction<string | null>) {
+      state.successMessage = action.payload
+    },
+    setWalletError(state, action: PayloadAction<string | null>) {
+      state.errorMessage = action.payload
     },
     setFirstIndex(state, action: PayloadAction<number>) {
       state.firstWalletIndex = action.payload
@@ -160,12 +166,12 @@ const walletsSlice = createSlice({
           state.wallets = action.payload.sort((a, b) => (a.id > b.id ? 1 : -1))
         }
         if (action.payload.length > 0 && state.activeWallet === null) {
-          state.activeWallet = action.payload[0].id
+          state.activeWallet = action.payload[0]
         }
       })
       .addCase(addNewWallets.fulfilled, (state, action) => {
         state.wallets.push(action.payload)
-        state.activeWallet = action.payload.id
+        state.activeWallet = action.payload
         state.successMessage = `Wallet ${action.payload.wallet_name} created`
         state.firstWalletIndex = state.wallets.length - 3
         state.lastWalletIndex = state.wallets.length - 1
@@ -173,6 +179,8 @@ const walletsSlice = createSlice({
       .addCase(updateWallet.fulfilled, (state, action) => {
         state.wallets = state.wallets.map((wallet) => {
           if (wallet.id === action.payload.id) {
+            state.activeWallet = action.payload
+
             return action.payload
           }
 
@@ -185,19 +193,22 @@ const walletsSlice = createSlice({
         state.wallets = state.wallets.filter(
           (wallet) => wallet.id !== action.payload,
         )
-        if (state.wallets.length > 0) state.activeWallet = state.wallets[0].id
+        state.wallets.length > 0
+          ? (state.activeWallet = state.wallets[0])
+          : (state.activeWallet = null)
+
         state.successMessage = `Wallet deleted`
         state.firstWalletIndex = 0
         state.lastWalletIndex = 2
       })
       .addMatcher(isAllSuccess, (state) => {
         state.loading = LoadingStatus.SUCCESS
-        state.errorMessage = ''
+        state.errorMessage = null
       })
       .addMatcher(isAllLoading, (state) => {
         state.loading = LoadingStatus.LOADING
         state.successMessage = null
-        state.errorMessage = ''
+        state.errorMessage = null
       })
       .addMatcher(isAllError, (state, action: PayloadAction<string>) => {
         state.errorMessage = action.payload
@@ -206,7 +217,12 @@ const walletsSlice = createSlice({
   },
 })
 
-export const { setActiveWallet, setFirstIndex, setLastIndex } =
-  walletsSlice.actions
+export const {
+  setActiveWallet,
+  setFirstIndex,
+  setLastIndex,
+  setWalletSuccess,
+  setWalletError,
+} = walletsSlice.actions
 
 export default walletsSlice.reducer

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Formik } from 'formik'
+import { Field, Form, Formik } from 'formik'
 import { InputField } from 'components/common/inputs/InputField'
 import { Button } from 'components/common/buttons/Button'
 import { ReactComponent as Cross } from 'assets/icons/cross-icon.svg'
@@ -9,6 +9,9 @@ import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
 import { ShowWalletFooter } from './Wallet'
 import { LoadingStatus } from 'common/enums/loading-status'
 import { updateWalletValidateSchema } from './validationSchemas/walletValidationSchem'
+import { wordToUpperCase } from './helpers/wordToUC'
+import { WalletStatusValues } from 'common/enums/walletStatus.enum'
+import { Typography } from 'components/common/Typography'
 
 interface IUpdateWalletFormProps {
   wallet: IWallet
@@ -24,6 +27,7 @@ export const UpdateWalletForm: React.FC<IUpdateWalletFormProps> = ({
 
   const initialValues = {
     wallet_name: wallet.wallet_name,
+    status: wallet.status,
   }
 
   const handleSubmit = (values: typeof initialValues) => {
@@ -40,12 +44,38 @@ export const UpdateWalletForm: React.FC<IUpdateWalletFormProps> = ({
       {({ dirty, isValid }) => {
         return (
           <Form className="my-3">
-            <InputField
-              label="Wallet Name"
-              name="wallet_name"
-              type="text"
-              placeholder="My Wallet"
-            />
+            <div className="lg:grid lg:grid-rows-1 lg:grid-cols-12">
+              <InputField
+                className="lg:col-span-7 mb-3 lg:mb-0 max-w-full"
+                label="Wallet Name"
+                name="wallet_name"
+                type="text"
+                placeholder="My Wallet"
+              />
+              <div className="col-span-1"></div>
+              <div className="flex flex-col justify-end lg:col-span-4">
+                <label className="mb-1" htmlFor="category">
+                  <Typography type="Ag-14-regular">Status</Typography>
+                </label>
+                <Field
+                  id="status"
+                  name="status"
+                  as="select"
+                  className="rounded-md border-green-light text-gray-700"
+                >
+                  {WalletStatusValues.map((status) => (
+                    <option
+                      className="text-gray-700"
+                      key={status}
+                      value={status}
+                    >
+                      {wordToUpperCase(status)}
+                    </option>
+                  ))}
+                </Field>
+              </div>
+            </div>
+
             <div className="flex justify-around">
               <Button
                 label="Save"

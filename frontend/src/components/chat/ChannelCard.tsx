@@ -1,8 +1,7 @@
 import React from 'react'
 import { formatRelative } from 'date-fns'
 import { Typography } from 'components/common/Typography'
-import { ReactComponent as ProfileIcon } from 'assets/icons/profile.svg'
-import { CONSTANTS } from 'shared/constants'
+import { Avatar } from 'components/common/avatar/Avatar'
 
 interface MessageCardProps {
   avatar: string | null
@@ -29,18 +28,8 @@ export const ChannelCard: React.FC<MessageCardProps> = ({
         'w-full min-h-[74px] flex flex-col justify-center items-center lg:flex-row px-4 py-2 lg:p-4 gap-2 hover:bg-gray-light hover:cursor-pointer rounded-lg transition-all duration-200'
       }
     >
-      <div className="flex items-center justify-center w-12 h-12 bg-green-light mr-3 rounded-full overflow-hidden shrink-0">
-        {avatar ? (
-          <img
-            src={`${CONSTANTS.CLOUDINARY_FILE_STORAGE}${avatar}`}
-            alt={name}
-          />
-        ) : (
-          <ProfileIcon
-            title="Avatar upload"
-            className="w-11 h-11 stroke-white "
-          />
-        )}
+      <div className="flex items-center justify-center w-11 h-11 bg-green-light lg:mr-3 rounded-full overflow-hidden shrink-0">
+        <Avatar img={avatar} alt={name} avatarType={'channel'} />
       </div>
       <div className="flex flex-col w-full">
         <Typography
