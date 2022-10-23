@@ -18,8 +18,15 @@ export const Messenger: React.FC<Props> = ({ messages, conversationId }) => {
     <div className="h-5/6 flex flex-col justify-between gap-5 ">
       <div className="h-5/6 justify-between overflow-y-auto overflow-x-hidden flex flex-col-reverse ">
         <div>
-          {messages.map((message) => (
-            <Message key={message.id} message={message} />
+          {messages.map(({ id, content, author, createdAt }) => (
+            <Message
+              key={id}
+              message={{
+                content,
+                author,
+                createdAt,
+              }}
+            />
           ))}
         </div>
       </div>

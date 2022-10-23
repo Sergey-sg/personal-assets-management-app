@@ -6,8 +6,8 @@ import React, {
   useState,
 } from 'react'
 import { useFormikContext } from 'formik'
-import { ReactComponent as ProfileIcon } from 'assets/icons/profile.svg'
-import { CONSTANTS } from 'shared/constants'
+
+import { Avatar } from 'components/common/avatar/Avatar'
 
 type UploadAvatarButtonProps = {
   fieldName: string
@@ -28,11 +28,7 @@ export const UploadAvatarButton = ({
     if (!imgUrl) {
       return
     }
-    const avatar = imgUrl.includes('googleusercontent')
-      ? imgUrl
-      : `${CONSTANTS.CLOUDINARY_FILE_STORAGE}${imgUrl}`
-
-    setImg(avatar)
+    setImg(imgUrl)
   }, [imgUrl])
 
   const onImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
@@ -49,20 +45,7 @@ export const UploadAvatarButton = ({
   return (
     <>
       <label ref={inputFile} className="upload-avatar-button">
-        {img ? (
-          <div className=" w-14 h-14 rounded-full border-4 border-green-light hover:border-green-hover cursor-pointer flex items-center justify-center overflow-hidden">
-            <img
-              src={img}
-              alt="user avatar"
-              title="Avatar upload"
-              className=" w-full h-full"
-            />
-          </div>
-        ) : (
-          <div className=" w-12 h-12 rounded-full border-2 border-grey flex items-center justify-center">
-            <ProfileIcon title="Avatar upload" />
-          </div>
-        )}
+        <Avatar img={img} avatarType={'upload'} />
         <input
           className="hidden"
           id={fieldName}
