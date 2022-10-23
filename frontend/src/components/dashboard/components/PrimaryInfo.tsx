@@ -40,7 +40,11 @@ const PrimaryInfo = ({
           <label className="mx-4" htmlFor="wallets">
             Wallet:
           </label>
-          <select className="w-52" id="wallets" onChange={onWalletChange}>
+          <select
+            className="w-52 rounded-xl"
+            id="wallets"
+            onChange={onWalletChange}
+          >
             {options}
           </select>
         </div>

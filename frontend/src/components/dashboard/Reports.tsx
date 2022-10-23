@@ -7,6 +7,7 @@ import { Wallet, Transaction, Period } from './interfaces'
 
 import { fetchReportForPeriod, fetchWallets } from './service/api'
 import { Totals } from './types'
+import { Link } from 'react-router-dom'
 
 const now = new Date()
 const year = now.getFullYear()
@@ -36,6 +37,8 @@ const Reports = () => {
   useEffect(() => {
     const getWallets = async () => {
       const data = await fetchWallets()
+
+      if (data.length === 0) return
 
       const sortedWallets = data?.sort((a: Wallet, b: Wallet) =>
         a.wallet_name > b.wallet_name ? 1 : -1,
@@ -99,16 +102,31 @@ const Reports = () => {
   return (
     <>
       <div className="flex gap-2 h-screen">
-        <PrimaryInfo
-          selectedWallet={selectedWallet}
-          totals={totals}
-          wallets={wallets}
-          onWalletChange={onWalletChange}
-          transactions={transactions}
-          period={period}
-          handleChange={handleChange}
-          handleSubmit={handleSubmit}
-        />
+        {wallets.length ? (
+          <PrimaryInfo
+            selectedWallet={selectedWallet}
+            totals={totals}
+            wallets={wallets}
+            onWalletChange={onWalletChange}
+            transactions={transactions}
+            period={period}
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
+          />
+        ) : (
+          <div className="flex flex-col gap-2 flex-1 basis-2/3 h-screen text-center">
+            <h2 className=" text-Ag-18 font-semibold mb-4">
+              No Wallets To Show{' '}
+            </h2>
+            <p>Create your very first wallet</p>
+            <Link
+              className="text-blue-500 underline uppercase"
+              to={'../my-wallets'}
+            >
+              My-Wallets
+            </Link>
+          </div>
+        )}
         <WidgetsBar />
       </div>
     </>
