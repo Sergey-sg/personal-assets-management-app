@@ -52,7 +52,7 @@ export function InputItemForm(props: {
         value={formik.values.name}
       />
       <input
-        className={`col-span-3 border ${
+        className={`col-span-2 border ${
           formik.touched.amount && formik.errors.amount
             ? 'border-error'
             : 'border-gray-medium'
@@ -69,13 +69,12 @@ export function InputItemForm(props: {
             : 'border-gray-medium'
         } rounded-xl p-4 focus:outline-none focus:border-green-hover focus:ring-green-hover focus:ring-0`}
         type={'number'}
-        max={64}
         name="price"
         onChange={formik.handleChange}
         value={formik.values.price > 0 ? formik.values.price : ''}
       />
       <button
-        className="col-span-2 text-green-medium border border-gray-medium rounded-xl py-4 hover:bg-gray-ultralight"
+        className="col-span-3 text-green-medium border border-gray-medium rounded-xl py-4 hover:bg-gray-ultralight"
         type="submit"
       >
         Add Item

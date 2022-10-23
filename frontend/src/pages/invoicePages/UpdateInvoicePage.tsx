@@ -11,10 +11,10 @@ import { BasicInfo } from './invoice_componetns/BasicInfo'
 import { ClientDetails } from './invoice_componetns/ClientDetails'
 import { FooterItems } from './invoice_componetns/FooterItems'
 import { InputItemForm } from './invoice_componetns/InputItemForm'
+import { InvoiceItemsList } from './invoice_componetns/InvoiceItemsList'
 import {
   HeaderItems,
   InvoiceInfoBaner,
-  InvoiceItemsList,
   MagloBaner,
 } from './invoice_componetns/statics'
 import { sum } from './secondaryFunctions/secondaryFunctions'
@@ -55,19 +55,24 @@ const InvoiceUpdatePage: React.FC = () => {
   }, [success, error, invoice])
 
   const setNewItem = useCallback(
-    (item: {
-      subTotal: number
-      id: number
-      name: string
-      amount: number
-      price: number
-    }) => {
-      const sumSubTotal =
-        sum(invoice.items.map((item: any) => item.subTotal)) + item.subTotal
+    (
+      newItem: {
+        subTotal: number
+        id: number
+        name: string
+        amount: number
+        price: number
+      },
+      remove = false,
+    ) => {
+      const newItems = remove
+        ? invoice.items.filter((item: any) => newItem.id !== item.id)
+        : [...invoice.items, newItem]
+      const sumSubTotal = sum(newItems.map((item: any) => item.subTotal))
       const total = Math.round((sumSubTotal * (100 - invoice.discount)) / 100)
 
       setSubTotal(sumSubTotal)
-      setInvoice({ ...invoice, items: [...invoice.items, item], total: total })
+      setInvoice({ ...invoice, items: newItems, total: total })
     },
     [subTotal, invoice],
   )
@@ -122,7 +127,10 @@ const InvoiceUpdatePage: React.FC = () => {
                   <HeaderItems />
                   <br />
                   {Object.keys(invoice.items[0]).length > 0 && (
-                    <InvoiceItemsList items={invoice.items} />
+                    <InvoiceItemsList
+                      items={invoice.items}
+                      removeItem={(item: any) => setNewItem(item, true)}
+                    />
                   )}
                 </div>
                 <br />

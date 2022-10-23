@@ -8,10 +8,10 @@ import { BasicInfo } from './invoice_componetns/BasicInfo'
 import { ClientDetails } from './invoice_componetns/ClientDetails'
 import { FooterItems } from './invoice_componetns/FooterItems'
 import { InputItemForm } from './invoice_componetns/InputItemForm'
+import { InvoiceItemsList } from './invoice_componetns/InvoiceItemsList'
 import {
   HeaderItems,
   InvoiceInfoBaner,
-  InvoiceItemsList,
   MagloBaner,
 } from './invoice_componetns/statics'
 import { sum } from './secondaryFunctions/secondaryFunctions'
@@ -42,23 +42,25 @@ const InvoiceCreatePage: React.FC = () => {
   }, [success, createdInvoice])
 
   const setNewItem = useCallback(
-    (item: {
-      subTotal: number
-      id: number
-      name: string
-      amount: number
-      price: number
-    }) => {
-      if (Object.keys(invoiceItems[0]).length > 0) {
-        setInvoiceItems([...invoiceItems, item])
-      } else {
-        setInvoiceItems([item])
-      }
-
-      const sumSubTotal =
-        sum(invoiceItems.map((item: any) => item.subTotal)) + item.subTotal
+    (
+      newItem: {
+        subTotal: number
+        id: number
+        name: string
+        amount: number
+        price: number
+      },
+      remove = false,
+    ) => {
+      const newItems = remove
+        ? invoiceItems.filter((item: any) => newItem.id !== item.id)
+        : Object.keys(invoiceItems[0]).length > 0
+        ? [...invoiceItems, newItem]
+        : [newItem]
+      const sumSubTotal = sum(newItems.map((item: any) => item.subTotal))
       const total = Math.round((sumSubTotal * (100 - invoice.discount)) / 100)
 
+      setInvoiceItems(newItems)
       setSubTotal(sumSubTotal)
       setInvoice({ ...invoice, total: total })
     },
@@ -111,7 +113,10 @@ const InvoiceCreatePage: React.FC = () => {
               <HeaderItems />
               <br />
               {Object.keys(invoiceItems[0]).length > 0 && (
-                <InvoiceItemsList items={invoiceItems} />
+                <InvoiceItemsList
+                  items={invoiceItems}
+                  removeItem={(item: any) => setNewItem(item, true)}
+                />
               )}
             </div>
             <br />

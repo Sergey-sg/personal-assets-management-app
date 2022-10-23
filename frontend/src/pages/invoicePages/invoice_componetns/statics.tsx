@@ -21,11 +21,17 @@ export const MagloBaner: React.FC = () => {
   )
 }
 
-export const HeaderItems: React.FC = () => {
+export function HeaderItems(props: any) {
   return (
     <div className="container py-4 grid grid-cols-12 gap-4 text-text-ultralight font-semibold">
       <div className="text-left pl-4 col-span-5">NAMES</div>
-      <div className="text-center col-span-3">NUMBER OF ITEMS</div>
+      <div
+        className={`text-center ${
+          props.detailsPage ? 'col-span-3' : 'col-span-2'
+        }`}
+      >
+        NUMBER OF ITEMS
+      </div>
       <div className="text-center col-span-2">PRICE</div>
       <div className="text-right pr-4 col-span-2">TOTAL PRICE</div>
     </div>
@@ -96,32 +102,6 @@ export const InvoiceStatus = (props: { dueDate: string; paid: boolean }) => {
       ) : (
         status
       )}
-    </div>
-  )
-}
-
-export function InvoiceItemsList(props: { items: any[] }) {
-  return (
-    <div className="font-medium">
-      {props.items.map((item: any) => (
-        <div key={item.id}>
-          <div className="container grid grid-cols-12 gap-4">
-            <div className="border border-gray-medium rounded-xl p-4 col-span-5">
-              {item.name}
-            </div>
-            <div className="text-center border border-gray-medium rounded-xl py-4 col-span-3">
-              {item.amount}
-            </div>
-            <div className="text-center border border-gray-medium rounded-xl py-4 col-span-2">
-              ${item.price / 100}
-            </div>
-            <div className="text-center border border-gray-medium rounded-xl p-4 col-span-2">
-              ${item.subTotal / 100}
-            </div>
-          </div>
-          <br />
-        </div>
-      ))}
     </div>
   )
 }

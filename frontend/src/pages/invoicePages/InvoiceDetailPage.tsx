@@ -6,10 +6,10 @@ import { fetchGetInvoiceById } from 'redux/slice/invoiceServices/invoiceActions'
 import { BasicInfo } from './invoice_componetns/BasicInfo'
 import { ClientDetails } from './invoice_componetns/ClientDetails'
 import { FooterItems } from './invoice_componetns/FooterItems'
+import { InvoiceItemsList } from './invoice_componetns/InvoiceItemsList'
 import {
   HeaderItems,
   InvoiceInfoBaner,
-  InvoiceItemsList,
   MagloBaner,
 } from './invoice_componetns/statics'
 import { sum } from './secondaryFunctions/secondaryFunctions'
@@ -26,7 +26,9 @@ const InvoiceDetailPage = () => {
   const currentUser = useAppSelector((state) => state.userProfile)
 
   useEffect(() => {
-    dispatch(fetchGetInvoiceById(`${invoiceId}`, false))
+    if (invoiceId && parseInt(invoiceId) !== invoice.id) {
+      dispatch(fetchGetInvoiceById(`${invoiceId}`, false))
+    }
     if (error === 'Invoice does not found for user') {
       navigate(`/${AppRoute.PORTAL}/${AppRoute.INVOICES}`)
     }
@@ -51,7 +53,7 @@ const InvoiceDetailPage = () => {
               <br />
               <br />
               <div className="w-full">
-                <HeaderItems />
+                <HeaderItems detailsPage={true} />
                 <br />
                 {Object.keys(invoice.items[0]).length > 0 && (
                   <InvoiceItemsList items={invoice.items} />
