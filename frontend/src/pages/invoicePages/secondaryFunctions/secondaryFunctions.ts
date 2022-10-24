@@ -2,6 +2,9 @@ import { CONSTANTS } from 'shared/constants'
 import profile from '../../../assets/icons/profile.svg'
 
 export function getCorrectDateFormat(dateString: string) {
+  if (!dateString) {
+    return ''
+  }
   const dateNow = new Date(dateString)
 
   return `${dateNow.getFullYear()}-${String(dateNow.getMonth() + 1).padStart(

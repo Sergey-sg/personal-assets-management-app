@@ -13,16 +13,15 @@ import {
   setOneInvoice,
 } from './invoice.slice'
 
-const getAllInvoices = (filters: any) => {
-  const queryParams = Object.keys(filters)
-    .map((key: string) =>
-      filters[key as keyof typeof filters]
-        ? `${key}=${filters[key as keyof typeof filters]}`
-        : '',
-    )
-    .filter((param) => (param ? true : false))
+import queryString from 'query-string'
 
-  return api.get(`/invoices?${queryParams.join('&')}`)
+const getAllInvoices = (filters: any) => {
+  const parsed = queryString.parse(location.search);  
+
+  parsed.page = filters.page
+  parsed.take = filters.take
+
+  return api.get(`/invoices?${queryString.stringify(parsed)}`)
 }
 
 const createInvoice = async (invoice: any) => {

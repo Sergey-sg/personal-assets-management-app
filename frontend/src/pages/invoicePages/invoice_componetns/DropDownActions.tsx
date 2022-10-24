@@ -3,10 +3,6 @@ import { Menu, Transition } from '@headlessui/react'
 import { AppRoute } from 'common/enums/app-route.enum'
 import { useAppSelector } from 'hooks/useAppDispatch'
 
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ')
-}
-
 export default function DropDownActions(props: any) {
   const dateNow = new Date()
   const currentUser = useAppSelector((state) => state.userProfile)
@@ -36,12 +32,7 @@ export default function DropDownActions(props: any) {
                 {({ active }) => (
                   <a
                     href={`${AppRoute.INVOICES}/${AppRoute.INVOICE_UPDATE}/${props.invoiceId}`}
-                    className={classNames(
-                      active
-                        ? 'bg-gray-medium text-gray-default'
-                        : 'text-text-light',
-                      'block px-4 py-2 text-sm',
-                    )}
+                    className={`${active? 'bg-gray-medium text-gray-default' : 'text-text-light'} block px-4 py-2 text-sm`}
                   >
                     Update
                   </a>
@@ -55,12 +46,7 @@ export default function DropDownActions(props: any) {
                   {({ active }) => (
                     <a
                       href="#"
-                      className={classNames(
-                        active
-                          ? 'bg-gray-medium text-gray-default'
-                          : 'text-text-light',
-                        'block px-4 py-2 text-sm',
-                      )}
+                      className={`${active? 'bg-gray-medium text-gray-default' : 'text-text-light'} block px-4 py-2 text-sm`}
                     >
                       Paid
                     </a>
@@ -70,13 +56,8 @@ export default function DropDownActions(props: any) {
             <Menu.Item>
               {({ active }) => (
                 <button
-                  disabled={loader ? true : false}
-                  className={classNames(
-                    active
-                      ? 'bg-gray-medium text-gray-default'
-                      : 'text-text-light',
-                    'block px-4 py-2 text-sm',
-                  )}
+                  disabled={loader}
+                  className={`${active? 'bg-gray-medium text-gray-default' : 'text-text-light'} block px-4 py-2 text-sm`}
                   onClick={props.removeInvoice}
                 >
                   Remove

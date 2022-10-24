@@ -5,58 +5,27 @@ import {
   convertDateTime,
   getCorrectDateFormat,
 } from '../secondaryFunctions/secondaryFunctions'
+import { addMinutes, addMonths } from 'date-fns'
+
+const minInputDate = addMinutes(new Date(), 30).toISOString()
+const maxInputDate = addMonths(new Date(), 2).toISOString()
+
+const valideteDueDate = (newDate: string, minDate: string) => {
+  const minDateString = addMinutes(new Date(minDate || new Date()), 60).toISOString()
+  const newDueDate = new Date(newDate)
+
+  return newDueDate >= new Date(minDateString)? newDueDate.toISOString() : minDateString
+}
+
+const valideteInvoiceDate = (newDate: string) => {
+  const newInvoiceDate = new Date(newDate)
+
+  return newInvoiceDate >= new Date(minInputDate)? newInvoiceDate.toISOString() : minInputDate
+}
 
 export function BasicInfo(props: any) {
   const currentUser = useAppSelector((state) => state.userProfile)
   const loader = useAppSelector((state) => state.loader)
-
-  function setValidInvoiceDateAndDueDate(date: {
-    invoiceDate: string
-    dueDate: string
-  }) {
-    const dateNow = new Date()
-    const outDate = {
-      invoiceDate: props.date.invoiceDate,
-      dueDate: props.date.dueDate,
-    }
-
-    if (date.dueDate) {
-      const dueDate = new Date(date.dueDate)
-
-      if (dueDate >= dateNow) {
-        if (
-          props.date.invoiceDate &&
-          dueDate >= new Date(props.date.invoiceDate)
-        ) {
-          outDate.dueDate = date.dueDate
-        } else if (props.date.invoiceDate) {
-          outDate.dueDate = props.date.invoiceDate
-        } else {
-          outDate.dueDate = getCorrectDateFormat(date.dueDate)
-        }
-      } else {
-        if (props.date.invoiceDate) {
-          outDate.dueDate = props.date.invoiceDate
-        } else {
-          outDate.dueDate = getCorrectDateFormat(dateNow.toString())
-        }
-      }
-    }
-    if (date.invoiceDate) {
-      const invoiceDate = new Date(date.invoiceDate)
-
-      if (invoiceDate >= dateNow) {
-        outDate.invoiceDate = date.invoiceDate
-        if (outDate.dueDate && invoiceDate >= new Date(outDate.dueDate)) {
-          outDate.dueDate = date.invoiceDate
-        }
-      } else {
-        outDate.invoiceDate = getCorrectDateFormat(dateNow.toString())
-      }
-    }
-
-    props.setDate(outDate)
-  }
 
   return (
     <div className="container h-max bg-text-white border border-gray-medium rounded-xl">
@@ -73,14 +42,12 @@ export function BasicInfo(props: any) {
               name="invoice-date"
               className="w-full p-3.5 border border-gray-medium rounded-xl focus:outline-none focus:border-green-hover focus:ring-green-hover focus:ring-0"
               type={'datetime-local'}
-              value={
-                props.date.invoiceDate
-                  ? getCorrectDateFormat(props.date.invoiceDate)
-                  : props.date.invoiceDate
-              }
+              min={minInputDate}
+              max={maxInputDate}
+              value={getCorrectDateFormat(props.date.invoiceDate)}
               onChange={(e) =>
-                setValidInvoiceDateAndDueDate({
-                  invoiceDate: new Date(e.target.value).toISOString(),
+                  props.setDate({
+                  invoiceDate: valideteInvoiceDate(e.target.value),
                   dueDate: '',
                 })
               }
@@ -98,22 +65,23 @@ export function BasicInfo(props: any) {
               name="due-date"
               className="w-full p-3.5 border border-gray-medium rounded-xl focus:outline-none focus:border-green-hover focus:ring-green-hover focus:ring-0"
               type={'datetime-local'}
+              min={getCorrectDateFormat(props.date.invoiceDate) || minInputDate}
+              max={maxInputDate}
               value={
                 props.date.dueDate
                   ? getCorrectDateFormat(props.date.dueDate)
                   : props.date.dueDate
               }
               onChange={(e) =>
-                setValidInvoiceDateAndDueDate({
-                  invoiceDate: '',
-                  dueDate: new Date(e.target.value).toISOString(),
+                props.setDate({
+                  dueDate: valideteDueDate(e.target.value, props.date.invoiceDate),
                 })
               }
             />
           )}
         </div>
         {props.invoice ? (
-          props.invoice.createdBy.email === currentUser.email && (
+          props.invoice.createdBy.email === currentUser.email && !props.invoice.paid && (
             <a
               href={`/${AppRoute.PORTAL}/${AppRoute.INVOICES}/${AppRoute.INVOICE_UPDATE}/${props.invoice.id}`}
             >
@@ -124,8 +92,8 @@ export function BasicInfo(props: any) {
           )
         ) : (
           <button
-            disabled={loader ? true : false}
-            onClick={() => props.sendInvoice()}
+            disabled={loader}
+            onClick={props.sendInvoice}
             className="bg-green-light rounded-xl w-full font-semibold text-base py-4 my-4 hover:bg-green-hover"
           >
             Send Invoice
@@ -133,7 +101,7 @@ export function BasicInfo(props: any) {
         )}
         {props.printPdf && 
           <button 
-            onClick={() => props.printPdf()}
+            onClick={props.printPdf}
             className="bg-gray-ultralight hover:bg-gray-border rounded-xl w-full font-semibold text-base text-green-medium py-4 my-4"
           >
             Download

@@ -63,7 +63,7 @@ const InvoiceDetailPage = () => {
                 <HeaderItems detailsPage={true}/>
                 <br />
                 {Object.keys(invoice.items[0]).length > 0 && (
-                  <InvoiceItemsList items={invoice.items} />
+                  <InvoiceItemsList removeItem={false} items={invoice.items} />
                 )}
               </div>
               <br />

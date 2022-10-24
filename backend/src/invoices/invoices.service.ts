@@ -7,12 +7,8 @@ import {
   EntityManager,
   ILike,
   In,
-  LessThan,
   LessThanOrEqual,
-  Like,
-  MoreThan,
   MoreThanOrEqual,
-  Raw,
   Repository,
 } from 'typeorm';
 import { InvoiceDto } from './dto/invoice.dto';
@@ -23,13 +19,7 @@ import { PageOptionsDto } from 'src/pagination/dto/pageOptionsDto';
 import { PageDto } from 'src/pagination/dto/page.dto';
 import { PageMetaDto } from 'src/pagination/dto/page-meta.dto';
 import { UpdateInvoiceDto } from './dto/updateInvoice.dto';
-
-const constantsForFilters = {
-  minPrice: 0,
-  maxPrice: 1000000000,
-  minDate: '1990-01-01',
-  maxDate: '2090-01-01',
-};
+import { IFiltersInvoice } from 'src/interfaces/paramsFilterInvoice.interface';
 
 @Injectable()
 export class InvoicesService {
@@ -46,7 +36,7 @@ export class InvoicesService {
     private dataSource: DataSource,
   ) {}
 
-  private async getUser(user: any) {
+  private async getUser(user: UserEntity) {
     const currentUser = await this.userRepository
       .findOneOrFail({
         where: user,
@@ -115,86 +105,77 @@ export class InvoicesService {
     }
   }
 
-  private getParamsForFilters(filters: any, userId: number) {
-    let params = [{ displayForUsers: { id: userId } }];
+  private getParamsForFilters(filters: IFiltersInvoice, userId: number) {
+    const params = { displayForUsers: { id: userId } };
+    let billedTo = {};
+    let createdBy = {};
     if (filters.search) {
       if (parseInt(filters.search)) {
-        params[0]['id'] = In([filters.search]);
+        params['id'] = parseInt(filters.search);
       } else if (filters.search.includes('@')) {
-        params[1] = { ...params[0] };
-        params[0]['billedTo'] = [{ email: Like(filters.search) }];
-        params[1]['createdBy'] = [{ email: Like(filters.search) }];
+        billedTo['email'] = ILike(filters.search);
+        createdBy['email'] = ILike(filters.search);
       } else {
-        params[1] = { ...params[0] };
-        params[0]['billedTo'] = [
+        const firstAndLastNameParams = [
           { firstName: ILike(In(filters.search.split(' '))) },
           { lastName: ILike(In(filters.search.split(' '))) },
         ];
-        params[1]['createdBy'] = [
-          { firstName: ILike(In(filters.search.split(' '))) },
-          { lastName: ILike(In(filters.search.split(' '))) },
-        ];
+        billedTo = firstAndLastNameParams;
+        createdBy = firstAndLastNameParams;
       }
     }
-    if (filters.minDate || filters.maxDate) {
-      params.forEach((param) => {
-        const minDate = filters.minDate
-          ? new Date(filters.minDate)
-          : new Date(constantsForFilters.minDate);
-        const maxDate = filters.maxDate
-          ? new Date(filters.maxDate)
-          : new Date(constantsForFilters.maxDate);
-        param['invoiceDate'] = Between(minDate, maxDate);
-      });
+    if (filters.minDate && filters.maxDate) {
+      params['invoiceDate'] = Between(
+        new Date(filters.minDate),
+        new Date(filters.maxDate),
+      );
     }
-    if (filters.minPrice || filters.maxPrice) {
-      params.forEach((param) => {
-        param['total'] = Between(
-          filters.minPrice
-            ? parseInt(filters.minPrice)
-            : constantsForFilters.minPrice,
-          filters.maxPrice
-            ? parseInt(filters.maxPrice)
-            : constantsForFilters.maxPrice,
-        );
-      });
+    if (filters.minDate && !filters.maxDate) {
+      params['invoiceDate'] = MoreThanOrEqual(new Date(filters.minDate));
+    }
+    if (filters.maxDate && !filters.minDate) {
+      params['invoiceDate'] = LessThanOrEqual(new Date(filters.maxDate));
+    }
+    if (filters.minPrice && filters.maxPrice) {
+      params['total'] = Between(
+        parseInt(filters.minPrice),
+        parseInt(filters.maxPrice),
+      );
+    }
+    if (filters.minPrice && !filters.maxPrice) {
+      params['total'] = MoreThanOrEqual(parseInt(filters.minPrice));
+    }
+    if (filters.maxPrice && !filters.minPrice) {
+      params['total'] = LessThanOrEqual(parseInt(filters.maxPrice));
     }
     if (filters.status) {
-      params.forEach((param) => {
-        switch (filters.status) {
-          case 'paid':
-            param['paid'] = true;
-            break;
-          case 'unpaid':
-            param['dueDate'] = LessThanOrEqual(new Date());
-            param['paid'] = false;
-            break;
-          case 'pending':
-            param['dueDate'] = MoreThanOrEqual(new Date());
-            param['paid'] = false;
-            break;
-        }
-      });
+      switch (filters.status) {
+        case 'paid':
+          params['paid'] = true;
+          break;
+        case 'unpaid':
+          params['dueDate'] = LessThanOrEqual(new Date());
+          params['paid'] = false;
+          break;
+        case 'pending':
+          params['dueDate'] = MoreThanOrEqual(new Date());
+          params['paid'] = false;
+          break;
+      }
     }
-    if (filters.target) {
-      params.forEach((param) => {
-        switch (filters.target) {
-          case 'toUser':
-            param['billedTo'] = { id: userId };
-            if (param['createdBy']) {
-              params = [param];
-            }
-            break;
-          case 'fromUser':
-            param['createdBy'] = { id: userId };
-            if (param['billedTo']) {
-              params = [param];
-            }
-            break;
-        }
-      });
+    if (filters.target === 'toUser') {
+      return { ...params, createdBy, billedTo: { id: userId } };
     }
-    return params;
+    if (filters.target === 'fromUser') {
+      return { ...params, createdBy: { id: userId }, billedTo };
+    }
+    if (Object.keys(createdBy).length > 0 && Object.keys(billedTo).length > 0) {
+      return [
+        { ...params, createdBy },
+        { ...params, billedTo },
+      ];
+    }
+    return { ...params, createdBy, billedTo };
   }
 
   public async createInvoice(
@@ -304,13 +285,10 @@ export class InvoicesService {
     invoiceId: number,
     currentUser: UserEntity,
   ): Promise<InvoiceDto> {
-    const params = forUpdate
-      ? {
-          id: invoiceId,
-          createdBy: { id: currentUser.id },
-          displayForUsers: { id: currentUser.id },
-        }
-      : { id: invoiceId, displayForUsers: { id: currentUser.id } };
+    const params = { id: invoiceId, displayForUsers: { id: currentUser.id } };
+    if (forUpdate) {
+      params['createdBy'] = { id: currentUser.id };
+    }
     return await this.getInvoiceByIdForUser(params, {
       items: true,
       createdBy: true,

@@ -2,6 +2,7 @@ import { Typography } from 'components/common/Typography'
 import { useAppSelector } from 'hooks/useAppDispatch'
 import React, { useState } from 'react'
 import { MdOutlineCancel, MdOutlineFilterList } from 'react-icons/md'
+import { getCorrectDateFormat } from '../secondaryFunctions/secondaryFunctions'
 
 const resetAllFilters = {
   minDate: '',
@@ -26,19 +27,6 @@ const getCurrentLabel = (label: string) => {
 function FilterMenu(props: any) {
   const [showSidebar, setShowSidebar] = useState(false)
   const loader = useAppSelector((state) => state.loader)
-  const [filters, setFilters] = useState({
-    minDate: props.filters.minDate,
-    maxDate: props.filters.maxDate,
-    minPrice: props.filters.minPrice,
-    maxPrice: props.filters.maxPrice,
-    status: props.filters.status,
-    target: props.filters.target,
-  })
-
-  function resetFilters() {
-    setFilters(resetAllFilters)
-    props.setFilters(resetAllFilters)
-  }
 
   return (
     <>
@@ -77,14 +65,14 @@ function FilterMenu(props: any) {
                   <div className="flex items-center pl-3">
                     <input
                       onChange={(e) => {
-                        setFilters({ ...filters, status: e.target.value })
+                        props.setFilters({ status: e.target.value })
                       }}
                       id={statusInvoice}
                       name="status"
                       type="radio"
                       value={statusInvoice}
                       className="w-4 h-4 text-green bg-gray-ultralight rounded-xl border-gray-light focus:ring-transparent"
-                      checked={filters.status === statusInvoice}
+                      checked={props.filters.status === statusInvoice}
                     />
                     <label
                       htmlFor={statusInvoice}
@@ -106,13 +94,15 @@ function FilterMenu(props: any) {
                     </span>
                     <input
                       onChange={(e) => {
+                        const currentDateValue = e.target.value? new Date(e.target.value).toISOString() : ''
+                        
                         min
-                          ? setFilters({ ...filters, minDate: e.target.value })
-                          : setFilters({ ...filters, maxDate: e.target.value })
+                          ? props.setFilters({ minDate: currentDateValue })
+                          : props.setFilters({ maxDate: currentDateValue })
                       }}
-                      className="w-max border border-gray-light rounded-xl p-2 focus:outline-none focus:border-green-hover focus:ring-green-hover focus:ring-0"
-                      type={'date'}
-                      value={min ? filters.minDate : filters.maxDate}
+                      className="w-min border border-gray-light rounded-xl p-2 focus:outline-none focus:border-green-hover focus:ring-green-hover focus:ring-0"
+                      type={'datetime-local'}
+                      value={min ?  getCorrectDateFormat(props.filters.minDate) : getCorrectDateFormat(props.filters.maxDate) }
                     />
                   </div>
                 </li>
@@ -129,19 +119,17 @@ function FilterMenu(props: any) {
                     <input
                       onChange={(e) => {
                         min
-                          ? setFilters({
-                              ...filters,
+                          ? props.setFilters({
                               minPrice: (parseFloat(e.target.value) * 100) | 0,
                             })
-                          : setFilters({
-                              ...filters,
+                          : props.setFilters({
                               maxPrice: (parseFloat(e.target.value) * 100) | 0,
                             })
                       }}
                       className="w-full border border-gray-light rounded-xl p-2 focus:outline-none focus:border-green-hover focus:ring-green-hover focus:ring-0"
                       type={'number'}
                       value={
-                        min ? filters.minPrice / 100 : filters.maxPrice / 100
+                        min ? props.filters.minPrice / 100 : props.filters.maxPrice / 100
                       }
                     />
                   </div>
@@ -155,8 +143,7 @@ function FilterMenu(props: any) {
                   <div className="flex items-center pl-3">
                     <input
                       onChange={(e) => {
-                        setFilters({
-                          ...filters,
+                        props.setFilters({
                           target: target === 'all' ? '' : e.target.value,
                         })
                       }}
@@ -166,9 +153,9 @@ function FilterMenu(props: any) {
                       value={target}
                       className="w-4 h-4 text-green bg-gray-ultralight rounded-xl border-gray-light focus:ring-transparent"
                       checked={
-                        filters.target === target
+                        props.filters.target === target
                           ? true
-                          : filters.target === '' && target === 'all'
+                          : props.filters.target === '' && target === 'all'
                       }
                     />
                     <label
@@ -191,15 +178,15 @@ function FilterMenu(props: any) {
 
             <div>
               <button
-                disabled={loader ? true : false}
-                onClick={() => props.setFilters(filters)}
+                disabled={loader}
+                onClick={() => props.getInvoicesWithFilters()}
                 className="w-5/12 bg-green-light hover:bg-green-hover rounded-xl font-semibold text-base p-4 my-4 mx-3 text-text"
               >
                 filter
               </button>
               <button
-                disabled={loader ? true : false}
-                onClick={() => resetFilters()}
+                disabled={loader}
+                onClick={() => props.resetFilters(resetAllFilters)}
                 className="w-5/12 bg-green-light hover:bg-green-hover rounded-xl font-semibold text-base p-4 my-4 mx-3 text-text"
               >
                 reset

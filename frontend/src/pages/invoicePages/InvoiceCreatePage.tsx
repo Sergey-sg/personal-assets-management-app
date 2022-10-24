@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ReactTextareaAutosize from 'react-textarea-autosize'
 import { fetchCreateInvoice } from 'redux/slice/invoiceServices/invoiceActions'
+import { IInvoiceItem } from './interfaces/invoiceItem.interface'
 import { BasicInfo } from './invoice_componetns/BasicInfo'
 import { ClientDetails } from './invoice_componetns/ClientDetails'
 import { FooterItems } from './invoice_componetns/FooterItems'
@@ -42,23 +43,19 @@ const InvoiceCreatePage: React.FC = () => {
   }, [success, createdInvoice])
 
   const setNewItem = useCallback(
-    (
-      newItem: {
-        subTotal: number
-        id: number
-        name: string
-        amount: number
-        price: number
-      },
-      remove = false,
-    ) => {
-      const newItems = remove
-        ? invoiceItems.filter((item: any) => newItem.id !== item.id)
-        : Object.keys(invoiceItems[0]).length > 0
+    (newItem: IInvoiceItem, remove = false) => {
+      let newItems = []
+      
+      if (remove) {
+        newItems = invoiceItems.filter((item: any) => newItem.id !== item.id)
+      }
+      else {
+        newItems = Object.keys(invoiceItems[0]).length > 0
           ? [...invoiceItems, newItem]
           : [newItem]
-      const sumSubTotal = sum(newItems.map((item: any) => item.subTotal)) | 0
-      const total = Math.round((sumSubTotal * (100 - invoice.discount)) / 100) | 0
+      }
+      const sumSubTotal = sum(newItems.map((item: any) => item.subTotal)) || 0
+      const total = Math.round((sumSubTotal * (100 - invoice.discount)) / 100) || 0
 
       setInvoiceItems(newItems.length > 0? newItems : [{}])
       setSubTotal(sumSubTotal)
@@ -115,15 +112,13 @@ const InvoiceCreatePage: React.FC = () => {
               {Object.keys(invoiceItems[0]).length > 0 && (
                 <InvoiceItemsList
                   items={invoiceItems}
-                  removeItem={(item: any) => setNewItem(item, true)}
+                  removeItem={setNewItem}
                 />
               )}
             </div>
             <br />
             <InputItemForm
-              setItem={(item: any) => {
-                setNewItem(item)
-              }}
+              setItem={setNewItem}
             />
             <br />
             <FooterItems

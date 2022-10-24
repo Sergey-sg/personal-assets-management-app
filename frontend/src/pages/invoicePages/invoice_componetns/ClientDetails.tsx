@@ -3,28 +3,26 @@ import { getUserByParams } from 'redux/slice/invoiceServices/invoiceActions'
 import { currentImagesPath } from '../secondaryFunctions/secondaryFunctions'
 import { UserInputModalForm } from './UserInputModalForm'
 
+const initialUser = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  address: '',
+  phone: '',
+  avatarPath: '',
+}
+
 export function ClientDetails(props: any) {
-  const [client, setClient] = useState(
-    props.client
-      ? props.client
-      : {
-          firstName: '',
-          lastName: '',
-          email: '',
-          address: '',
-          phone: '',
-          avatarPath: '',
-        },
-  )
+  const [client, setClient] = useState(props.client || initialUser)
   const [error, setError] = useState('')
-  const [showModal, setShowModal] = useState(false)
-  const [userAllReady, setUserAllReady] = useState(props.client ? true : false)
+  const [showUserInputModalForm, setShowUserInputModalForm] = useState(false)
+  const [invoiceAlreadyHasUser, setInvoiceAlreadyHasUser] = useState(props.client ? true : false)
   const userFullName = client.firstName
     ? `${client.firstName} ${client.lastName}`
     : client.email
   const address = client.address ? client.address.split(',') : ''
 
-  async function getUser(params: any) {
+  async function getUser(params: { [x: string]: any; email?: string; phone?: string }) {
     let correctParams = {}
 
     Object.keys(params).forEach((key) => {
@@ -39,10 +37,10 @@ export function ClientDetails(props: any) {
       setClient(user)
       props.setCustomer(user)
       setError('')
-      setUserAllReady(true)
+      setInvoiceAlreadyHasUser(true)
     } catch (e: any) {
       setError(e.response.data.message)
-      setShowModal(true)
+      setShowUserInputModalForm(true)
     }
   }
 
@@ -83,16 +81,10 @@ export function ClientDetails(props: any) {
           <>
             <br />
             <UserInputModalForm
-              getCustomer={useCallback(
-                (params: { email: string; phone: string }) => getUser(params),
-                [],
-              )}
-              showModal={showModal}
-              userAllReady={userAllReady}
-              setShowModal={useCallback(
-                (status: boolean) => setShowModal(status),
-                [],
-              )}
+              getCustomer={getUser}
+              showModal={showUserInputModalForm}
+              userAllReady={invoiceAlreadyHasUser}
+              setShowModal={setShowUserInputModalForm}
               error={error}
             />
           </>

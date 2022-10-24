@@ -14,7 +14,7 @@ import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { AuthService } from 'src/auth/auth.service';
 import { v4 } from 'uuid';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
-import { CONSTANTS } from 'src/shared/constants';
+import { CONSTANTS } from '../shared/constants';
 import { FilterDto } from './dto/filter.dto';
 import { Conversation } from 'src/conversations/entities/conversation.entity';
 
@@ -238,25 +238,25 @@ export class UserService {
   }
 
   public async findCustomerByParams(params: any) {
-    const user = await this.userRepository.findAndCount({
+    const [users, usersCount] = await this.userRepository.findAndCount({
       where: params,
-      select: ['id', 'firstName', 'lastName', 'email', 'address', 'avatarPath']
+      select: ['id', 'firstName', 'lastName', 'email', 'address', 'avatarPath'],
     });
 
-    if (user[1] === 0) {
+    if (!usersCount) {
       throw new HttpException(
         'User with these parameters not found.',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    if (user[1] > 1) {
+    if (usersCount > 1) {
       throw new HttpException(
         'You need to make a more precise request. This request is available to several users.',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    return user[0][0];
+    return users[0];
   }
 }

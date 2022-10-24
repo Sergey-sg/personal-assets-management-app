@@ -1,15 +1,10 @@
 import React, { useState } from 'react'
 import { useFormik } from 'formik'
 import { InvoiceItemSchema } from '../schemas/invoiceItemSchema'
+import { IInvoiceItem } from '../interfaces/invoiceItem.interface'
 
 export function InputItemForm(props: {
-  setItem: (arg0: {
-    subTotal: number
-    id: number
-    name: string
-    amount: number
-    price: number
-  }) => void
+  setItem: (arg0: IInvoiceItem) => void
 }) {
   const [item, setItem] = useState({
     name: '',

@@ -6,8 +6,9 @@ export function FooterItems(props: any) {
   )
   const [discount, setDiscount] = useState(props.invoice.discount)
 
-  function sendDiscountToInvoice(value: number) {
-    const discount = value ? (value < 0 ? 0 : value > 100 ? 100 : value) : 0
+  function sendDiscountToInvoice(value: string) {
+    const valueInt = parseInt(value)
+    const discount = value ? (valueInt < 0 ? 0 : valueInt > 100 ? 100 : valueInt) : 0
 
     setDiscount(discount)
     props.setDiscount(discount)
@@ -20,7 +21,7 @@ export function FooterItems(props: any) {
           className="border border-gray-medium w-20 rounded-xl p-2 focus:outline-none focus:border-green-hover focus:ring-green-hover focus:ring-0"
           type={'number'}
           name="discount"
-          onChange={(e) => sendDiscountToInvoice(parseInt(e.target.value))}
+          onChange={(e) => sendDiscountToInvoice(e.target.value)}
           value={discount}
         />
         <span className="absolute inset-y-0 right-6 flex items-center">%</span>
