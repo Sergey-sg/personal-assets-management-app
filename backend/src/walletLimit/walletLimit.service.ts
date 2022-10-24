@@ -99,7 +99,7 @@ export class WalletLimitService {
     return walletLimit;
   }
 
-  async removeCost(walletLimitId: number): Promise<any> {
+  async removeWalletLimit(walletLimitId: number): Promise<any> {
     const walletLimit = await this.walletLimitRepository.findOne({
       where: { id: walletLimitId },
     });
