@@ -32,6 +32,7 @@ export const conversationsSlice = createSlice({
       ...state,
       currentConversationId: action.payload,
     }),
+    resetConversation: () => ({ ...initialState }),
   },
 })
 
@@ -41,6 +42,7 @@ export const {
   addConversationSuccess,
   addConversationFailure,
   setCurrentConversation,
+  resetConversation,
 } = conversationsSlice.actions
 
 export default conversationsSlice.reducer

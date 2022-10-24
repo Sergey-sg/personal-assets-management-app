@@ -27,12 +27,6 @@ export default function App() {
     }
   }, [])
 
-  useEffect(() => {
-    if (isAuth) {
-      dispatch(fetchWallets(''))
-    }
-  }, [])
-
   if (status === 'LOADING') {
     return <LoginLoader />
   }

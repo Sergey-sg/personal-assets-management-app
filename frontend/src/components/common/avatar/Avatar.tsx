@@ -25,7 +25,9 @@ export const Avatar = ({ img, alt, avatarType }: AvatarProps) => {
             }
             alt={alt || 'user avatar'}
             title="user avatar"
-            className=" w-full h-full"
+            className={`w-full h-full ${
+              avatarType === 'message' && 'object-contain'
+            }`}
           />
         </div>
       ) : (

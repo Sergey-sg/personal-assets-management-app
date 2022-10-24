@@ -72,10 +72,11 @@ export class CostsService {
         .getRawOne();
 
       const predictableBalance = Number(sum) + Number(createCostDto.cost_sum);
+      const walletLimitInCoins = limit.wallet_limit * 100;
 
-      if (predictableBalance >= limit.wallet_limit) {
+      if (predictableBalance >= walletLimitInCoins) {
         throw new HttpException(
-          `Max sum that allow to use = ${limit.wallet_limit} for ${limit.wallet_duration} days`,
+          `Your wallet limit ${limit.wallet_limit} ${limit.wallet.currency} for ${limit.wallet_duration} days`,
           HttpStatus.BAD_REQUEST,
         );
       }

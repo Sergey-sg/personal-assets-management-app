@@ -1,8 +1,10 @@
 import { AxiosError } from 'axios'
 import api from 'axios/axios'
 import { AppDispatch } from 'redux/store'
+import { resetConversation } from '../conversations/conversations.slice'
 import { errorOccurred, resetError } from '../error/error.slice'
 import { startLoading, stopLoading } from '../loader/loader.slice'
+import { resetMessages } from '../messages/messages.slice'
 import { resetSuccess, successAction } from '../success/success.slice'
 import {
   IUserProfile,
@@ -11,6 +13,7 @@ import {
   updateUserSuccess,
   updateUserFail,
   removeUserSuccess,
+  resetUserProfile,
 } from './userProfile.slice'
 
 const getCurrentUserId = () => {
@@ -138,5 +141,15 @@ export const deleteUserProfile = (userData: { password: string }) => {
     } finally {
       dispatch(stopLoading())
     }
+  }
+}
+
+export const resetUserProfileStore = () => {
+  return async (dispatch: AppDispatch) => {
+    dispatch(resetError())
+    dispatch(resetSuccess())
+    dispatch(resetUserProfile())
+    dispatch(resetConversation())
+    dispatch(resetMessages())
   }
 }

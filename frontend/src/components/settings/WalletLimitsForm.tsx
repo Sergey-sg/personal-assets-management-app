@@ -1,69 +1,50 @@
 import React, { useCallback, useEffect } from 'react'
 import { Button } from 'components/common/buttons/Button'
-import { Input } from 'components/common/inputs/Input'
 import AddWalletLimitsForm from './AddWalletLimitFrom'
 
-import { Field, Form, Formik, FormikProps, useFormik } from 'formik'
+import { Form, Formik, FormikProps } from 'formik'
 import { WalletLimitsSchema } from './schemas/walletLimitsSchema'
 import { SectionTitle } from './SectionTitle'
 import { ReactComponent as PenIcon } from 'assets/icons/pen.svg'
-import api from 'axios/axios'
+
+import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
+import {
+  fetchAllWalletLimits,
+  fetchUpdateWalletLimit,
+  fetchRemoveWalletLimit,
+} from '../../redux/slice/walletLimitActions'
+import { InputField } from 'components/common/inputs/InputField'
 
 interface WalletLimitsFormProps {
-  id: number
-  wallet_name: string | number
   wallet_limit: number
   wallet_duration: number
-  wallet: object
 }
 
 const InitialValues: WalletLimitsFormProps = {
-  id: 0,
-  wallet_name: '',
   wallet_limit: 1000,
   wallet_duration: 30,
-  wallet: {
-    wallet_name: '',
-  },
 }
 
 const WalletLimitsForm: React.FC = () => {
-  const [editWalletId, setEditWalletId] = React.useState(0)
-  const [walletsArray, setWalletsArray] = React.useState([
-    {
-      id: 0,
-      wallet_name: '',
-      wallet_limit: 1000,
-      wallet_duration: 30,
-      wallet: {
-        wallet_name: '',
-      },
-    },
-  ])
+  const dispatch = useAppDispatch()
+  const walletLimits = useAppSelector((state) => state.walletLimit.walletLimits)
 
-  React.useEffect(() => {
-    getWalletLimit()
+  const [editWalletId, setEditWalletId] = React.useState(0)
+
+  useEffect(() => {
+    dispatch(fetchAllWalletLimits())
   }, [])
 
   const handleSubmit = async (values: typeof InitialValues) => {
     const wallet_limit = values.wallet_limit
     const wallet_duration = values.wallet_duration
 
-    // await api.post('/walletLimits/1', {
-    //   wallet_limit: wallet_limit,
-    //   wallet_duration: wallet_duration,
-    // })
+    const data = {
+      wallet_limit: wallet_limit,
+      wallet_duration: wallet_duration,
+    }
 
-    return api
-      .patch('/walletLimits/' + editWalletId, {
-        wallet_limit: wallet_limit,
-        wallet_duration: wallet_duration,
-      })
-      .then(() => {
-        getWalletLimit()
-      })
-
-    // console.log('handleSubmit',values,editWalletId)
+    dispatch(fetchUpdateWalletLimit(editWalletId, data))
   }
 
   const toggleWalletBlock = useCallback((walletId: any = 0) => {
@@ -75,15 +56,19 @@ const WalletLimitsForm: React.FC = () => {
   }, [])
 
   const deleteWalletLimit = useCallback(() => {
-    api.delete('/walletLimits/' + editWalletId).then(() => {
-      getWalletLimit()
-    })
+    dispatch(fetchRemoveWalletLimit(editWalletId))
   }, [editWalletId])
 
-  const getWalletLimit = () => {
-    api.get('/walletLimits').then((res: any) => {
-      setWalletsArray(res.data.tmp)
-    })
+  const getSubTitle = (wallet: any) => {
+    return (
+      'Wallet limit: ' +
+      wallet.wallet_limit.toString() +
+      ' ' +
+      wallet.wallet.currency +
+      ' and wallet duration: ' +
+      wallet.wallet_duration.toString() +
+      ' days'
+    )
   }
 
   return (
@@ -95,17 +80,12 @@ const WalletLimitsForm: React.FC = () => {
 
       <AddWalletLimitsForm />
 
-      {walletsArray.map((row) => {
+      {walletLimits.map((row) => {
         return (
           <div key={row.id}>
             <SectionTitle
               title={`Change limits for: ${row.wallet.wallet_name}`}
-              subTitle={
-                'Wallet limit: ' +
-                row.wallet_limit.toString() +
-                ' and wallet duration: ' +
-                row.wallet_duration.toString()
-              }
+              subTitle={getSubTitle(row)}
               icon={<PenIcon />}
               iconLabel={'Edit'}
               onClick={() => {
@@ -119,6 +99,8 @@ const WalletLimitsForm: React.FC = () => {
                   initialValues={row}
                   onSubmit={handleSubmit}
                   enableReinitialize={true}
+                  validateOnBlur={true}
+                  validationSchema={WalletLimitsSchema}
                 >
                   {(props: FormikProps<any>) => {
                     const {
@@ -133,30 +115,26 @@ const WalletLimitsForm: React.FC = () => {
                     return (
                       <>
                         <Form onSubmit={props.handleSubmit}>
-                          <Field
+                          <InputField
                             label={'Wallet limit'}
                             name={'wallet_limit'}
                             id={'wallet_limit'}
                             placeholder={'1000'}
                             type={'number'}
                             value={values.wallet_limit}
-                            error={values.wallet_limit}
                             onBlur={handleBlur}
                             onChange={handleChange}
-                            component={Input}
                             className="sm:w-1/2"
                           />
-                          <Field
+                          <InputField
                             label={'Wallet duration'}
                             name={'wallet_duration'}
                             id={'wallet_duration'}
                             placeholder={'30'}
                             type={'number'}
                             value={values.wallet_duration}
-                            error={values.wallet_duration}
                             onBlur={handleBlur}
                             onChange={handleChange}
-                            component={Input}
                             className="w-full sm:w-1/2"
                           />
                           <br />
@@ -166,6 +144,7 @@ const WalletLimitsForm: React.FC = () => {
                                 label={'Save'}
                                 type={'submit'}
                                 btnName={'primary'}
+                                disabled={!isValid}
                               />
                             </div>
                             <div className="w-full lg:w-1/3">

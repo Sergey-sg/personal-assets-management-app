@@ -3,6 +3,7 @@ import {
   authSlice,
   conversationsSlice,
   errorSlice,
+  exchangeSlice,
   loaderSlice,
   messagesSlice,
   successSlice,
@@ -15,6 +16,7 @@ import invoiceSlice from './slice/invoiceServices/invoice.slice'
 import paginationSlice from './slice/pagination/pagination.slice'
 import refreshPasswordSlice from './slice/refreshPasswordSlice'
 import todoSlice from './slice/todo/todo.slice'
+import walletLimitSlice from './slice/walletLimitSlice'
 
 export const store = configureStore({
   reducer: {
@@ -25,6 +27,7 @@ export const store = configureStore({
     success: successSlice,
     error: errorSlice,
     loader: loaderSlice,
+    exchange: exchangeSlice,
     wallets: walletsSlice,
     incomes: incomeSlice,
     costs: costsSlice,
@@ -32,6 +35,7 @@ export const store = configureStore({
     messages: messagesSlice,
     conversations: conversationsSlice,
     todo: todoSlice,
+    walletLimit: walletLimitSlice,
   },
 })
 // Infer the `RootState` and `AppDispatch` types from the store itself

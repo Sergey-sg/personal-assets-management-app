@@ -27,6 +27,8 @@ const Chats: React.FC = () => {
   }, [])
 
   useEffect(() => {
+    if (messages.length === 0) return
+
     dispatch(fetchUserConversations())
   }, [messages, dispatch])
 
@@ -39,12 +41,15 @@ const Chats: React.FC = () => {
 
   useEffect(() => {
     if (conversations.length === 0) return
+
     conversationId !== null
       ? setConversationId(conversationId)
       : setConversationId(conversations[0].id)
   }, [conversations])
 
   useEffect(() => {
+    if (currentChatMessages.length === 0) return
+
     setMessages(currentChatMessages)
   }, [currentChatMessages])
 
@@ -80,7 +85,7 @@ const Chats: React.FC = () => {
   return (
     <>
       <div className="w-full  flex flex-row h-full border-4 rounded-lg border-gray-ultralight">
-        <div className="w-1/3 lg:w-1/2 h-full p-4 border-r relative">
+        <div className="w-1/2 h-full p-4 border-r relative">
           {showModal && (
             <CreateConversationModal
               showModal={showModal}
@@ -95,7 +100,7 @@ const Chats: React.FC = () => {
             conversationId={conversationId}
           />
         </div>
-        <div className="w-2/3 lg:w-1/2 h-full p-4">
+        <div className="w-1/2 h-full p-4">
           <ChatPanel
             user={user}
             conversationId={conversationId}

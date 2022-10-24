@@ -39,6 +39,7 @@ export const userProfileSlice = createSlice({
     }),
     updateUserFail: () => {},
     removeUserSuccess: () => ({ ...initialState }),
+    resetUserProfile: () => ({ ...initialState }),
   },
 })
 
@@ -48,6 +49,7 @@ export const {
   updateUserSuccess,
   updateUserFail,
   removeUserSuccess,
+  resetUserProfile,
 } = userProfileSlice.actions
 
 export default userProfileSlice.reducer

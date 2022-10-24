@@ -68,9 +68,9 @@ export class WalletLimitController {
   @ApiOperation({ summary: `Delete walletLimit` })
   @ApiResponse({ status: HttpStatus.CREATED, type: WalletLimitEntity })
   @Delete(':walletLimitId')
-  async removeCost(
+  async removeWalletLimit(
     @Param('walletLimitId') walletLimitId: number,
   ): Promise<void> {
-    await this.walletLimitService.removeCost(walletLimitId);
+    await this.walletLimitService.removeWalletLimit(walletLimitId);
   }
 }

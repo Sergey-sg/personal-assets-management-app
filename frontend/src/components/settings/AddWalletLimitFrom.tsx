@@ -3,7 +3,9 @@ import { Button } from 'components/common/buttons/Button'
 import { Select } from 'components/common/inputs/select'
 
 import { Form, Formik, FormikProps } from 'formik'
-import api from 'axios/axios'
+
+import { fetchCreateWalletLimit } from '../../redux/slice/walletLimitActions'
+import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
 
 interface AddWalletLimitsFormProps {
   walletId: number
@@ -13,40 +15,12 @@ const InitialValues: AddWalletLimitsFormProps = {
   walletId: 0,
 }
 
-const defaultWallet = {
-  value: 0,
-  name: '',
-}
+const AddWalletLimitsForm = () => {
+  const dispatch = useAppDispatch()
+  const wallets = useAppSelector((state) => state.wallets.wallets)
 
-const AddWalletLimitsForm: React.FC = (props) => {
-  const [walletsArray, setWalletsArray] = React.useState([defaultWallet])
-
-  React.useEffect(() => {
-    getWallets()
-  }, [])
-
-  const getWallets = async () => {
-    api.get('/wallets').then((res: any) => {
-      setWalletsArray([defaultWallet])
-      res.data.map((row: { id: any; wallet_name: string }) => {
-        const wallet = {
-          value: row.id,
-          name: row.wallet_name,
-        }
-
-        setWalletsArray((walletsArray) => [...walletsArray, wallet])
-      })
-    })
-  }
-  const handleSubmit = async (values: typeof InitialValues) => {
-    await api
-      .post('/walletLimits/' + values.walletId, {
-        wallet_limit: 1000,
-        wallet_duration: 30,
-      })
-      .then(() => {
-        getWallets()
-      })
+  const handleSubmit = async (values: any) => {
+    dispatch(fetchCreateWalletLimit(values.walletId))
   }
 
   return (
@@ -57,8 +31,7 @@ const AddWalletLimitsForm: React.FC = (props) => {
         enableReinitialize={true}
       >
         {(props: FormikProps<any>) => {
-          const { dirty, isValid, errors, handleBlur, handleChange, values } =
-            props
+          const { dirty, isValid, errors, handleBlur, handleChange } = props
 
           return (
             <>
@@ -68,7 +41,10 @@ const AddWalletLimitsForm: React.FC = (props) => {
                     type={'select'}
                     name={'walletId'}
                     value={props.values.walletId}
-                    optionArray={walletsArray}
+                    optionArray={wallets.map((wallet) => ({
+                      value: wallet.id,
+                      name: wallet.wallet_name,
+                    }))}
                     onChange={handleChange}
                     className={'w-full sm:w-1/2'}
                   />

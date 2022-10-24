@@ -13,6 +13,7 @@ import { ReactComponent as WalletIcon } from 'assets/icons/wallet.svg'
 import { ReactComponent as ChatIcon } from 'assets/icons/chat.svg'
 import { Layout } from 'components/common/Layout/Layout'
 import { fetchUserProfile } from 'redux/slice/userProfile/actionCreators'
+import { fetchWallets } from 'redux/slice/walletsSlice'
 import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
 import { notifyError, notifySuccess } from 'components/common/notifications'
 import { resetError } from 'redux/slice/error/error.slice'
@@ -77,6 +78,7 @@ const PortalPage: React.FC = () => {
 
   useEffect(() => {
     dispatch(fetchUserProfile())
+    dispatch(fetchWallets(''))
   }, [dispatch])
 
   return (
