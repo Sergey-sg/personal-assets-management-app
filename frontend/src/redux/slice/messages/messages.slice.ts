@@ -19,9 +19,11 @@ export const messagesSlice = createSlice({
       messages: action.payload,
     }),
     getMessagesFailure: () => ({ ...initialState }),
+    resetMessages: () => ({ ...initialState }),
   },
 })
 
-export const { getMessagesSuccess, getMessagesFailure } = messagesSlice.actions
+export const { getMessagesSuccess, getMessagesFailure, resetMessages } =
+  messagesSlice.actions
 
 export default messagesSlice.reducer

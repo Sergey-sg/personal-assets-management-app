@@ -71,15 +71,15 @@ export class AuthService {
         isVerified: true,
       });
 
-      const tokens = await this.getTokens(newUser['id'], newUser['email']);
+      const userCreate = await this.userRepository.save(newUser);
 
-      this.updateRt(newUser.id, tokens.refresh_token);
+      const tokens = await this.getTokens(newUser['id'], newUser['email']);
+      await this.updateRt(newUser.id, tokens.refresh_token);
 
       res.cookie('tokenRefresh', tokens.refresh_token, {
         maxAge: Number(process.env.MAX_AGE_COOKIE_TOKEN),
         httpOnly: true,
       });
-      const userCreate = await this.userRepository.save(newUser);
       return {
         userCreate,
         tokens,

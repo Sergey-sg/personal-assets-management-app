@@ -8,8 +8,6 @@ import {
 import { Server, Socket } from 'socket.io';
 import { OnEvent } from '@nestjs/event-emitter';
 
-console.log('REACT_APP_WEBSOCKET_URL', process.env);
-
 @WebSocketGateway({
   cors: {
     origin: {

@@ -7,6 +7,7 @@ import clsx from 'clsx'
 import { useAppDispatch } from 'hooks/useAppDispatch'
 import { Logout } from 'redux/thunk/authThunk'
 import { AppRoute } from 'common/enums/app-route.enum'
+import { resetUserProfileStore } from 'redux/slice/userProfile/actionCreators'
 
 interface MenuStructureItem {
   title: string
@@ -36,6 +37,7 @@ export const SideBar: React.FC<SideBarProps> = ({
   const logoutClick = React.useCallback(() => {
     try {
       dispatch(Logout())
+      dispatch(resetUserProfileStore())
       navigate(AppRoute.HOME)
     } catch (e) {
       console.log(e, 'error with logout')

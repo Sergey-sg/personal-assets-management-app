@@ -53,32 +53,25 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
                   return conversation
                 }
               })
-              .map(
-                ({
-                  id,
-                  messages,
-                  recipient: { avatarPath, firstName, lastName },
-                  creator,
-                }) => (
-                  <ChannelCard
-                    key={id}
-                    avatar={
-                      user.id === creator.id
-                        ? avatarPath || null
-                        : creator.avatarPath || null
-                    }
-                    name={
-                      user.id === creator.id
-                        ? `${firstName} ${lastName}`
-                        : `${creator.firstName} ${creator.lastName}`
-                    }
-                    timeStamp={messages[0].createdAt || 'today at 12:00 PM'}
-                    isActiveChannel={conversationId === id ? true : false}
-                    lastMessage={messages[0].content || 'Hello there!'}
-                    onClick={() => onChannelClick(id)}
-                  />
-                ),
-              )
+              .map(({ id, messages, recipient, creator }) => (
+                <ChannelCard
+                  key={id}
+                  avatar={
+                    user.id === creator.id
+                      ? recipient.avatarPath || null
+                      : creator.avatarPath || null
+                  }
+                  name={
+                    user.id === creator.id
+                      ? `${recipient.firstName} ${recipient.lastName}`
+                      : `${creator.firstName} ${creator.lastName}`
+                  }
+                  timeStamp={messages[0].createdAt || 'today at 12:00 PM'}
+                  isActiveChannel={conversationId === id ? true : false}
+                  lastMessage={messages[0].content || 'Hello there!'}
+                  onClick={() => onChannelClick(id)}
+                />
+              ))
           ) : (
             <div className="text-center text-gray-500">
               No conversations yet

@@ -41,7 +41,7 @@ export const ModalContainer: React.FC<ModalContainerProps> = ({
 
       {/* content */}
       <div
-        className={`absolute h-50 w-2/3 bg-gray-ultralight shadow-lg p-3 rounded-xl flex flex-col justify-center items-center ${
+        className={`absolute h-50 lg:w-2/3 bg-gray-ultralight shadow-lg p-3 rounded-xl flex flex-col justify-center items-center ${
           showModal ? 'opacity-100' : 'pointer-events-none opacity-0'
         } transition-opacity duration-300 ease-in-out`}
       >

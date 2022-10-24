@@ -1,9 +1,9 @@
 export const AVATAR_STYLES = {
   upload:
     'w-14 h-14 rounded-full border-4 border-green-light hover:border-green-hover cursor-pointer flex items-center justify-center overflow-hidden',
-  profile: '',
-  channel: '',
-  message: '',
+  profile: 'w-10 h-10 overflow-hidden object-contain rounded-full',
+  channel: 'w-10 h-10 overflow-hidden object-contain rounded-full',
+  message: 'w-11 h-11 overflow-hidden rounded-full',
 }
 
 export const AVATAR_PLACEHOLDER_STYLES = {
