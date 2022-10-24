@@ -298,7 +298,7 @@ export class InvoicesService {
 
   public async getAllInvoicesForUser(
     currentUser: UserEntity,
-    filters: any,
+    filters: IFiltersInvoice,
     pageOptionsDto: PageOptionsDto,
   ): Promise<PageDto<InvoiceDto>> {
     const params = this.getParamsForFilters(filters, currentUser.id);

@@ -6,4 +6,5 @@ export interface IFiltersInvoice {
   maxPrice: string | null;
   status: string | null;
   target: string | null;
+  firstNew: string | null;
 }
