@@ -125,24 +125,20 @@ const InvoiceCreatePage: React.FC = () => {
               invoice={invoice}
               subTotal={subTotal}
               total={invoice.total}
-              setDiscount={(discount: number) => setDiscount(discount)}
+              setDiscount={setDiscount}
             />
           </div>
         </div>
         <div className="container lg:col-span-3 col-span-1">
           <ClientDetails
-            setCustomer={useCallback(
-              (customer: any) => setBilledTo(customer),
-              [billedTo],
-            )}
+            setCustomer={setBilledTo}
           />
           <br />
           <BasicInfo
-            setDate={useCallback(
+            setDate={
               (date: { invoiceDate: string; dueDate: string }) =>
-                setInvoice({ ...invoice, ...date }),
-              [invoice],
-            )}
+                setInvoice({ ...invoice, ...date })
+            }
             sendInvoice={sendInvoice}
             date={{
               dueDate: invoice.dueDate,

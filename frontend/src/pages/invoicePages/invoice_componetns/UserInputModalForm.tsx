@@ -3,7 +3,7 @@ import React from 'react'
 import { MdOutlineCancel } from 'react-icons/md'
 import { InputUserSchema } from '../schemas/inputUserSchema'
 
-export const UserInputModalForm = (props: { setShowModal: (arg0: boolean) => void; getCustomer: (arg0: { email: string; phone: string }) => void; userAllReady: any; showModal: any; error: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.ReactPortal | null | undefined }) => {
+export const UserInputModalForm = (props: { setShowModal: (arg0: boolean) => void; getCustomer: (arg0: { email: string; phone: string }) => void; userAlReady: any; showModal: any; error: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.ReactPortal | null | undefined }) => {
   const formik = useFormik({
     initialValues: { email: '', phone: '' },
     onSubmit: (values) => {
@@ -21,7 +21,7 @@ export const UserInputModalForm = (props: { setShowModal: (arg0: boolean) => voi
         className="bg-green-minimal text-green-medium font-medium rounded-xl w-full py-3.5 font-semibold hover:bg-green-ultralight"
         onClick={() => props.setShowModal(true)}
       >
-        {props.userAllReady ? (
+        {props.userAlReady ? (
           <span>Change Customer</span>
         ) : (
           <span>Add Customer</span>

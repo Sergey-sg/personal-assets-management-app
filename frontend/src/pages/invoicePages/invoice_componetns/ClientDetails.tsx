@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useState } from 'react'
 import { getUserByParams } from 'redux/slice/invoiceServices/invoiceActions'
 import { currentImagesPath } from '../secondaryFunctions/secondaryFunctions'
 import { UserInputModalForm } from './UserInputModalForm'
@@ -83,7 +83,7 @@ export function ClientDetails(props: any) {
             <UserInputModalForm
               getCustomer={getUser}
               showModal={showUserInputModalForm}
-              userAllReady={invoiceAlreadyHasUser}
+              userAlReady={invoiceAlreadyHasUser}
               setShowModal={setShowUserInputModalForm}
               error={error}
             />
