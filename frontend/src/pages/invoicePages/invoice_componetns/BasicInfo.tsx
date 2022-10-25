@@ -42,8 +42,8 @@ export function BasicInfo(props: any) {
               name="invoice-date"
               className="w-full p-3.5 border border-gray-medium rounded-xl focus:outline-none focus:border-green-hover focus:ring-green-hover focus:ring-0"
               type={'datetime-local'}
-              min={minInputDate}
-              max={maxInputDate}
+              min={getCorrectDateFormat(minInputDate)}
+              max={getCorrectDateFormat(maxInputDate)}
               value={getCorrectDateFormat(props.date.invoiceDate)}
               onChange={(e) =>
                   props.setDate({
@@ -65,8 +65,8 @@ export function BasicInfo(props: any) {
               name="due-date"
               className="w-full p-3.5 border border-gray-medium rounded-xl focus:outline-none focus:border-green-hover focus:ring-green-hover focus:ring-0"
               type={'datetime-local'}
-              min={getCorrectDateFormat(props.date.invoiceDate) || minInputDate}
-              max={maxInputDate}
+              min={getCorrectDateFormat(props.date.invoiceDate)}
+              max={getCorrectDateFormat(maxInputDate)}
               value={
                 props.date.dueDate
                   ? getCorrectDateFormat(props.date.dueDate)
