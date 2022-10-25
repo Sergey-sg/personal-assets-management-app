@@ -16,7 +16,7 @@ import {
 import queryString from 'query-string'
 
 const getAllInvoices = (filters: any) => {
-  const parsed = queryString.parse(location.search);  
+  const parsed = queryString.parse(location.search)
 
   parsed.page = filters.page
   parsed.take = filters.take
@@ -124,7 +124,6 @@ export const fetchLoadNextPageInvoices = (filters: any) => {
 
       dispatch(addNewPageOfInvoices(response.data.data))
       dispatch(setPagination(response.data.meta))
-      dispatch(successAction({ message: 'invoice loaded' }))
     } catch (e) {
       const axiosErr = e as AxiosError
       const status = axiosErr.response?.status
