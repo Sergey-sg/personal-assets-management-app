@@ -99,7 +99,7 @@ export const IncomesList: React.FC = () => {
             details={{
               title: 'My Incomes',
               listName: 'Wallets Income',
-              createName: 'Cleate Income',
+              createName: 'Create Income',
             }}
           />
           <div className="bg-gray-300 h-px my-3"></div>

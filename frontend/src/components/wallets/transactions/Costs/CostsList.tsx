@@ -100,7 +100,7 @@ export const CostsList: React.FC = () => {
             details={{
               title: 'My Costs',
               listName: 'Wallets Costs',
-              createName: 'Cleate Cost',
+              createName: 'Create Cost',
             }}
           />
           <div className="bg-gray-300 h-px my-3"></div>
