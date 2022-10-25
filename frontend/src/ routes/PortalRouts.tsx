@@ -20,14 +20,17 @@ import {
 } from 'pages/portalPages'
 import Crypto from 'pages/portalPages/Crypto'
 import React from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 
 const PortalRouts = () => {
   return (
     <Routes>
-      <Route path={AppRoute.HOME} element={<PortalPage />} />
+      <Route
+        path={AppRoute.HOME}
+        element={<Navigate to="portal/dashboard" />}
+      />
       <Route path={AppRoute.PORTAL} element={<PortalPage />}>
-        <Route index element={<Dashboard />} />
+        <Route index element={<DashboardOverview />} />
         <Route path={AppRoute.DASHBOARD} element={<DashboardOverview />} />
         <Route path={AppRoute.TRANSACTIONS} element={<Transactions />} />
         <Route path={AppRoute.INVOICES}>

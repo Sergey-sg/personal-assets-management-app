@@ -1,3 +1,4 @@
+import { SkipThrottle } from '@nestjs/throttler';
 import {
   Controller,
   Delete,
@@ -25,6 +26,7 @@ import { PageOptionsDto } from 'src/pagination/dto/pageOptionsDto';
 import { UpdateInvoiceDto } from './dto/updateInvoice.dto';
 
 @ApiTags('Invoices')
+@SkipThrottle()
 @UseGuards(AccessTokenGuard)
 @Controller('invoices')
 export class InvoicesController {

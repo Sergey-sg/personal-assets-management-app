@@ -74,6 +74,9 @@ const PortalPage: React.FC = () => {
   const dispatch = useAppDispatch()
   const error = useAppSelector((state) => state.error.message)
   const success = useAppSelector((state) => state.success.message)
+  const { status, messageError, messageSuccess } = useAppSelector(
+    (state) => state.authSlice,
+  )
 
   useEffect(() => {
     error && notifyError(error)
@@ -81,6 +84,15 @@ const PortalPage: React.FC = () => {
     dispatch(resetError())
     dispatch(resetSuccess())
   }, [error, success])
+
+  React.useEffect(() => {
+    if (status === 'ERROR') {
+      notifyError(messageError)
+    }
+    if (status === 'SUCCESS') {
+      notifySuccess(messageSuccess)
+    }
+  }, [status])
 
   useEffect(() => {
     dispatch(fetchUserProfile())

@@ -104,3 +104,20 @@
     background-color: transparent;
   }
 }
+
+@media screen and (max-width: '792px') {
+  .each-slide {
+    width: 100vw !important;
+    height: 100vh;
+    float: left;
+    line-height: 100vh;
+    font-size: 40vh;
+    text-align: center;
+    background-size: cover;
+    background-position: center center;
+    background-color: transparent;
+  }
+  .slider {
+    width: 100wh;
+  }
+}

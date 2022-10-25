@@ -120,7 +120,7 @@ export class AuthService {
     const user = await this.userRepository.findOne({
       where: {
         email: dto.email,
-        refreshPasswordCode: dto.code,
+        codeForAuth: dto.code,
       },
     });
 
@@ -339,6 +339,58 @@ export class AuthService {
       });
 
     await this.userRepository.save(user);
+  }
+
+  async generateCodeForAuth(dto: forgotPasswordDto): Promise<void> {
+    const user = await this.userRepository.findOne({
+      where: { email: dto.email },
+    });
+
+    if (!user) {
+      throw new BadRequestException('Invalid email');
+    }
+    const code = await this.generateNewCode(dto);
+    user.codeForAuth = String(code);
+    await this.mailerService
+      .sendMail({
+        to: dto.email,
+        subject: 'Auth Code',
+        template: './authTemplate',
+        context: {
+          link: process.env.FRONTEND_URL,
+          email: code,
+        },
+      })
+      .catch((e) => {
+        throw new HttpException(`Error`, HttpStatus.UNPROCESSABLE_ENTITY);
+      });
+
+    await this.userRepository.save(user);
+  }
+
+  async generateNewCodeForAuth(dto: forgotPasswordDto) {
+    setTimeout(async () => {
+      const user = await this.userRepository.findOne({
+        where: { email: dto.email },
+      });
+      user.codeForAuth = Math.random().toFixed(6).slice(2);
+      return await this.userRepository.save(user);
+    }, 60 * 1000);
+
+    return Math.random().toFixed(6).slice(2);
+  }
+
+  async verifyCodeAuth(dto: verifyCodeDto) {
+    const user = await this.userRepository.findOne({
+      where: {
+        email: dto.email,
+        codeForAuth: dto.code,
+      },
+    });
+
+    if (!user) {
+      throw new BadRequestException('Invalid Verify Code');
+    }
   }
 
   async generateNewCode(dto: forgotPasswordDto) {

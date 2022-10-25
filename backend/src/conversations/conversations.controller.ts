@@ -14,8 +14,10 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Conversation } from './entities/conversation.entity';
+import { SkipThrottle } from '@nestjs/throttler';
 
 @ApiTags('conversations')
+@SkipThrottle()
 @Controller('conversations')
 export class ConversationsController {
   constructor(private readonly conversationsService: ConversationsService) {}

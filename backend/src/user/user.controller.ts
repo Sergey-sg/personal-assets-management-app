@@ -1,3 +1,4 @@
+import { SkipThrottle } from '@nestjs/throttler';
 import {
   Body,
   Controller,
@@ -31,6 +32,7 @@ import { User } from '../user/decorators/user.decorator';
 import { FilterDto } from './dto/filter.dto';
 
 @ApiTags('User')
+@SkipThrottle()
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}

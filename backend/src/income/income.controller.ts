@@ -1,3 +1,4 @@
+import { SkipThrottle } from '@nestjs/throttler';
 import { IncomeEntity } from './entities/income.entity';
 import { CreateIncomeDto } from './dto/createIncome.dto';
 import {
@@ -24,6 +25,7 @@ import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @ApiTags('Income')
 @Controller('income')
+@SkipThrottle()
 export class IncomeController {
   constructor(private readonly incomeService: IncomeService) {}
 

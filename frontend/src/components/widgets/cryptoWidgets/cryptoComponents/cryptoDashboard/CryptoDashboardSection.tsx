@@ -30,8 +30,6 @@ const CryptoDashboardSection: React.FC = () => {
     (state) => state.cryptoPortfolioSlice,
   )
 
-  console.log(statistics)
-
   return (
     <>
       <div className={clsx(style.item, style['one'])}>
@@ -57,7 +55,7 @@ const CryptoDashboardSection: React.FC = () => {
             type={'Ag-18-semibold'}
             // eslint-disable-next-line
             children={`≈  ${(
-              (totalBalans / 100) *
+              (Number(statistics['totalPrice1Day']) / 100) *
               Number(statistics['change1day'])
             ).toFixed(1)} $`}
           />
@@ -79,7 +77,7 @@ const CryptoDashboardSection: React.FC = () => {
             type={'Ag-18-semibold'}
             // eslint-disable-next-line
             children={`≈  ${(
-              (totalBalans / 100) *
+              (Number(statistics['totalPrice7Day']) / 100) *
               Number(statistics['changes7Day'])
             ).toFixed(1)} $`}
           />

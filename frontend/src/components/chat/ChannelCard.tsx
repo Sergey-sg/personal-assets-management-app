@@ -4,8 +4,8 @@ import { Typography } from 'components/common/Typography'
 import { Avatar } from 'components/common/avatar/Avatar'
 
 interface MessageCardProps {
-  avatar: string | null
-  name: string
+  avatar?: string | null
+  name?: string
   timeStamp: string
   isActiveChannel: boolean
   onClick: () => void

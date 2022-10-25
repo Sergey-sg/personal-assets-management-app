@@ -1,3 +1,4 @@
+import { SkipThrottle } from '@nestjs/throttler';
 import { forgotPasswordDto } from './dto/forgotPassword';
 import {
   Body,
@@ -32,6 +33,7 @@ export class AuthController {
   [x: string]: any;
   constructor(private readonly authService: AuthService) {}
 
+  @SkipThrottle()
   @Post('google/auth')
   async googleTest(
     @Body('token') token: string,
@@ -48,6 +50,7 @@ export class AuthController {
     return this.authService.login(dto);
   }
 
+  @SkipThrottle()
   @ApiOperation({ summary: 'Verify code User' })
   @ApiResponse({ status: 201, type: UserEntity })
   @Post('login/verify')
@@ -58,6 +61,7 @@ export class AuthController {
     return this.authService.loginAuthWithCode(dto, res);
   }
 
+  @SkipThrottle()
   @ApiOperation({
     summary: 'Create new User',
   })
@@ -68,12 +72,14 @@ export class AuthController {
     return this.authService.register(dto);
   }
 
+  @SkipThrottle()
   @Get(':link')
   @Redirect(process.env.FRONTEND_URL)
   async activatedLink(@Param('link') link: string) {
     return this.authService.activate(link);
   }
 
+  @SkipThrottle()
   @UseGuards(AccessTokenGuard)
   @Post('logout')
   @HttpCode(200)
@@ -83,6 +89,7 @@ export class AuthController {
     return this.authService.logout(user, res);
   }
 
+  @SkipThrottle()
   @UseGuards(RefreshTokenGuard)
   @Post('refresh')
   @HttpCode(200)
@@ -96,17 +103,33 @@ export class AuthController {
     return this.authService.refreshToken(user, tokenRefresh, res);
   }
 
+  @SkipThrottle()
   @Post('forgotPassword')
   async forgotPassword(@Body() dto: forgotPasswordDto) {
     return this.authService.forgotPassword(dto);
   }
 
+  @SkipThrottle()
+  @Post('generateCodeForAuth')
+  async sendCodeForAuth(@Body() dto: forgotPasswordDto) {
+    return this.authService.generateCodeForAuth(dto);
+  }
+
+  @SkipThrottle()
   @HttpCode(200)
   @Post('verifyCode')
   async verifyCode(@Body() dto: verifyCodeDto) {
     return this.authService.verifyCode(dto);
   }
 
+  @SkipThrottle()
+  @HttpCode(200)
+  @Post('verifyCodeForAuth')
+  async verifyCodeForAuth(@Body() dto: verifyCodeDto) {
+    return this.authService.verifyCodeAuth(dto);
+  }
+
+  @SkipThrottle()
   @HttpCode(202)
   @Patch('refreshPassword')
   async changePasswod(@Body() dto: refreshPasswordDto) {

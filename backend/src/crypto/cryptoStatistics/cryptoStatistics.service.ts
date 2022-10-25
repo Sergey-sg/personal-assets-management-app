@@ -1,11 +1,6 @@
-import { Cron, CronExpression } from '@nestjs/schedule';
 import { HttpService } from '@nestjs/axios';
-import {
-  ConsoleLogger,
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CryptoPortfolioEntity } from '../cryptoPortfolio/entities/cryptoPortfolio.entity';
@@ -77,6 +72,10 @@ export class CryptoStatisticsService {
       return el.CHANGEPCT24HOUR + sum;
     }, 0);
 
+    const chengePriceOfDay = newArr.reduce((sum: number, el: any) => {
+      return el.PRICE + sum;
+    }, 0);
+
     const statistics = await this.statisticsRepository.findOne({
       where: { id: cryptoPortfolio.statistics.id },
     });
@@ -89,27 +88,35 @@ export class CryptoStatisticsService {
       return await this.statisticsRepository.save(createNewStatistics);
     }
     statistics.counterDay++;
+    statistics.totalPrice1Day = chengePriceOfDay;
 
     if (statistics.counterDay === 1) {
       statistics.one_day = chengePercentOfDay;
+      statistics.totalPriceOneDay = chengePriceOfDay;
     }
     if (statistics.counterDay === 2) {
       statistics.two_day = chengePercentOfDay;
+      statistics.totalPriceTwoDay = chengePriceOfDay;
     }
     if (statistics.counterDay === 3) {
       statistics.three_day = chengePercentOfDay;
+      statistics.totalPriceThreeDay = chengePriceOfDay;
     }
     if (statistics.counterDay === 4) {
       statistics.four_day = chengePercentOfDay;
+      statistics.totalPriceFourDay = chengePriceOfDay;
     }
     if (statistics.counterDay === 5) {
       statistics.five_day = chengePercentOfDay;
+      statistics.totalPriceFiveDay = chengePriceOfDay;
     }
     if (statistics.counterDay === 6) {
       statistics.six_day = chengePercentOfDay;
+      statistics.totalPriceSixDay = chengePriceOfDay;
     }
     if (statistics.counterDay === 7) {
       statistics.seven_day = chengePercentOfDay;
+      statistics.totalPriceSevenDay = chengePriceOfDay;
     }
     if (statistics.counterDay > 7) {
       statistics.seven_day = statistics.six_day;
@@ -119,6 +126,13 @@ export class CryptoStatisticsService {
       statistics.three_day = statistics.two_day;
       statistics.two_day = statistics.one_day;
       statistics.one_day = chengePercentOfDay;
+      statistics.totalPriceSevenDay = statistics.totalPriceSixDay;
+      statistics.totalPriceSixDay = statistics.totalPriceFiveDay;
+      statistics.totalPriceFiveDay = statistics.totalPriceFourDay;
+      statistics.totalPriceFourDay = statistics.totalPriceThreeDay;
+      statistics.totalPriceThreeDay = statistics.totalPriceTwoDay;
+      statistics.totalPriceTwoDay = statistics.totalPriceOneDay;
+      statistics.totalPriceOneDay = chengePriceOfDay;
     }
     statistics.change1day = chengePercentOfDay;
     statistics.changes7Day =
@@ -129,6 +143,15 @@ export class CryptoStatisticsService {
       Number(statistics.five_day) +
       Number(statistics.six_day) +
       Number(statistics.seven_day);
+
+    statistics.totalPrice7Day =
+      Number(statistics.totalPriceOneDay) +
+      Number(statistics.totalPriceTwoDay) +
+      Number(statistics.totalPriceThreeDay) +
+      Number(statistics.totalPriceFourDay) +
+      Number(statistics.totalPriceFiveDay) +
+      Number(statistics.totalPriceSixDay) +
+      Number(statistics.totalPriceSevenDay) / 7;
 
     await this.statisticsRepository.save(statistics);
   }

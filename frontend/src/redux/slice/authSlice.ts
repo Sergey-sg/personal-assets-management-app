@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { AxiosError } from 'axios'
 import {
   authWithGoogle,
   checkAuth,
@@ -15,14 +16,18 @@ interface typeInfo {
   isVerify: boolean
   sendAuthMessage: boolean
   hasCryptoPortfolio: boolean
+  messageError: string
+  messageSuccess: string
 }
 const initialState: typeInfo = {
   user: {},
-  status: 'SUCCESS',
+  status: 'INIT',
   isAuth: false,
   isVerify: false,
   sendAuthMessage: false,
   hasCryptoPortfolio: false,
+  messageError: '',
+  messageSuccess: 'Successful !',
 }
 const authSlice = createSlice({
   name: 'auth',
@@ -44,14 +49,15 @@ const authSlice = createSlice({
     })
     builder.addCase(fetchLogin.fulfilled, (state, action) => {
       state.status = 'SUCCESS'
-      const statusCode = action.payload['status']
+      const statusCode = action.payload?.status
 
       if (statusCode === 201) {
         state.isVerify = true
       }
     })
-    builder.addCase(fetchLogin.rejected, (state) => {
+    builder.addCase(fetchLogin.rejected, (state, action) => {
       state.status = 'ERROR'
+      state.messageError = String(action.payload)
     })
 
     builder.addCase(Registration.pending, (state) => {
@@ -60,8 +66,9 @@ const authSlice = createSlice({
     builder.addCase(Registration.fulfilled, (state, action) => {
       state.status = 'SUCCESS'
     })
-    builder.addCase(Registration.rejected, (state) => {
+    builder.addCase(Registration.rejected, (state, action) => {
       state.status = 'ERROR'
+      state.messageError = String(action.payload)
     })
 
     builder.addCase(Logout.pending, (state) => {
@@ -116,9 +123,10 @@ const authSlice = createSlice({
       localStorage.setItem('token', action.payload.tokens.access_token)
       state.isAuth = true
     })
-    builder.addCase(authWithGoogle.rejected, (state) => {
+    builder.addCase(authWithGoogle.rejected, (state, action) => {
       state.status = 'ERROR'
       state.isAuth = false
+      state.messageError = String(action.payload)
     })
     builder.addCase(verifyCodeAuth.pending, (state) => {
       state.status = 'LOADING'
@@ -146,6 +154,7 @@ const authSlice = createSlice({
       state.sendAuthMessage = true
       state.status = 'ERROR'
       state.isAuth = false
+      state.messageError = String(action.payload)
     })
   },
 })

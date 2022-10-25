@@ -18,6 +18,7 @@ import * as yup from 'yup'
 import ChangePassword from './ChangePassword'
 import { validationsSchemaCheckCode } from './schemaForgotPassword/ValidationSchemaForgotPassword'
 import Taimer from './Taimer'
+import { checkEmailAndSendCodeAgainForAuth } from '../../redux/thunk/authThunk'
 /*eslint-disable */
 type PropsCheckCode = {
   verifyCodeAuth?: any
@@ -36,9 +37,8 @@ const CheckCode: React.FC<PropsCheckCode> = ({ verifyCodeAuth }) => {
 
     setToggleTimer(true)
   }
-  const { permission, status, statusCode, codeWillBySend } = useAppSelector(
-    (state) => state.refreshPasswordSlice,
-  )
+  const { permission, statusRefreshSlice, statusCode, codeWillBySend } =
+    useAppSelector((state) => state.refreshPasswordSlice)
   const [value, setValue] = React.useState('')
 
   React.useEffect(() => {
@@ -48,7 +48,7 @@ const CheckCode: React.FC<PropsCheckCode> = ({ verifyCodeAuth }) => {
           dispatch(checkEmailAndSendCodeAgain())
           resetTimer()
         } catch (e) {
-          console.log()
+          console.log(e)
         }
       }
     }
@@ -58,7 +58,6 @@ const CheckCode: React.FC<PropsCheckCode> = ({ verifyCodeAuth }) => {
   }, [])
 
   const clickButton = React.useCallback(async (loginData: any, e: any) => {
-    console.log('lalala')
     try {
       if (verifyCodeAuth) {
         await dispatch(verifyCodeAuth(loginData))
@@ -72,6 +71,18 @@ const CheckCode: React.FC<PropsCheckCode> = ({ verifyCodeAuth }) => {
       console.log(error)
     }
   }, [])
+
+  const clickButtonForAuth = React.useCallback(() => {
+    if (verifyCodeAuth) {
+      dispatch(checkEmailAndSendCodeAgainForAuth())
+      console.log('hello Auth')
+    }
+
+    if (!verifyCodeAuth) {
+      dispatch(checkEmailAndSendCodeAgain())
+    }
+    resetTimer()
+  }, [verifyCodeAuth])
 
   const goHome = () => {
     navigate(AppRoute.HOME)
@@ -82,19 +93,16 @@ const CheckCode: React.FC<PropsCheckCode> = ({ verifyCodeAuth }) => {
     try {
       if (verifyCodeAuth) {
         await dispatch(verifyCodeAuth(loginData))
-        console.log('auth')
         navigate('/')
         return true
       }
       if (!verifyCodeAuth) {
         await dispatch(verifyCode(loginData))
-        console.log('none Auth')
       }
     } catch (error) {
       console.log(error)
       return false
     }
-    console.log('hello')
     return false
   }
 
@@ -115,8 +123,6 @@ const CheckCode: React.FC<PropsCheckCode> = ({ verifyCodeAuth }) => {
               const res = await newClickButton(value)
               if (res) {
                 setSubmitting(true)
-
-                console.log('good')
               } else {
                 console.log('error')
               }
@@ -168,12 +174,12 @@ const CheckCode: React.FC<PropsCheckCode> = ({ verifyCodeAuth }) => {
                 )}
                 {!toggleTimer && (
                   <Typography
-                    onClick={() => {
-                      dispatch(checkEmailAndSendCodeAgain())
-                      resetTimer()
-                    }}
+                    onClick={() => clickButtonForAuth()}
                     type={'Ag-14-medium'}
-                    children={'Send again code'}
+                    children={'Send again '}
+                    className={
+                      'px-3 bg-lime-400 text-white cursor-pointer rounded-md w-max	 '
+                    }
                   ></Typography>
                 )}
                 <div className="flex">

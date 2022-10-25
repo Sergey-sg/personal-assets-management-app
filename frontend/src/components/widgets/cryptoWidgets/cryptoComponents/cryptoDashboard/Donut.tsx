@@ -5,6 +5,7 @@ import { Typography } from 'components/common/Typography'
 import { LabelsForDonut } from './LabelsForDonut'
 import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
 import { getPortfolio } from 'redux/thunk/cryptoThunk'
+import style from './CryptoDashboardComponent.module.scss'
 
 Chart.register(ArcElement)
 
@@ -61,18 +62,19 @@ const Donut = () => {
           hoverOffset: 4,
           borderRadius: 10,
           spacing: 1,
+          weight: 1,
         },
       ],
     },
     options: {
-      cutout: 110,
+      cutout: 90,
     },
   }
 
   return (
     <div className="flex justify-center bg-gray-100 rounded-xl m-2 p-2">
-      <div className="item">
-        <div className="chart relative">
+      <div className={style.donutSection}>
+        <div className={`${style.donut}`}>
           <Doughnut {...cofig}></Doughnut>
         </div>
         <div className="flex flex-col py-10 gap-4">

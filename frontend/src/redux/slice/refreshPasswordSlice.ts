@@ -9,18 +9,22 @@ import {
 
 export interface CounterState {
   value: number
-  status: string
+  statusRefreshSlice: string
   statusCode: number | null
   permission: boolean
   codeWillBySend: boolean
+  messageErrorRefreshSlice: string
+  messageSuccess: string
 }
 
 const initialState: CounterState = {
-  status: 'SUCCESS',
+  statusRefreshSlice: 'INIT',
   statusCode: 0,
   permission: false,
   codeWillBySend: false,
   value: 0,
+  messageErrorRefreshSlice: '',
+  messageSuccess: '',
 }
 const refreshPasswordSlice = createSlice({
   name: 'authRefresh',
@@ -32,12 +36,12 @@ const refreshPasswordSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(checkEmailAndSendCode.pending, (state) => {
-      state.status = 'LOADING'
+      state.statusRefreshSlice = 'LOADING'
     })
     builder.addCase(checkEmailAndSendCode.fulfilled, (state, action) => {
       console.log(action.payload['status'])
       state.statusCode = action.payload['status']
-      state.status = 'SUCCESS'
+      state.statusRefreshSlice = 'SUCCESS'
       state.codeWillBySend = true
       const { email } = action.payload['params']
 
@@ -45,11 +49,12 @@ const refreshPasswordSlice = createSlice({
         sessionStorage.setItem('email', email)
       }
     })
-    builder.addCase(checkEmailAndSendCode.rejected, (state) => {
-      state.status = 'ERROR'
+    builder.addCase(checkEmailAndSendCode.rejected, (state, action) => {
+      state.statusRefreshSlice = 'ERROR'
+      state.messageErrorRefreshSlice = String(action.payload)
     })
     builder.addCase(verifyCode.pending, (state) => {
-      state.status = 'LOADING'
+      state.statusRefreshSlice = 'LOADING'
     })
     builder.addCase(verifyCode.fulfilled, (state, action) => {
       const { statusCode } = action.payload
@@ -58,13 +63,14 @@ const refreshPasswordSlice = createSlice({
         state.permission = true
         state.codeWillBySend = false
       }
-      state.status = 'SUCCESS'
+      state.statusRefreshSlice = 'SUCCESS'
     })
-    builder.addCase(verifyCode.rejected, (state) => {
-      state.status = 'ERROR'
+    builder.addCase(verifyCode.rejected, (state, action) => {
+      state.statusRefreshSlice = 'ERROR'
+      state.messageErrorRefreshSlice = String(action.payload)
     })
     builder.addCase(refreshPassword.pending, (state) => {
-      state.status = 'LOADING'
+      state.statusRefreshSlice = 'LOADING'
     })
     builder.addCase(refreshPassword.fulfilled, (state, action) => {
       const statusCode2 = action.payload
@@ -73,13 +79,14 @@ const refreshPasswordSlice = createSlice({
       if (statusCode2 === 202) {
         state.statusCode = statusCode2
       }
-      state.status = 'SUCCESS'
+      state.statusRefreshSlice = 'SUCCESS'
     })
-    builder.addCase(refreshPassword.rejected, (state) => {
-      state.status = 'ERROR'
+    builder.addCase(refreshPassword.rejected, (state, action) => {
+      state.statusRefreshSlice = 'ERROR'
+      state.messageErrorRefreshSlice = String(action.payload)
     })
     builder.addCase(checkEmailAndSendCodeAgain.pending, (state) => {
-      state.status = 'LOADING'
+      state.statusRefreshSlice = 'LOADING'
     })
     builder.addCase(checkEmailAndSendCodeAgain.fulfilled, (state, action) => {
       const { status } = action.payload
@@ -87,10 +94,11 @@ const refreshPasswordSlice = createSlice({
       if (status > 202) {
         state.statusCode = status
       }
-      state.status = 'SUCCESS'
+      state.statusRefreshSlice = 'SUCCESS'
     })
-    builder.addCase(checkEmailAndSendCodeAgain.rejected, (state) => {
-      state.status = 'ERROR'
+    builder.addCase(checkEmailAndSendCodeAgain.rejected, (state, action) => {
+      state.statusRefreshSlice = 'ERROR'
+      state.messageErrorRefreshSlice = String(action.payload)
     })
   },
 })

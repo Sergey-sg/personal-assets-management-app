@@ -1,3 +1,4 @@
+import { SkipThrottle } from '@nestjs/throttler';
 import {
   Controller,
   Get,
@@ -14,7 +15,9 @@ import { AccessTokenGuard } from 'src/auth/guards/accessToken.guard';
 import { CryptoService } from './crypto.service';
 import { CreateCryptoDto } from './dto/create-crypto.dto';
 import { UpdateCryptoDto } from './dto/update-crypto.dto';
+
 @UseGuards(AccessTokenGuard)
+@SkipThrottle()
 @Controller('crypto')
 export class CryptoController {
   constructor(private readonly cryptoService: CryptoService) {}
