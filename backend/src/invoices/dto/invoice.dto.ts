@@ -12,7 +12,7 @@ import {
   IsDate,
   MinDate,
   MaxLength,
-  MinLength
+  MinLength,
 } from 'class-validator';
 import { UserEntity } from '../../user/entities/user.entity';
 import { InvoiceItemDto } from './invoiceItem.dto';
@@ -76,4 +76,13 @@ export class InvoiceDto {
   @IsInt()
   @IsPositive()
   total: number;
+
+  @ApiProperty({
+    example: 'other',
+    description: 'Expense category for the invoice',
+  })
+  @IsOptional()
+  @IsString()
+  @MaxLength(32)
+  category: string;
 }
