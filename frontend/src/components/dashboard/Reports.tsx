@@ -21,6 +21,7 @@ const initialPeriod: Period = {
 }
 
 const Reports = () => {
+  // In progress
   // const [searchParams, setSearchParams] = useSearchParams({})
 
   const [period, setPeriod] = useState<Period>(initialPeriod)
@@ -100,36 +101,34 @@ const Reports = () => {
   }
 
   return (
-    <>
-      <div className="flex gap-2 h-screen">
-        {wallets.length ? (
-          <PrimaryInfo
-            selectedWallet={selectedWallet}
-            totals={totals}
-            wallets={wallets}
-            onWalletChange={onWalletChange}
-            transactions={transactions}
-            period={period}
-            handleChange={handleChange}
-            handleSubmit={handleSubmit}
-          />
-        ) : (
-          <div className="flex flex-col gap-2 flex-1 basis-2/3 h-screen text-center">
-            <h2 className=" text-Ag-18 font-semibold mb-4">
-              No Wallets To Show{' '}
-            </h2>
-            <p>Create your very first wallet</p>
-            <Link
-              className="text-blue-500 underline uppercase"
-              to={'../my-wallets'}
-            >
-              My-Wallets
-            </Link>
-          </div>
-        )}
-        <WidgetsBar />
-      </div>
-    </>
+    <div className="flex gap-2 h-screen flex-1">
+      {wallets.length ? (
+        <PrimaryInfo
+          selectedWallet={selectedWallet}
+          totals={totals}
+          wallets={wallets}
+          onWalletChange={onWalletChange}
+          transactions={transactions}
+          period={period}
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+        />
+      ) : (
+        <div className="flex flex-col gap-2 flex-1 basis-2/3 h-screen text-center">
+          <h2 className=" text-Ag-18 font-semibold mb-4">
+            No Wallets To Show{' '}
+          </h2>
+          <p>Create your very first wallet</p>
+          <Link
+            className="text-blue-500 underline uppercase"
+            to={'../my-wallets'}
+          >
+            My-Wallets
+          </Link>
+        </div>
+      )}
+      <WidgetsBar />
+    </div>
   )
 }
 
