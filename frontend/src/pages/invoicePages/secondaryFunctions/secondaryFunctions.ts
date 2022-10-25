@@ -1,3 +1,6 @@
+import { errorOccurred } from 'redux/slice/error/error.slice'
+import { IInvoice } from 'redux/slice/invoiceServices/invoice.slice'
+import { AppDispatch } from 'redux/store'
 import { CONSTANTS } from 'shared/constants'
 import profile from '../../../assets/icons/profile.svg'
 
@@ -49,4 +52,18 @@ export function currentImagesPath(path: string) {
     : profile
 
   return currentPath
+}
+
+export function invoiceEmpty(invoice: IInvoice) {
+  if (!invoice.billedTo || Object.keys(invoice.billedTo).length < 1) {
+    return 'the customer field cannot be empty'
+  }
+  if (!invoice.items[0] || Object.keys(invoice.items[0]).length < 1) {
+    return 'the item field cannot be empty'
+  }
+  if (!invoice.dueDate || !invoice.invoiceDate) {
+    return 'the Invoice and Due Dates field cannot be empty'
+  }
+
+  return false
 }

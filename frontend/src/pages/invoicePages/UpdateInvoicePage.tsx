@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import ReactTextareaAutosize from 'react-textarea-autosize'
+import { errorOccurred } from 'redux/slice/error/error.slice'
 import {
   fetchGetInvoiceById,
   fetchUpdateInvoice,
@@ -17,7 +18,7 @@ import {
   InvoiceInfoBaner,
   MagloBaner,
 } from './invoice_componetns/statics'
-import { sum } from './secondaryFunctions/secondaryFunctions'
+import { sum, invoiceEmpty } from './secondaryFunctions/secondaryFunctions'
 
 const InvoiceUpdatePage: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -30,9 +31,6 @@ const InvoiceUpdatePage: React.FC = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (!invoice) {
-      dispatch(fetchGetInvoiceById(`${invoiceId}`, true))
-    }
     if (currentInvoice && !invoice) {
       setInvoice({
         ...currentInvoice,
@@ -53,6 +51,10 @@ const InvoiceUpdatePage: React.FC = () => {
       )
     }
   }, [success, error, invoice])
+
+  useEffect(() => {
+    dispatch(fetchGetInvoiceById(`${invoiceId}`, true))
+  }, [])
 
   const setNewItem = useCallback(
     (
@@ -81,8 +83,13 @@ const InvoiceUpdatePage: React.FC = () => {
     if (invoiceId && invoice.id === parseInt(invoiceId)) {
       const items = invoice.items.map(({ id, ...item }: any) => item)
       const newInvoice = { ...invoice, items }
+      const emptyInvoice = invoiceEmpty(newInvoice)
 
-      dispatch(fetchUpdateInvoice(invoiceId, newInvoice))
+      if (!emptyInvoice){
+        dispatch(fetchUpdateInvoice(invoiceId, newInvoice))
+      } else {
+        dispatch(errorOccurred({ statusCode: 400, message: emptyInvoice }))
+      }
     }
   }, [invoice])
 

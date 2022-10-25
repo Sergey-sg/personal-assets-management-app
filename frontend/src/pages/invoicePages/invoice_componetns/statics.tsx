@@ -39,12 +39,10 @@ export function HeaderItems(props: any) {
 }
 
 export function InvoiceInfoBaner(props: any) {
-  const address = props.billedTo.address
-    ? props.billedTo.address.split(',')
-    : ''
-  const customerName = props.billedTo.firstName
+  const address = props.billedTo?.address.split(',') || ''
+  const customerName = props.billedTo?.firstName
     ? `${props.billedTo.firstName} ${props.billedTo.lastName}`
-    : props.billedTo.email
+    : props.billedTo?.email
 
   return (
     <div className="grid grid-rows-1 grid-flow-col columns-2 bg-gray-ultralight rounded-xl p-5">

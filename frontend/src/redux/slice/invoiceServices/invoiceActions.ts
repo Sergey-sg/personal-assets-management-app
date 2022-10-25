@@ -1,4 +1,4 @@
-import { AxiosError, AxiosRequestConfig } from 'axios'
+import { AxiosError } from 'axios'
 import api from 'axios/axios'
 import { AppDispatch } from 'redux/store'
 import { errorOccurred, resetError } from '../error/error.slice'
