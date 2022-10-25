@@ -62,6 +62,9 @@ export function invoiceEmpty(invoice: IInvoice) {
   if (!invoice.dueDate || !invoice.invoiceDate) {
     return 'the Invoice and Due Dates field cannot be empty'
   }
+  if (new Date(invoice.invoiceDate) <= new Date()) {
+    return 'invoice date must be not earlier than in 5 min'
+  }
 
   return false
 }
