@@ -1,5 +1,5 @@
 import { IInvoice } from 'redux/slice/invoiceServices/invoice.slice'
-import { CONSTANTS } from 'shared/constants'
+import { CONSTANTS } from '../../../shared/constants'
 import profile from '../../../assets/icons/profile.svg'
 
 export function getCorrectDateFormat(dateString: string) {
