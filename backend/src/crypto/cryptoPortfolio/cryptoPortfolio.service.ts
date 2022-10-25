@@ -15,7 +15,6 @@ import { CryptoPortfolioEntity } from './entities/cryptoPortfolio.entity';
 import { HttpService } from '@nestjs/axios';
 import { CryptoStatisticsService } from '../cryptoStatistics/cryptoStatistics.service';
 import { CronJob } from 'cron';
-/*eslint-disable */
 
 @Injectable()
 export class CryptoPortfolioService {
@@ -107,4 +106,3 @@ export class CryptoPortfolioService {
     await this.cryptoPortfolioRepository.delete({ id: idPortfolio });
   }
 }
-/*eslint-enable */

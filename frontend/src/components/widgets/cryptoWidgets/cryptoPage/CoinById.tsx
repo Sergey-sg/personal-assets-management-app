@@ -63,7 +63,7 @@ const CoinById = () => {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-4 gap-3 rounded-xl p-4 bg-gray-100">
+        <div className="grid grid-cols-2 gap-3 rounded-xl p-4 bg-gray-100 max-w-full md:grid-cols-4 ">
           <div className=" text-center ">
             <Typography
               type={'Ag-15-medium'}

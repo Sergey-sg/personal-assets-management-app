@@ -1,3 +1,4 @@
+import { SkipThrottle } from '@nestjs/throttler';
 import {
   Controller,
   Get,
@@ -21,6 +22,7 @@ import { UpdateTaskDto } from './dto/task/update-task.dto';
 import { EntityNotFoundError } from 'typeorm';
 import { User } from 'src/user/decorators/user.decorator';
 
+@SkipThrottle()
 @Controller('todo-lists')
 export class ToDoController {
   constructor(private readonly todoService: ToDoService) {}

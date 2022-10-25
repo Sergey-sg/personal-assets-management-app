@@ -13,7 +13,7 @@ const ForgotPassword = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
-  const { status, statusCode } = useAppSelector(
+  const { statusRefreshSlice, statusCode } = useAppSelector(
     (state) => state.refreshPasswordSlice,
   )
 

@@ -112,7 +112,7 @@ const SliderLogin = () => {
       {renderArrows()}
       <ul className="dots-container">{renderDots()}</ul>
       <button type="button" className="toggle-play" onClick={toggleAutoPlay}>
-        {renderPlayStop()}
+        {/* {renderPlayStop()} */}
       </button>
     </section>
   )

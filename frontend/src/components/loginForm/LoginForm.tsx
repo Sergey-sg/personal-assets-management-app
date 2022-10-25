@@ -16,6 +16,8 @@ import { AppRoute } from 'common/enums/app-route.enum'
 import CheckCode from 'components/forgotPaswordForm/CheckCode'
 import { GoogleLink } from 'components/common/GoogleLink/GoogleLink'
 import { Typography } from 'components/common/Typography'
+import { AxiosError } from 'axios'
+import { errorOccurred } from 'redux/slice/error/error.slice'
 
 type PropsLoginForm = {
   toggleFunction?: React.MouseEventHandler<HTMLButtonElement>
@@ -37,7 +39,7 @@ const LoginForm: React.FC<PropsLoginForm> = ({ toggleFunction }: any) => {
     <div className=" px-10">
       {!isVerify ? (
         <div className="p-4" style={{ margin: 'auto', width: '100%' }}>
-          <h1 className="text-3xl font-semibold text-center mb-10">Sing in</h1>
+          <h1 className="text-3xl font-semibold text-center mb-10">Sign in</h1>
           <Formik
             initialValues={{
               email: '',
@@ -110,7 +112,7 @@ const LoginForm: React.FC<PropsLoginForm> = ({ toggleFunction }: any) => {
                     <p
                       className="text-red-600 italic text-sm"
                       style={{
-                        margin: '0',
+                        marginTop: '13px',
                         position: 'relative',
                         bottom: '12px',
                       }}
@@ -132,7 +134,7 @@ const LoginForm: React.FC<PropsLoginForm> = ({ toggleFunction }: any) => {
                     <Button
                       type={'submit'}
                       btnName={'primary'}
-                      label={'Sing in'}
+                      label={'Sign in'}
                       disabled={!isValid && !dirty}
                       className="w-full m-0"
                     >

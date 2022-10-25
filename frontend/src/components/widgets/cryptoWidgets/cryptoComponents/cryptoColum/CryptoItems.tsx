@@ -61,7 +61,7 @@ const CryptoItems = () => {
         />
         <div className={style.items}>
           {/*  */}
-          <table className=" table-fixed min-w-full leading-normal overflow-x-hidden">
+          <table className=" table-fixed w-full leading-normal overflow-x-hidden">
             <thead className="text-xs text-gray-600 uppercase bg-gray-100 ">
               <tr className="bg">
                 <th className="py-3 px-6 text-left	">#</th>
@@ -90,7 +90,7 @@ const CryptoItems = () => {
         </div>
         <CryptoModelInput />
       </div>
-      <div>
+      <div className={style.exchanger}>
         <SelectInput />
       </div>
       <ToastContainer transition={Zoom} />

@@ -8,6 +8,7 @@ import { Wallet, Transaction, Period } from './interfaces'
 import { fetchReportForPeriod, fetchWallets } from './service/api'
 import { Totals } from './types'
 import { Link } from 'react-router-dom'
+import { AppRoute } from '../../common/enums/app-route.enum'
 
 const now = new Date()
 const year = now.getFullYear()

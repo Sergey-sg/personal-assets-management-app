@@ -21,8 +21,10 @@ import { AllWalletCostsResponseDto } from './dto/allWalletCostsResponse.dto';
 import { AllUserCostsResponseDto } from './dto/allUserCostsResponse.dto';
 import { AllUserCostsResponseType } from './interfaces/allUserCostsResponse.type';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
+import { SkipThrottle } from '@nestjs/throttler';
 
 @ApiTags('Costs')
+@SkipThrottle()
 @Controller('costs')
 export class CostsController {
   constructor(private readonly costsService: CostsService) {}

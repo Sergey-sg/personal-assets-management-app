@@ -30,7 +30,6 @@ const InputUI: React.FC<inputProps> = ({
         className={`placeholder:opacity-50 text-sm ${
           error ? styles.input : styles.inputError
         }`}
-        id="input"
         type={type}
         value={value}
         onChange={setValue ? setValue : (e) => onChange(e.target.value)}

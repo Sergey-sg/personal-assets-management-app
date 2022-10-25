@@ -1,3 +1,4 @@
+import { SkipThrottle } from '@nestjs/throttler';
 import { Controller, Get, HttpStatus, Param, Query } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ExchangeService } from './exchange.service';
@@ -15,6 +16,7 @@ import { CurrencyFilterQueryDto } from './dto/currency-filter-query.dto';
 import { GetBankRatesDto } from './dto/get-bank-rates.dto';
 
 @ApiTags('Exchange')
+@SkipThrottle()
 @Controller('exchange')
 export class ExchangeController {
   constructor(

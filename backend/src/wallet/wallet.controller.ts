@@ -1,3 +1,4 @@
+import { SkipThrottle } from '@nestjs/throttler';
 import { WalletEntity } from 'src/wallet/entities/wallet.entity';
 import { CreateWalletDto } from './dto/createWallet.dto';
 import { WalletService } from './wallet.service';
@@ -20,6 +21,7 @@ import { UpdateWalletDto } from './dto/updateWallet.dto';
 
 @ApiTags('Wallets')
 @ApiHeader({ name: 'authorization', description: 'must be token' })
+@SkipThrottle()
 @Controller('wallets')
 export class WalletController {
   constructor(private walletService: WalletService) {}

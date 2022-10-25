@@ -12,11 +12,9 @@ export interface SelectProps extends React.HTMLProps<HTMLInputElement> {
   label?: string
   type: 'select'
   name: string
-  //   disabled?: boolean
   isInvalid?: boolean
   error?: string
   value?: string | number
-  //   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
   onChange?: any
   optionArray: IOption[]
 }
@@ -46,7 +44,6 @@ export const Select: React.FC<SelectProps> = ({
         name={name}
         value={value}
         onChange={onChange}
-        // onChange={(e) => onChange(e.target.value)}
         className={` p-3 form-input rounded-lg min-w-full text-base font-medium text-green-dark placeholder:italic placeholder:text-slate-400 placeholder:text-sm placeholder:font-medium  opacity-70  focus:border-2 focus:border-lime-500 focus:ring-0 ${borderStyle}`}
       >
         {optionArray.map((row) => {

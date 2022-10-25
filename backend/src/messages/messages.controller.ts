@@ -1,3 +1,4 @@
+import { SkipThrottle } from '@nestjs/throttler';
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/user/decorators/user.decorator';
@@ -7,6 +8,7 @@ import { MessagesService } from './messages.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @ApiTags('messages')
+@SkipThrottle()
 @Controller('messages')
 export class MessagesController {
   constructor(

@@ -103,6 +103,10 @@ export class UserEntity extends Base {
   @Column({ default: '' })
   refreshPasswordCode?: string;
 
+  @ApiProperty()
+  @Column({ default: '' })
+  codeForAuth?: string;
+
   @OneToMany(() => WalletEntity, (wallet) => wallet.userWallet)
   wallet?: WalletEntity[];
   @OneToMany(

@@ -1,9 +1,11 @@
+import { SkipThrottle } from '@nestjs/throttler';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { Controller, Get, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { Request } from 'express';
 import { AccessTokenGuard } from 'src/auth/guards/accessToken.guard';
 import { CryptoPortfolioService } from './cryptoPortfolio.service';
 
+@SkipThrottle()
 @UseGuards(AccessTokenGuard)
 @Controller('cryptoPortfolio')
 export class CryptoPortfolioController {
