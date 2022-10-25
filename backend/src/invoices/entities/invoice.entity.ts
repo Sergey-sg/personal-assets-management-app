@@ -55,6 +55,10 @@ export class InvoiceEntity extends Base {
   @Column({ type: 'varchar', length: 500, nullable: true })
   invoiceDetails: string | null;
 
+  @ApiProperty({ description: 'expense category for the invoice' })
+  @Column({ type: 'varchar', length: 32, default: 'other' })
+  category: string;
+
   @ApiProperty({ description: 'total invoice price', example: 20000 })
   @Column({ type: 'int', default: 0 })
   total: number;

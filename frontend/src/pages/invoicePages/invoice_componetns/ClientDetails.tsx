@@ -53,7 +53,7 @@ export function ClientDetails(props: any) {
         {client.email && (
           <>
             <img
-              className="px-5 mb-2 float-left"
+              className="mx-5 mb-2 float-left h-14 rounded-full"
               src={currentImagesPath(client.avatarPath)}
               alt={userFullName}
             />

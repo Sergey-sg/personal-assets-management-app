@@ -32,7 +32,7 @@ const ClientInfo = (props: any) => {
   return (
     <>
       <img
-        className="float-left pr-4 max-h-9 rounded-full"
+        className="float-left mr-4 max-h-9 rounded-full"
         src={currentImagesPath(props.client.avatarPath)}
         alt={props.client.email}
       />
@@ -85,7 +85,7 @@ export const InvoicesList = (props: any) => {
               {convertDate(invoice.invoiceDate)}
             </div>
             <div className="col-span-2 text-text-ultralight mt-2">
-              {invoice.type}
+              {invoice.category}
             </div>
             <div className="col-span-2 font-bold mt-2">
               ${invoice.total / 100}

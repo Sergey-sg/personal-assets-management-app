@@ -14,6 +14,7 @@ export interface IInvoice {
   invoiceDate: string
   invoiceDetails: string
   total: number
+  category: string
 }
 
 const initialState: { invoices: IInvoice[] } = { invoices: [] }
