@@ -9,11 +9,12 @@ import {
 } from '../thunk/authThunk'
 
 interface typeInfo {
-  user: object
+  user: any
   status: string
   isAuth: boolean
   isVerify: boolean
   sendAuthMessage: boolean
+  hasCryptoPortfolio: boolean
 }
 const initialState: typeInfo = {
   user: {},
@@ -21,6 +22,7 @@ const initialState: typeInfo = {
   isAuth: false,
   isVerify: false,
   sendAuthMessage: false,
+  hasCryptoPortfolio: false,
 }
 const authSlice = createSlice({
   name: 'auth',
@@ -28,6 +30,12 @@ const authSlice = createSlice({
   reducers: {
     toggleSendAuthMessage(state) {
       state.sendAuthMessage = true
+    },
+    changeStatusCryptoPosrtfolio(state) {
+      state.hasCryptoPortfolio = true
+    },
+    changeStatusCryptoPosrtfolioOnFalse(state) {
+      state.hasCryptoPortfolio = false
     },
   },
   extraReducers: (builder) => {
@@ -62,6 +70,9 @@ const authSlice = createSlice({
     builder.addCase(Logout.fulfilled, (state) => {
       state.status = 'SUCCESS'
       state.isAuth = false
+      state.isVerify = false
+      state.sendAuthMessage = false
+      state.hasCryptoPortfolio = false
       state.user = {}
     })
     builder.addCase(Logout.rejected, (state) => {
@@ -80,6 +91,8 @@ const authSlice = createSlice({
           'token',
           action.payload['data'].tokens.access_token,
         )
+        state.hasCryptoPortfolio =
+          action.payload['data']['user']?.['hasCryptoWallet']
         state.isAuth = true
       }
       if (action.payload['status'] > 201) {
@@ -98,7 +111,8 @@ const authSlice = createSlice({
     })
     builder.addCase(authWithGoogle.fulfilled, (state, action) => {
       state.status = 'SUCCESS'
-      state.user = action.payload
+      state.user = action.payload['user']
+      state.hasCryptoPortfolio = action.payload['user']?.['hasCryptoWallet']
       localStorage.setItem('token', action.payload.tokens.access_token)
       state.isAuth = true
     })
@@ -113,12 +127,13 @@ const authSlice = createSlice({
       state.status = 'SUCCESS'
       const statusCode = action.payload['status']
 
-      console.log(statusCode)
-
       if (statusCode !== 201) {
         state.sendAuthMessage = true
       }
       const userData = action.payload['data']
+
+      state.hasCryptoPortfolio =
+        action.payload['data']['user']['hasCryptoWallet']
 
       state.user = userData.user
 
@@ -135,6 +150,10 @@ const authSlice = createSlice({
   },
 })
 
-export const { toggleSendAuthMessage } = authSlice.actions
+export const {
+  toggleSendAuthMessage,
+  changeStatusCryptoPosrtfolio,
+  changeStatusCryptoPosrtfolioOnFalse,
+} = authSlice.actions
 
 export default authSlice.reducer

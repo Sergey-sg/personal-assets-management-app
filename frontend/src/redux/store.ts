@@ -1,4 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
+import cryptoWidgetSlice from './slice/cryptoWidgetSlice'
+import cryptoPortfolioSlice from './slice/cryptoPortfolioSlice'
 import {
   authSlice,
   conversationsSlice,
@@ -21,6 +23,9 @@ import walletLimitSlice from './slice/walletLimitSlice'
 export const store = configureStore({
   reducer: {
     authSlice,
+    cryptoWidgetSlice,
+    cryptoPortfolioSlice,
+    refreshPasswordSlice,
     userProfile: userProfileSlice,
     invoices: invoiceSlice,
     pagination: paginationSlice,
@@ -31,7 +36,6 @@ export const store = configureStore({
     wallets: walletsSlice,
     incomes: incomeSlice,
     costs: costsSlice,
-    refreshPasswordSlice,
     messages: messagesSlice,
     conversations: conversationsSlice,
     todo: todoSlice,

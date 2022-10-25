@@ -79,6 +79,7 @@ export class AuthController {
   @HttpCode(200)
   async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const user = req.user['id'];
+
     return this.authService.logout(user, res);
   }
 

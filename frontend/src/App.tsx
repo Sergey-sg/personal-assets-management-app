@@ -15,6 +15,8 @@ import { AppRoute } from 'common/enums/app-route.enum'
 import NotFoundPage from 'pages/NotFoundPage'
 import LoginRouts from ' routes/LoginRouts'
 import { socket, SocketContext } from 'utils/context/SocketContext'
+import { changeStatusCryptoPosrtfolioOnFalse } from 'redux/slice/authSlice'
+import { chengeStatusPortfolio } from 'redux/slice/cryptoPortfolioSlice'
 import { fetchWallets } from 'redux/slice/walletsSlice'
 
 export default function App() {
@@ -22,9 +24,17 @@ export default function App() {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
+    if (!isAuth) {
+      dispatch(changeStatusCryptoPosrtfolioOnFalse())
+      dispatch(chengeStatusPortfolio())
+    }
+  }, [isAuth])
+
+  React.useEffect(() => {
     if (localStorage.getItem('token')) {
       dispatch(checkAuth())
     }
+    sessionStorage.clear()
   }, [])
 
   if (status === 'LOADING') {

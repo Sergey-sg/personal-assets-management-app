@@ -21,6 +21,10 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { InvoicesModule } from './invoices/invoices.module';
 import { ToDoModule } from './todo/todo.module';
 import { WalletLimitModule } from './walletLimit/walletLimit.module';
+import { CryptoModule } from './crypto/cryptoItem/crypto.module';
+import { CryptoPortfolioModule } from './crypto/cryptoPortfolio/cryptoPortfolio.module';
+
+import { CryptoStatisticsModule } from './crypto/cryptoStatistics/cryptoStatistics.module';
 import { ReportsModule } from './reports/reports.module';
 
 @Module({
@@ -64,6 +68,9 @@ import { ReportsModule } from './reports/reports.module';
     InvoicesModule,
     ToDoModule,
     WalletLimitModule,
+    CryptoModule,
+    CryptoPortfolioModule,
+    CryptoStatisticsModule,
     ReportsModule,
   ],
   controllers: [AppController],

@@ -13,7 +13,7 @@ import {
   MagloBaner,
 } from './invoice_componetns/statics'
 import { sum } from './secondaryFunctions/secondaryFunctions'
-import { useReactToPrint } from 'react-to-print';
+import { useReactToPrint } from 'react-to-print'
 
 const InvoiceDetailPage = () => {
   const dispatch = useAppDispatch()
@@ -40,13 +40,16 @@ const InvoiceDetailPage = () => {
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
     documentTitle: 'Maglo Invoice',
-  });
+  })
 
   return (
     <div className="container mx-auto">
       {invoice && (
         <div className="container py-4 grid grid-cols-1 lg:grid-cols-10 gap-4">
-          <div ref={componentRef} className="container col-span-1 lg:col-span-7 md:col-span-7 px-10">
+          <div
+            ref={componentRef}
+            className="container col-span-1 lg:col-span-7 md:col-span-7 px-10"
+          >
             <MagloBaner />
             <br />
             <InvoiceInfoBaner
@@ -56,14 +59,16 @@ const InvoiceDetailPage = () => {
             />
             <br />
             <div>
-              {invoice.invoiceDetails && <>
-                <div className="text-base font-bold mb-3.5">Item Details</div>
-                <div className="w-full">{invoice.invoiceDetails}</div>
-              </>}
+              {invoice.invoiceDetails && (
+                <>
+                  <div className="text-base font-bold mb-3.5">Item Details</div>
+                  <div className="w-full">{invoice.invoiceDetails}</div>
+                </>
+              )}
               <br />
               <br />
               <div className="w-full">
-                <HeaderItems detailsPage={true}/>
+                <HeaderItems detailsPage={true} />
                 <br />
                 {Object.keys(invoice.items[0]).length > 0 && (
                   <InvoiceItemsList removeItem={false} items={invoice.items} />
@@ -78,7 +83,7 @@ const InvoiceDetailPage = () => {
             </div>
           </div>
           <div className="container lg:col-span-3 col-span-1">
-            {currentUser.email && invoice.billedTo &&(
+            {currentUser.email && invoice.billedTo && (
               <ClientDetails
                 client={
                   currentUser.email !== invoice.billedTo.email

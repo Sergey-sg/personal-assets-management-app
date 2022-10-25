@@ -1,6 +1,4 @@
-import { errorOccurred } from 'redux/slice/error/error.slice'
 import { IInvoice } from 'redux/slice/invoiceServices/invoice.slice'
-import { AppDispatch } from 'redux/store'
 import { CONSTANTS } from 'shared/constants'
 import profile from '../../../assets/icons/profile.svg'
 

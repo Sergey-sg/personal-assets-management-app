@@ -11,7 +11,7 @@ const LoginPage = () => {
   }
 
   return (
-    <div className="grid grid-cols-2 h-full">
+    <div className="grid grid-cols-1 h-full md:grid-cols-2">
       <div className="flex items-center justify-center bg-green-light">
         <div className="w-full">
           <SliderLogin />
