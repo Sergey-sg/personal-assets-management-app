@@ -45,19 +45,20 @@ const InvoiceCreatePage: React.FC = () => {
   const setNewItem = useCallback(
     (newItem: IInvoiceItem, remove = false) => {
       let newItems = []
-      
+
       if (remove) {
         newItems = invoiceItems.filter((item: any) => newItem.id !== item.id)
-      }
-      else {
-        newItems = Object.keys(invoiceItems[0]).length > 0
-          ? [...invoiceItems, newItem]
-          : [newItem]
+      } else {
+        newItems =
+          Object.keys(invoiceItems[0]).length > 0
+            ? [...invoiceItems, newItem]
+            : [newItem]
       }
       const sumSubTotal = sum(newItems.map((item: any) => item.subTotal)) || 0
-      const total = Math.round((sumSubTotal * (100 - invoice.discount)) / 100) || 0
+      const total =
+        Math.round((sumSubTotal * (100 - invoice.discount)) / 100) || 0
 
-      setInvoiceItems(newItems.length > 0? newItems : [{}])
+      setInvoiceItems(newItems.length > 0 ? newItems : [{}])
       setSubTotal(sumSubTotal)
       setInvoice({ ...invoice, total: total })
     },
@@ -117,9 +118,7 @@ const InvoiceCreatePage: React.FC = () => {
               )}
             </div>
             <br />
-            <InputItemForm
-              setItem={setNewItem}
-            />
+            <InputItemForm setItem={setNewItem} />
             <br />
             <FooterItems
               invoice={invoice}
@@ -130,14 +129,11 @@ const InvoiceCreatePage: React.FC = () => {
           </div>
         </div>
         <div className="container lg:col-span-3 col-span-1">
-          <ClientDetails
-            setCustomer={setBilledTo}
-          />
+          <ClientDetails setCustomer={setBilledTo} />
           <br />
           <BasicInfo
-            setDate={
-              (date: { invoiceDate: string; dueDate: string }) =>
-                setInvoice({ ...invoice, ...date })
+            setDate={(date: { invoiceDate: string; dueDate: string }) =>
+              setInvoice({ ...invoice, ...date })
             }
             sendInvoice={sendInvoice}
             date={{

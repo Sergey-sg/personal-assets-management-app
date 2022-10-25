@@ -81,7 +81,7 @@ export class AuthService {
         httpOnly: true,
       });
       return {
-        userCreate,
+        user: userCreate,
         tokens,
       };
     }
@@ -133,12 +133,9 @@ export class AuthService {
         'Your password or email is wrong, try again please',
       );
     }
-    console.log('start');
     const tokens = await this.getTokens(userVerify.id, userVerify.email);
-    console.log('toket get');
 
     this.updateRt(userVerify.id, tokens.refresh_token);
-    console.log('token save');
 
     res.cookie('tokenRefresh', tokens.refresh_token, {
       maxAge: Number(process.env.MAX_AGE_COOKIE_TOKEN),
@@ -146,7 +143,7 @@ export class AuthService {
     });
 
     return {
-      user: this.returnUser(user),
+      user: userVerify,
       tokens: tokens,
     };
   }
@@ -187,8 +184,8 @@ export class AuthService {
         );
       });
 
-    this.updateRt(newUser.id, tokens.refresh_token);
     const user = await this.userRepository.save(newUser);
+    await this.updateRt(newUser.id, tokens.refresh_token);
 
     return {
       user,
@@ -325,8 +322,8 @@ export class AuthService {
     if (!user) {
       throw new BadRequestException('Invalid email');
     }
-    let code = await this.generateNewCode(dto);
-    code = user.refreshPasswordCode = String(code);
+    const code = await this.generateNewCode(dto);
+    user.refreshPasswordCode = String(code);
     await this.mailerService
       .sendMail({
         to: dto.email,

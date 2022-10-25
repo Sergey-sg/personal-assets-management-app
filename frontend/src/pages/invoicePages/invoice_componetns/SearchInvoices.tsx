@@ -8,7 +8,7 @@ export const SearchInvoices = (props: any) => {
 
   const searchInvoices = (event: any) => {
     event.preventDefault()
-    props.setNewFiltersAndGetInvoices({search: event.target.value})
+    props.setNewFiltersAndGetInvoices({ search: event.target.value })
   }
 
   return (
@@ -23,7 +23,7 @@ export const SearchInvoices = (props: any) => {
           </span>
         </button>
         <input
-          onChange={(e) => props.setSearchString({search: e.target.value})}
+          onChange={(e) => props.setSearchString({ search: e.target.value })}
           onKeyDown={(e) => {
             if (e.key === 'Enter') searchInvoices(e)
           }}
@@ -35,7 +35,7 @@ export const SearchInvoices = (props: any) => {
         />
         <button
           disabled={loader}
-          onClick={() => props.setNewFiltersAndGetInvoices({search: ''})}
+          onClick={() => props.setNewFiltersAndGetInvoices({ search: '' })}
         >
           <span className="absolute inset-y-0 right-0 flex items-center pr-3 hover:text-error">
             <MdOutlineCancel />

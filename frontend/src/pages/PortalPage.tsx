@@ -12,6 +12,7 @@ import { ReactComponent as PluginIcon } from 'assets/icons/plugins.svg'
 import { ReactComponent as WalletIcon } from 'assets/icons/wallet.svg'
 import { ReactComponent as ChatIcon } from 'assets/icons/chat.svg'
 import { Layout } from 'components/common/Layout/Layout'
+import { FaEthereum } from 'react-icons/fa'
 import { fetchUserProfile } from 'redux/slice/userProfile/actionCreators'
 import { fetchWallets } from 'redux/slice/walletsSlice'
 import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
@@ -46,6 +47,11 @@ export const menuStructure = [
     title: 'Widgets',
     link: AppRoute.WIDGETS,
     icon: <PluginIcon />,
+  },
+  {
+    title: 'Crypto',
+    link: AppRoute.CRYPTO,
+    icon: <FaEthereum />,
   },
   {
     title: 'Moneybox',

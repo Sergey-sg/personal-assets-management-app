@@ -1,4 +1,7 @@
 import { AppRoute } from 'common/enums/app-route.enum'
+import CryptoItems from 'components/widgets/cryptoWidgets/cryptoComponents/cryptoColum/CryptoItems'
+import CoinById from 'components/widgets/cryptoWidgets/cryptoPage/CoinById'
+import CryptoDashboard from 'components/widgets/cryptoWidgets/cryptoPage/CryptoDashboard'
 import InvoiceCreatePage from 'pages/invoicePages/InvoiceCreatePage'
 import InvoiceDetailPage from 'pages/invoicePages/InvoiceDetailPage'
 import InvoicesListPage from 'pages/invoicePages/InvoicesListPage'
@@ -15,6 +18,7 @@ import {
   Widgets,
   DashboardOverview,
 } from 'pages/portalPages'
+import Crypto from 'pages/portalPages/Crypto'
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 
@@ -42,6 +46,14 @@ const PortalRouts = () => {
           />
         </Route>
         <Route path={AppRoute.MY_WALLETS} element={<MyWallet />} />
+        <Route path={AppRoute.CRYPTO} element={<Crypto />}>
+          <Route index element={<CryptoDashboard />} />
+          <Route
+            path={AppRoute.GET_ALL_CRYPTO_ITEM}
+            element={<CryptoItems />}
+          />
+          <Route path={AppRoute.COIN_ID} element={<CoinById />} />
+        </Route>
         <Route path={AppRoute.WIDGETS} element={<Widgets />} />
         <Route path={AppRoute.MONEY_BOX} element={<MoneyBox />} />
         <Route path={AppRoute.CHATS} element={<Chats />} />

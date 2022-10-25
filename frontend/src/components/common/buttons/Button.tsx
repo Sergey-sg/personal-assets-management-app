@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { Typography } from 'components/common/Typography'
 import { ReactComponent as GoogleIcon } from 'assets/icons/google.svg'
 import clsx from 'clsx'
@@ -20,6 +20,7 @@ interface ButtonProps {
   children?: React.ReactNode | React.ReactNode[]
   icon?: React.ReactNode
   onClick?: () => void
+  style?: any
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -30,6 +31,7 @@ export const Button: React.FC<ButtonProps> = ({
   icon,
   className,
   onClick,
+  style,
 }) => {
   return (
     <button
@@ -42,6 +44,7 @@ export const Button: React.FC<ButtonProps> = ({
       )}
       // className={clsx(STYLES[btnName], className)}
       onClick={onClick}
+      style={style}
     >
       {btnName === 'google' && (
         <>

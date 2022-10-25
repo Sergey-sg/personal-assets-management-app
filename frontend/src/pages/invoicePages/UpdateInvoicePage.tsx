@@ -69,10 +69,15 @@ const InvoiceUpdatePage: React.FC = () => {
         ? invoice.items.filter((item: any) => newItem.id !== item.id)
         : [...invoice.items, newItem]
       const sumSubTotal = sum(newItems.map((item: any) => item.subTotal)) | 0
-      const total = Math.round((sumSubTotal * (100 - invoice.discount)) / 100) | 0
+      const total =
+        Math.round((sumSubTotal * (100 - invoice.discount)) / 100) | 0
 
       setSubTotal(sumSubTotal)
-      setInvoice({ ...invoice, items: newItems.length > 0? newItems : [], total: total })
+      setInvoice({
+        ...invoice,
+        items: newItems.length > 0 ? newItems : [],
+        total: total,
+      })
     },
     [subTotal, invoice],
   )

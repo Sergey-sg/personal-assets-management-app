@@ -3,6 +3,7 @@ import { WalletEntity } from '../../wallet/entities/wallet.entity';
 import {
   Column,
   Entity,
+  OneToOne,
   Index,
   JoinColumn,
   ManyToMany,
@@ -13,6 +14,7 @@ import { Base } from 'src/common/dto/base.dto';
 import { IncomeEntity } from 'src/income/entities/income.entity';
 import { CostEntity } from 'src/costs/entities/cost.entity';
 import { Message } from 'src/messages/entities/message.entity';
+import { CryptoPortfolioEntity } from 'src/crypto/cryptoPortfolio/entities/cryptoPortfolio.entity';
 
 @Entity('user')
 export class UserEntity extends Base {
@@ -55,7 +57,7 @@ export class UserEntity extends Base {
   birthdate: Date;
 
   @ApiProperty()
-  @Column({ nullable: true })
+  @Column({ default: '123' })
   refreshTokenHash?: string;
 
   @ApiProperty()
@@ -78,6 +80,10 @@ export class UserEntity extends Base {
     onDelete: 'CASCADE',
   })
   wallets: WalletEntity[];
+
+  @ApiProperty()
+  @Column({ type: 'boolean', default: false })
+  hasCryptoWallet: boolean;
 
   @ApiProperty()
   @OneToMany(() => InvoiceEntity, (invoice) => invoice.id)
@@ -108,6 +114,11 @@ export class UserEntity extends Base {
   )
   costs_transactions: CostEntity[];
 
+  @OneToOne(
+    () => CryptoPortfolioEntity,
+    (cryptoPortfolio) => cryptoPortfolio.owner,
+  )
+  cryptoPortfolio: CryptoPortfolioEntity;
   @ApiProperty()
   @ManyToMany(() => InvoiceEntity, (invoice) => invoice.displayForUsers)
   displayInvoices: InvoiceEntity[];

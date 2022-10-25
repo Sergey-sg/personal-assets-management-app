@@ -11,16 +11,23 @@ const minInputDate = addMinutes(new Date(), 30).toISOString()
 const maxInputDate = addMonths(new Date(), 2).toISOString()
 
 const valideteDueDate = (newDate: string, minDate: string) => {
-  const minDateString = addMinutes(new Date(minDate || new Date()), 60).toISOString()
+  const minDateString = addMinutes(
+    new Date(minDate || new Date()),
+    60,
+  ).toISOString()
   const newDueDate = new Date(newDate)
 
-  return newDueDate >= new Date(minDateString)? newDueDate.toISOString() : minDateString
+  return newDueDate >= new Date(minDateString)
+    ? newDueDate.toISOString()
+    : minDateString
 }
 
 const valideteInvoiceDate = (newDate: string) => {
   const newInvoiceDate = new Date(newDate)
 
-  return newInvoiceDate >= new Date(minInputDate)? newInvoiceDate.toISOString() : minInputDate
+  return newInvoiceDate >= new Date(minInputDate)
+    ? newInvoiceDate.toISOString()
+    : minInputDate
 }
 
 export function BasicInfo(props: any) {
@@ -46,7 +53,7 @@ export function BasicInfo(props: any) {
               max={getCorrectDateFormat(maxInputDate)}
               value={getCorrectDateFormat(props.date.invoiceDate)}
               onChange={(e) =>
-                  props.setDate({
+                props.setDate({
                   invoiceDate: valideteInvoiceDate(e.target.value),
                   dueDate: '',
                 })
@@ -74,14 +81,18 @@ export function BasicInfo(props: any) {
               }
               onChange={(e) =>
                 props.setDate({
-                  dueDate: valideteDueDate(e.target.value, props.date.invoiceDate),
+                  dueDate: valideteDueDate(
+                    e.target.value,
+                    props.date.invoiceDate,
+                  ),
                 })
               }
             />
           )}
         </div>
         {props.invoice ? (
-          props.invoice.createdBy.email === currentUser.email && !props.invoice.paid && (
+          props.invoice.createdBy.email === currentUser.email &&
+          !props.invoice.paid && (
             <a
               href={`/${AppRoute.PORTAL}/${AppRoute.INVOICES}/${AppRoute.INVOICE_UPDATE}/${props.invoice.id}`}
             >
@@ -99,14 +110,14 @@ export function BasicInfo(props: any) {
             Send Invoice
           </button>
         )}
-        {props.printPdf && 
-          <button 
+        {props.printPdf && (
+          <button
             onClick={props.printPdf}
             className="bg-gray-ultralight hover:bg-gray-border rounded-xl w-full font-semibold text-base text-green-medium py-4 my-4"
           >
             Download
           </button>
-        }
+        )}
       </div>
       <br />
     </div>

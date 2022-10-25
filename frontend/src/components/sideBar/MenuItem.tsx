@@ -16,7 +16,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ link, icon, label }) => {
       to={link}
       className={({ isActive }) =>
         [
-          'w-full flex items-center text-gray fill-gray  py-4 pl-4 rounded-lg',
+          'w-full flex items-center text-gray fill-gray  py-4 pl-4 rounded-lg transition-all hover:translate-x-2 duration-300',
           isActive
             ? 'bg-green-light text-gray-dark stroke-gray fill-gray-dark'
             : null,

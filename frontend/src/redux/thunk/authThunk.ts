@@ -71,9 +71,9 @@ export const checkEmailAndSendCode = createAsyncThunk(
 export const checkEmailAndSendCodeAgain = createAsyncThunk(
   'users/checkEmailAndSendCodeAgain',
   async (): Promise<any> => {
-    const email = sessionStorage.getItem('email')
-      ? sessionStorage.getItem('email')
-      : sessionStorage.getItem('emailVerify')
+    const email = sessionStorage.getItem('emailVerify')
+      ? sessionStorage.getItem('emailVerify')
+      : sessionStorage.getItem('email')
     const { data, status } = await apiCreden.post('auth/forgotPassword', {
       email: email,
     })

@@ -3,10 +3,11 @@ import { Link, useNavigate } from 'react-router-dom'
 import MenuItem from './MenuItem'
 import { Typography } from '../common/Typography/Typography'
 import LogoutButton from '../common/buttons/LogoutButton'
+
+import { AppRoute } from 'common/enums/app-route.enum'
 import clsx from 'clsx'
 import { useAppDispatch } from 'hooks/useAppDispatch'
 import { Logout } from 'redux/thunk/authThunk'
-import { AppRoute } from 'common/enums/app-route.enum'
 import { resetUserProfileStore } from 'redux/slice/userProfile/actionCreators'
 
 interface MenuStructureItem {

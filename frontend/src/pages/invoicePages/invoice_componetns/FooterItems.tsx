@@ -8,7 +8,13 @@ export function FooterItems(props: any) {
 
   function sendDiscountToInvoice(value: string) {
     const valueInt = parseInt(value)
-    const discount = value ? (valueInt < 0 ? 0 : valueInt > 100 ? 100 : valueInt) : 0
+    const discount = value
+      ? valueInt < 0
+        ? 0
+        : valueInt > 100
+        ? 100
+        : valueInt
+      : 0
 
     setDiscount(discount)
     props.setDiscount(discount)

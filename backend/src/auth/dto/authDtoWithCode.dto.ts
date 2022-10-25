@@ -14,6 +14,7 @@ export class AuthDtoWithCode {
   @IsString()
   password: string;
 
+  @ApiProperty()
   @IsString()
   code?: string;
 }

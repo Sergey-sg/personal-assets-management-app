@@ -10,14 +10,13 @@ import { SearchInvoices } from './invoice_componetns/SearchInvoices'
 import { useLocation, useSearchParams } from 'react-router-dom'
 
 const getQueryParams = (currentFilters: any) => {
-  return (Object.keys(currentFilters)
+  return Object.keys(currentFilters)
     .map((key: string) =>
-    currentFilters[key as keyof typeof currentFilters]
+      currentFilters[key as keyof typeof currentFilters]
         ? `${key}=${currentFilters[key as keyof typeof currentFilters]}`
         : '',
     )
     .filter((param) => (param ? true : false))
-  )
 }
 
 const InvoicesListPage = () => {
@@ -42,25 +41,33 @@ const InvoicesListPage = () => {
   }, [])
 
   const getInvoicesWithFilters = useCallback(
-    (currentFilters=filters) => {
-      const queryParams = getQueryParams(currentFilters)    
+    (currentFilters = filters) => {
+      const queryParams = getQueryParams(currentFilters)
 
       setSearchParams(`${queryParams.join('&')}`)
-      dispatch(fetchAllInvoices({ ...currentFilters, page: 1, take: pagination.take }))
+      dispatch(
+        fetchAllInvoices({ ...currentFilters, page: 1, take: pagination.take }),
+      )
     },
     [filters, searchParams, pagination],
   )
 
-  const setNewFilters = useCallback((newFilters: any) => {
-    setFilters({ ...filters, ...newFilters })
-  }, [filters])
+  const setNewFilters = useCallback(
+    (newFilters: any) => {
+      setFilters({ ...filters, ...newFilters })
+    },
+    [filters],
+  )
 
-  const setNewFiltersAndGetInvoices = useCallback((newFilters: any) => {
-    const currentFilters = { ...filters, ...newFilters }
+  const setNewFiltersAndGetInvoices = useCallback(
+    (newFilters: any) => {
+      const currentFilters = { ...filters, ...newFilters }
 
-    setFilters({ ...filters, ...newFilters })
-    getInvoicesWithFilters(currentFilters)
-  }, [filters])
+      setFilters({ ...filters, ...newFilters })
+      getInvoicesWithFilters(currentFilters)
+    },
+    [filters],
+  )
 
   return (
     <div className="container mx-auto mb-10">

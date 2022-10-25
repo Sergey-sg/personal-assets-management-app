@@ -1,5 +1,5 @@
 import React from 'react'
-import style from './InputUi.module.scss'
+import styles from './InputUi.module.scss'
 
 type inputProps = {
   type?: string
@@ -9,30 +9,35 @@ type inputProps = {
   onBlur?: any
   name?: string
   error?: boolean
+  style?: any
+  onChange?: any
 }
 
 const InputUI: React.FC<inputProps> = ({
   type = 'text',
   placeholder = 'text',
   value,
-  setValue = () => 'text',
+  setValue,
   onBlur,
   name,
   error = true,
+  style,
+  onChange,
 }) => {
   return (
     <div>
       <input
-        className={` placeholder:opacity-50 text-sm ${
-          error ? style.input : style.inputError
+        className={`placeholder:opacity-50 text-sm ${
+          error ? styles.input : styles.inputError
         }`}
-        id="password"
+        id="input"
         type={type}
         value={value}
-        onChange={setValue}
+        onChange={setValue ? setValue : (e) => onChange(e.target.value)}
         placeholder={placeholder}
         onBlur={onBlur}
         name={name}
+        style={style}
       />
     </div>
   )

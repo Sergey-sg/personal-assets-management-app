@@ -6,7 +6,7 @@ export const HeaderInvoicesTable = (props: any) => {
   const loader = useAppSelector((state) => state.loader)
 
   const setFirstNew = () => {
-    props.setFirstNew({firstNew: !props.firstNew})
+    props.setFirstNew({ firstNew: !props.firstNew })
   }
 
   return (

@@ -16,7 +16,7 @@ import {
 import queryString from 'query-string'
 
 const getAllInvoices = (filters: any) => {
-  const parsed = queryString.parse(location.search);  
+  const parsed = queryString.parse(location.search)
 
   parsed.page = filters.page
   parsed.take = filters.take

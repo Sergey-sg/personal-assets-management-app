@@ -16,6 +16,9 @@ enum AppRoute {
   INVOICE_DETAILS = 'invoice-details',
   FORGOT_PASSWORD = 'forgotPassword',
   VERIFY_CODE = 'verify-code',
+  CRYPTO = 'crypto',
+  COIN_ID = 'get-all_crypto_item/:marker',
+  GET_ALL_CRYPTO_ITEM = 'get-all_crypto_item',
 }
 
 export { AppRoute }
