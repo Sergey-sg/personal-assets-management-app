@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Param,
   Patch,
+  Post,
   Query,
   UploadedFile,
   UseInterceptors,
@@ -207,5 +208,13 @@ export class UserController {
   @ApiNoContentResponse()
   async remove(@User('id') id: number, @Body() userData: { password: string }) {
     return this.userService.remove(id, userData);
+  }
+
+  @Post('/by-params')
+  @ApiOperation({ summary: `get customer user by params` })
+  async getCustomerByParams(
+    @Body() params: any
+  ): Promise<UserEntity> {
+    return this.userService.findCustomerByParams(params);
   }
 }

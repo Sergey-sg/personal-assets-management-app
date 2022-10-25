@@ -9,7 +9,7 @@ export class InvoiceItemEntity extends Base {
   invoice: InvoiceEntity;
 
   @ApiProperty({ description: 'item name' })
-  @Column({ type: 'varchar', length: 300 })
+  @Column({ type: 'varchar', length: 64 })
   name: string;
 
   @ApiProperty({ description: 'quantity of items' })

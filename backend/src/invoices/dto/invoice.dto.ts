@@ -10,6 +10,9 @@ import {
   Min,
   IsOptional,
   IsDate,
+  MinDate,
+  MaxLength,
+  MinLength,
 } from 'class-validator';
 import { UserEntity } from '../../user/entities/user.entity';
 import { InvoiceItemDto } from './invoiceItem.dto';
@@ -41,25 +44,29 @@ export class InvoiceDto {
 
   @ApiProperty({
     example: '2022-09-30',
-    description: 'end date for payment',
-  })
-  @Type(() => Date)
-  @IsDate()
-  dueDate: Date;
-
-  @ApiProperty({
-    example: '2022-09-30',
     description: 'billing date for payment',
   })
   @Type(() => Date)
   @IsDate()
+  @MinDate(new Date())
   invoiceDate: Date;
+
+  @ApiProperty({
+    example: '2022-09-30',
+    description: 'end date for payment',
+  })
+  @Type(() => Date)
+  @IsDate()
+  @MinDate(new Date())
+  dueDate: Date;
 
   @ApiProperty({
     example: 'Details of invoice',
     description: 'details of invoice',
   })
+  @IsOptional()
   @IsString()
+  @MaxLength(500)
   invoiceDetails: string;
 
   @ApiProperty({
@@ -69,4 +76,13 @@ export class InvoiceDto {
   @IsInt()
   @IsPositive()
   total: number;
+
+  @ApiProperty({
+    example: 'other',
+    description: 'Expense category for the invoice',
+  })
+  @IsOptional()
+  @IsString()
+  @MaxLength(32)
+  category: string;
 }

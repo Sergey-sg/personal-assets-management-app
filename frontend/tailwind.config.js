@@ -15,6 +15,10 @@ module.exports = {
           DEFAULT: '#1B212D',
           light: '#78778B',
           ultralight: '#929EAE',
+          white: '#FFFFFF',
+        },
+        black: {
+          DEFAULT: '#202736',
         },
         error: {
           DEFAULT: '#EB5757',
@@ -25,7 +29,9 @@ module.exports = {
         gray: {
           DEFAULT: '#909590',
           dark: '#292D32',
+          medium: '#F5F5F5',
           light: '#D4D5D4',
+          border: '#E5E5E5',
           ultralight: '#F8F8F8',
         },
         blue: {
@@ -36,8 +42,10 @@ module.exports = {
         green: {
           DEFAULT: '#27AE60',
           dark: '#1A3131',
+          medium: '#29A073',
           light: '#c8ee44',
           ultralight: '#D9FFE9',
+          minimal: '#EEFEF2',
           hover: '#84CC16',
           hover2: '#169873',
         },

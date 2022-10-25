@@ -13,7 +13,10 @@ import { ReactComponent as MenuIcon } from 'assets/icons/menu.svg'
 export const Header: React.FC = () => {
   const [open, setOpen] = useState(false)
   const location = useLocation()
-  const title = location.pathname?.split('/')[2]?.replace(/-/g, ' ')
+  const linksLocation = location.pathname?.split('/')
+  const title = parseInt(linksLocation[linksLocation.length - 1])
+    ? linksLocation[linksLocation.length - 2]?.replace(/-/g, ' ')
+    : linksLocation[linksLocation.length - 1]?.replace(/-/g, ' ')
 
   return (
     <>

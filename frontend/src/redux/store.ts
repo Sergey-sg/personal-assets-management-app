@@ -12,6 +12,8 @@ import {
   incomeSlice,
   costsSlice,
 } from './slice'
+import invoiceSlice from './slice/invoiceServices/invoice.slice'
+import paginationSlice from './slice/pagination/pagination.slice'
 import refreshPasswordSlice from './slice/refreshPasswordSlice'
 import todoSlice from './slice/todo/todo.slice'
 import walletLimitSlice from './slice/walletLimitSlice'
@@ -20,6 +22,8 @@ export const store = configureStore({
   reducer: {
     authSlice,
     userProfile: userProfileSlice,
+    invoices: invoiceSlice,
+    pagination: paginationSlice,
     success: successSlice,
     error: errorSlice,
     loader: loaderSlice,

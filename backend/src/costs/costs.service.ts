@@ -72,7 +72,7 @@ export class CostsService {
         .getRawOne();
 
       const predictableBalance = Number(sum) + Number(createCostDto.cost_sum);
-      const walletLimitInCoins = limit.wallet_limit * 100
+      const walletLimitInCoins = limit.wallet_limit * 100;
 
       if (predictableBalance >= walletLimitInCoins) {
         throw new HttpException(

@@ -6,6 +6,7 @@ import { SideBar } from 'components/sideBar/SideBar'
 import { ReactComponent as DashboardIcon } from 'assets/icons/dashboard.svg'
 import { ReactComponent as SettingsIcon } from 'assets/icons/settings.svg'
 import { ReactComponent as TransactionIcon } from 'assets/icons/transaction.svg'
+import { ReactComponent as InvoiceIcon } from 'assets/icons/invoices.svg'
 import { ReactComponent as MoneyBoxIcon } from 'assets/icons/money-box.svg'
 import { ReactComponent as PluginIcon } from 'assets/icons/plugins.svg'
 import { ReactComponent as WalletIcon } from 'assets/icons/wallet.svg'
@@ -30,6 +31,11 @@ export const menuStructure = [
     title: 'Transactions',
     link: AppRoute.TRANSACTIONS,
     icon: <TransactionIcon />,
+  },
+  {
+    title: 'Invoices',
+    link: AppRoute.INVOICES,
+    icon: <InvoiceIcon />,
   },
   {
     title: 'My Wallets',

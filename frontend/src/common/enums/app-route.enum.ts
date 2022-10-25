@@ -11,6 +11,9 @@ enum AppRoute {
   MY_WALLETS = 'my-wallets',
   CHATS = 'chats',
   SETTINGS = 'settings',
+  INVOICE_CREATE = 'new-invoice',
+  INVOICE_UPDATE = 'update-invoice',
+  INVOICE_DETAILS = 'invoice-details',
   FORGOT_PASSWORD = 'forgotPassword',
   VERIFY_CODE = 'verify-code',
 }

@@ -11,6 +11,7 @@ import {
 import {
   Body,
   Param,
+  Query,
 } from '@nestjs/common/decorators/http/route-params.decorator';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AccessTokenGuard } from '../auth/guards/accessToken.guard';
@@ -19,6 +20,9 @@ import { InvoiceEntity } from './entities/invoice.entity';
 import { InvoicesService } from './invoices.service';
 import { UserEntity } from 'src/user/entities/user.entity';
 import { User } from 'src/user/decorators/user.decorator';
+import { PageDto } from 'src/pagination/dto/page.dto';
+import { PageOptionsDto } from 'src/pagination/dto/pageOptionsDto';
+import { UpdateInvoiceDto } from './dto/updateInvoice.dto';
 
 @ApiTags('Invoices')
 @UseGuards(AccessTokenGuard)
@@ -39,8 +43,12 @@ export class InvoicesController {
   @Get()
   @ApiOperation({ summary: `Get all invoices` })
   @ApiResponse({ status: HttpStatus.OK, type: [InvoiceEntity] })
-  async getAllInvoices(@User() currentUser: UserEntity): Promise<InvoiceDto[]> {
-    return this.invoicesService.getAllInvoicesForUser(currentUser);
+  async getAllInvoices(
+    @User() currentUser: UserEntity,
+    @Query() filters: any,
+  ): Promise<PageDto<InvoiceDto>> {
+    const pageOptionsDto = new PageOptionsDto({page: filters.page, take: filters.take})
+    return this.invoicesService.getAllInvoicesForUser(currentUser, filters, pageOptionsDto);
   }
 
   @Get('/:invoiceId')
@@ -49,8 +57,14 @@ export class InvoicesController {
   async getOneById(
     @User() currentUser: UserEntity,
     @Param('invoiceId', ParseIntPipe) invoiceId: number,
+    @Query() queryParam: any,
   ): Promise<InvoiceDto> {
-    return await this.invoicesService.getOneById(invoiceId, currentUser);
+    const forUpdate = queryParam.forUpdate? true : false
+    return await this.invoicesService.getOneById(
+      forUpdate,
+      invoiceId,
+      currentUser,
+    );
   }
 
   @Put('/:invoiceId')
@@ -59,14 +73,14 @@ export class InvoicesController {
   async update(
     @User() currentUser: UserEntity,
     @Param('invoiceId') invoiceId: number,
-    @Body() invoice: InvoiceDto,
+    @Body() invoice: UpdateInvoiceDto,
   ): Promise<InvoiceDto> {
     return this.invoicesService.updateInvoice(invoiceId, invoice, currentUser);
   }
 
   @Delete('/:invoiceId')
   @ApiOperation({ summary: `deletes the order from the creator` })
-  async removeForCreator(
+  async removeInvoice(
     @User() currentUser: UserEntity,
     @Param('invoiceId') invoiceId: number,
   ): Promise<void> {

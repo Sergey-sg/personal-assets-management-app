@@ -23,6 +23,7 @@ yarn-debug.log*
 yarn-error.log*
 
 /src/shared
+/src/assets/images/*.test.png
 .env
 
 .idea
