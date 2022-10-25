@@ -35,3 +35,24 @@ export interface QueryParams {
   startDate: string
   endDate: string
 }
+
+// Chart Interfaces
+
+export interface Dataset {
+  label?: string
+  data: number[]
+  backgroundColor?: string[]
+  borderColor?: string[]
+  borderWidth: number
+  cutout?: string
+  borderRadius?: number
+  offset?: number
+  hoverOffset?: number
+  rotation?: number
+  spacing?: number
+}
+
+export interface DatasetShape {
+  labels: string[]
+  datasets: Dataset[]
+}

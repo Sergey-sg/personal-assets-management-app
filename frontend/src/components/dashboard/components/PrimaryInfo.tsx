@@ -1,7 +1,6 @@
 import * as React from 'react'
 import BalanceBox from './BalanceBox'
 import Chart from './Chart'
-// import LatestTransactions from './LatestTransactions'
 import { Period, Transaction, Wallet } from '../interfaces'
 import { Totals } from '../types'
 
@@ -34,7 +33,7 @@ const PrimaryInfo = ({
   })
 
   return (
-    <div className="flex flex-col gap-2 flex-1 basis-2/3 h-screen">
+    <div className="flex flex-col gap-2 flex-shrink-0 flex-grow basis-2/3 h-screen">
       <div className=" basis-1/6 border">
         <div className="flex justify-center items-center  p-2">
           <label className="mx-4" htmlFor="wallets">
@@ -69,7 +68,6 @@ const PrimaryInfo = ({
       />
 
       <Chart transactions={transactions} />
-      {/* <LatestTransactions /> */}
     </div>
   )
 }
