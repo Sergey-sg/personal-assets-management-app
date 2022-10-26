@@ -1,7 +1,7 @@
 const magnitudeFactor = 100
 
 export const convertToСoins = (money: number): number => {
-  return money * magnitudeFactor
+  return Math.floor(money * magnitudeFactor)
 }
 
 export const convertToMoney = (coins: number): number => {
