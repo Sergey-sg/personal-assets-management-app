@@ -69,9 +69,6 @@ const cryptoPortfolioSlice = createSlice({
       state.modalActive = !state.modalActive
     },
 
-    filterCryptoItemList: (state, action) => {
-      console.log(state.portfolioCryptoList)
-    },
     chengeStatusPortfolio: (state) => {
       state.havePortfolio = false
     },
@@ -82,7 +79,6 @@ const cryptoPortfolioSlice = createSlice({
     })
     builder.addCase(addNewItemInPortfolio.fulfilled, (state, action) => {
       state.status = 'SUCCESS'
-      console.log(action.payload)
     })
     builder.addCase(addNewItemInPortfolio.rejected, (state) => {
       state.status = 'ERROR'

@@ -75,7 +75,6 @@ const CheckCode: React.FC<PropsCheckCode> = ({ verifyCodeAuth }) => {
   const clickButtonForAuth = React.useCallback(() => {
     if (verifyCodeAuth) {
       dispatch(checkEmailAndSendCodeAgainForAuth())
-      console.log('hello Auth')
     }
 
     if (!verifyCodeAuth) {

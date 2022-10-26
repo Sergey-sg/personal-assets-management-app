@@ -19,8 +19,6 @@ const CoinById = () => {
     dispatch(getOneCoin({ marker, currency }))
   }, [])
 
-  console.log(oneCoin)
-
   return (
     <div>
       <div>

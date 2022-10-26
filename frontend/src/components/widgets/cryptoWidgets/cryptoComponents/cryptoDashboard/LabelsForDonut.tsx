@@ -16,7 +16,7 @@ export const LabelsForDonut = () => {
   return (
     <div>
       {portfolioCryptoList.map((el: any, i: number) => (
-        <div className="labels flex justify-between my-2">
+        <div className="labels flex justify-between my-2" key={el.marker}>
           <div className="flex gap-2">
             <div
               className="w-2 h-2 rounded-full p-3"

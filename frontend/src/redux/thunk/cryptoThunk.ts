@@ -21,7 +21,6 @@ export const getTenCoins = createAsyncThunk(
 export const getOneCoin = createAsyncThunk(
   'user/fetchOneCoin',
   async ({ marker, currency }: any) => {
-    console.log(marker)
     const { data } = await axios.get(
       `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${marker}&tsyms=${currency}`,
     )
