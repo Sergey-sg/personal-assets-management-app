@@ -1,4 +1,5 @@
-import { CONSTANTS } from 'shared/constants'
+import { IInvoice } from 'redux/slice/invoiceServices/invoice.slice'
+import { CONSTANTS } from '../../../shared/constants'
 import profile from '../../../assets/icons/profile.svg'
 
 export function getCorrectDateFormat(dateString: string) {
@@ -49,4 +50,21 @@ export function currentImagesPath(path: string) {
     : profile
 
   return currentPath
+}
+
+export function invoiceNotValid(invoice: IInvoice) {
+  if (!invoice.billedTo || Object.keys(invoice.billedTo).length < 1) {
+    return 'the customer field cannot be empty'
+  }
+  if (!invoice.items[0] || Object.keys(invoice.items[0]).length < 1) {
+    return 'the item field cannot be empty'
+  }
+  if (!invoice.dueDate || !invoice.invoiceDate) {
+    return 'the Invoice and Due Dates field cannot be empty'
+  }
+  if (new Date(invoice.invoiceDate) <= new Date()) {
+    return 'invoice date must be not earlier than in 5 min'
+  }
+
+  return false
 }

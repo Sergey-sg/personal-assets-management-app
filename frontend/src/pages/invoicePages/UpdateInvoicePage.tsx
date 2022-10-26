@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import ReactTextareaAutosize from 'react-textarea-autosize'
+import { errorOccurred } from 'redux/slice/error/error.slice'
 import {
   fetchGetInvoiceById,
   fetchUpdateInvoice,
@@ -17,7 +18,7 @@ import {
   InvoiceInfoBaner,
   MagloBaner,
 } from './invoice_componetns/statics'
-import { sum } from './secondaryFunctions/secondaryFunctions'
+import { sum, invoiceNotValid } from './secondaryFunctions/secondaryFunctions'
 
 const InvoiceUpdatePage: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -30,18 +31,6 @@ const InvoiceUpdatePage: React.FC = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (!invoice) {
-      dispatch(fetchGetInvoiceById(`${invoiceId}`, true))
-    }
-    if (currentInvoice && !invoice) {
-      setInvoice({
-        ...currentInvoice,
-        items: currentInvoice.items.map(
-          ({ createdAt, updatedAt, ...item }: any) => item,
-        ),
-      })
-      setSubTotal(sum(currentInvoice.items.map((item: any) => item.subTotal)))
-    }
     if (success === 'Invoice updated successfully') {
       navigate(
         `/${AppRoute.PORTAL}/${AppRoute.INVOICES}/${AppRoute.INVOICE_DETAILS}/${invoice.id}`,
@@ -52,7 +41,18 @@ const InvoiceUpdatePage: React.FC = () => {
         `/${AppRoute.PORTAL}/${AppRoute.INVOICES}/${AppRoute.INVOICE_DETAILS}/${invoiceId}`,
       )
     }
-  }, [success, error, invoice])
+  }, [success, error])
+
+  useEffect(() => {
+    dispatch(fetchGetInvoiceById(`${invoiceId}`, true))
+    setInvoice({
+      ...currentInvoice,
+      items: currentInvoice.items.map(
+        ({ createdAt, updatedAt, ...item }: any) => item,
+      ),
+    })
+    setSubTotal(sum(currentInvoice.items.map((item: any) => item.subTotal)))
+  }, [])
 
   const setNewItem = useCallback(
     (
@@ -86,8 +86,13 @@ const InvoiceUpdatePage: React.FC = () => {
     if (invoiceId && invoice.id === parseInt(invoiceId)) {
       const items = invoice.items.map(({ id, ...item }: any) => item)
       const newInvoice = { ...invoice, items }
+      const messageValidation = invoiceNotValid(newInvoice)
 
-      dispatch(fetchUpdateInvoice(invoiceId, newInvoice))
+      if (!messageValidation) {
+        dispatch(fetchUpdateInvoice(invoiceId, newInvoice))
+      } else {
+        dispatch(errorOccurred({ statusCode: 400, message: messageValidation }))
+      }
     }
   }, [invoice])
 

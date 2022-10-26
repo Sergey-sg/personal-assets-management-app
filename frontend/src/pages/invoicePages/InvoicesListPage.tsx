@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
 import { InvoicesList } from './invoice_componetns/ListInvoices'
 import { HeaderInvoicesTable } from './invoice_componetns/HeaderInvoicesTable'
 import { SearchInvoices } from './invoice_componetns/SearchInvoices'
-import { useLocation, useSearchParams } from 'react-router-dom'
+import { Link, useLocation, useSearchParams } from 'react-router-dom'
 
 const getQueryParams = (currentFilters: any) => {
   return Object.keys(currentFilters)
@@ -82,13 +82,12 @@ const InvoicesListPage = () => {
           <div className="col-span-8">
             <div className="float-right">
               <button disabled={loader}>
-                <a
-                  href={`${AppRoute.INVOICES}/${AppRoute.INVOICE_CREATE}`}
-                  className="flex justify-center bg-green-light hover:bg-green-hover rounded-xl font-semibold text-base p-4 my-4"
-                >
-                  <CreateInvoiceIcon className="my-auto" />
-                  <span className="pl-3 lg:block hidden">Create Invoice</span>
-                </a>
+                <Link to={AppRoute.INVOICE_CREATE}>
+                  <div className="flex justify-center bg-green-light hover:bg-green-hover rounded-xl font-semibold text-base p-4 my-4">
+                    <CreateInvoiceIcon className="my-auto" />
+                    <span className="pl-3 lg:block hidden">Create Invoice</span>
+                  </div>
+                </Link>
               </button>
               <FilterMenu
                 setFilters={setNewFilters}

@@ -1,20 +1,21 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { IInvoiceItem } from 'pages/invoicePages/interfaces/invoiceItem.interface'
 import { IUserProfile } from '../userProfile/userProfile.slice'
 
 export interface IInvoice {
-  id: number
-  billedTo: IUserProfile
-  createdBy: IUserProfile
-  createdAt: string
-  updatedAt: string
-  items: object[]
+  id?: number
+  billedTo: IUserProfile | undefined
+  createdBy?: IUserProfile
+  createdAt?: string
+  updatedAt?: string
+  items: IInvoiceItem[]
   discount: number
-  paid: boolean
+  paid?: boolean
   dueDate: string
   invoiceDate: string
   invoiceDetails: string
   total: number
-  category: string
+  category?: string
 }
 
 const initialState: { invoices: IInvoice[] } = { invoices: [] }

@@ -28,11 +28,14 @@ const InvoiceDetailPage = () => {
   const componentRef = useRef(null)
 
   useEffect(() => {
-    dispatch(fetchGetInvoiceById(`${invoiceId}`, false))
     if (error === 'Invoice does not found for user') {
       navigate(`/${AppRoute.PORTAL}/${AppRoute.INVOICES}`)
     }
   }, [error])
+
+  useEffect(() => {
+    dispatch(fetchGetInvoiceById(`${invoiceId}`, false))
+  }, [])
 
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
@@ -80,7 +83,7 @@ const InvoiceDetailPage = () => {
             </div>
           </div>
           <div className="container lg:col-span-3 col-span-1">
-            {currentUser.email && (
+            {currentUser.email && invoice.billedTo && (
               <ClientDetails
                 client={
                   currentUser.email !== invoice.billedTo.email

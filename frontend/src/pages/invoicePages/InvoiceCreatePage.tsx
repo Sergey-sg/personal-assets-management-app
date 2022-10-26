@@ -3,7 +3,10 @@ import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ReactTextareaAutosize from 'react-textarea-autosize'
+import { errorOccurred } from 'redux/slice/error/error.slice'
+import { IInvoice } from 'redux/slice/invoiceServices/invoice.slice'
 import { fetchCreateInvoice } from 'redux/slice/invoiceServices/invoiceActions'
+import { IUserProfile } from 'redux/slice/userProfile/userProfile.slice'
 import { IInvoiceItem } from './interfaces/invoiceItem.interface'
 import { BasicInfo } from './invoice_componetns/BasicInfo'
 import { ClientDetails } from './invoice_componetns/ClientDetails'
@@ -15,7 +18,7 @@ import {
   InvoiceInfoBaner,
   MagloBaner,
 } from './invoice_componetns/statics'
-import { sum } from './secondaryFunctions/secondaryFunctions'
+import { invoiceNotValid, sum } from './secondaryFunctions/secondaryFunctions'
 
 const InvoiceCreatePage: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -29,7 +32,7 @@ const InvoiceCreatePage: React.FC = () => {
     invoiceDate: '',
     discount: 0,
   })
-  const [billedTo, setBilledTo] = useState({})
+  const [billedTo, setBilledTo] = useState<IUserProfile>()
   const [invoiceItems, setInvoiceItems] = useState([{}])
   const [subTotal, setSubTotal] = useState(0)
   const issuedDate = new Date()
@@ -67,9 +70,14 @@ const InvoiceCreatePage: React.FC = () => {
 
   const sendInvoice = useCallback(() => {
     const items = invoiceItems.map(({ id, ...item }: any) => item)
-    const newInvoice = { ...invoice, billedTo: billedTo, items }
+    const newInvoice: IInvoice = { ...invoice, billedTo: billedTo, items }
+    const messageValidation = invoiceNotValid(newInvoice)
 
-    dispatch(fetchCreateInvoice(newInvoice))
+    if (!messageValidation) {
+      dispatch(fetchCreateInvoice(newInvoice))
+    } else {
+      dispatch(errorOccurred({ statusCode: 400, message: messageValidation }))
+    }
   }, [invoiceItems, invoice, billedTo])
 
   const setDiscount = useCallback(
