@@ -5,8 +5,14 @@ import { PasswordInput } from 'components/common/inputs/PasswordInput'
 import { deleteAccountSchema } from './schemas/deleteAccountSchema'
 import { SectionTitle } from './SectionTitle'
 import { ReactComponent as PenIcon } from 'assets/icons/pen.svg'
-import { useAppDispatch, useAppSelector } from '../../hooks/useAppDispatch'
-import { deleteUserProfile } from 'redux/slice/userProfile/actionCreators'
+import { useAppDispatch } from 'hooks/useAppDispatch'
+import {
+  deleteUserProfile,
+  resetUserProfileStore,
+} from 'redux/slice/userProfile/actionCreators'
+import { useNavigate } from 'react-router-dom'
+import { AppRoute } from 'common/enums/app-route.enum'
+import { Logout } from 'redux/thunk/authThunk'
 
 interface DeleteAccountProps {
   currentPassword: string
@@ -19,11 +25,23 @@ const InitialValues: DeleteAccountProps = {
 }
 
 const DeleteAccountForm = () => {
+  const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const [isVisible, setIsVisible] = useState(false)
 
+  const logout = React.useCallback(() => {
+    try {
+      dispatch(Logout())
+      dispatch(resetUserProfileStore())
+      navigate(AppRoute.HOME)
+    } catch (e) {
+      console.log(e)
+    }
+  }, [])
+
   const handleSubmit = (values: typeof InitialValues) => {
     dispatch(deleteUserProfile({ password: values.currentPassword }))
+    logout()
   }
 
   return (
