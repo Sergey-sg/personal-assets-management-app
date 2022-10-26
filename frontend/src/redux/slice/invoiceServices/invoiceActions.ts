@@ -80,7 +80,7 @@ export const fetchCreateInvoice = (invoice: any) => {
 
       const response = await createInvoice(invoice)
 
-      dispatch(updateInvoiceSuccess(response.data))
+      dispatch(setOneInvoice(response.data))
       dispatch(successAction({ message: 'Invoice created successfully' }))
     } catch (e: any) {
       const axiosErr = e as AxiosError
