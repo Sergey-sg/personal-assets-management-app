@@ -2,6 +2,7 @@ import React, { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { AppRoute } from 'common/enums/app-route.enum'
 import { useAppSelector } from 'hooks/useAppDispatch'
+import { Link } from 'react-router-dom'
 
 export default function DropDownActions(props: any) {
   const dateNow = new Date()
@@ -30,12 +31,16 @@ export default function DropDownActions(props: any) {
             {!props.paid && props.createdByEmail === currentUser.email && (
               <Menu.Item>
                 {({ active }) => (
-                  <a
-                    href={`${AppRoute.INVOICES}/${AppRoute.INVOICE_UPDATE}/${props.invoiceId}`}
-                    className={`${active? 'bg-gray-medium text-gray-default' : 'text-text-light'} block px-4 py-2 text-sm`}
+                  <Link
+                    to={`${AppRoute.INVOICE_UPDATE}/${props.invoiceId}`}
+                    className={`${
+                      active
+                        ? 'bg-gray-medium text-gray-default'
+                        : 'text-text-light'
+                    } block px-4 py-2 text-sm`}
                   >
                     Update
-                  </a>
+                  </Link>
                 )}
               </Menu.Item>
             )}
@@ -46,7 +51,11 @@ export default function DropDownActions(props: any) {
                   {({ active }) => (
                     <a
                       href="#"
-                      className={`${active? 'bg-gray-medium text-gray-default' : 'text-text-light'} block px-4 py-2 text-sm`}
+                      className={`${
+                        active
+                          ? 'bg-gray-medium text-gray-default'
+                          : 'text-text-light'
+                      } block px-4 py-2 text-sm`}
                     >
                       Paid
                     </a>
@@ -57,7 +66,11 @@ export default function DropDownActions(props: any) {
               {({ active }) => (
                 <button
                   disabled={loader}
-                  className={`${active? 'bg-gray-medium text-gray-default' : 'text-text-light'} block px-4 py-2 text-sm`}
+                  className={`${
+                    active
+                      ? 'bg-gray-medium text-gray-default'
+                      : 'text-text-light'
+                  } block px-4 py-2 text-sm`}
                   onClick={props.removeInvoice}
                 >
                   Remove

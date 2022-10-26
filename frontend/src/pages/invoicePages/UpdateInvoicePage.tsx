@@ -31,15 +31,6 @@ const InvoiceUpdatePage: React.FC = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (currentInvoice && !invoice) {
-      setInvoice({
-        ...currentInvoice,
-        items: currentInvoice.items.map(
-          ({ createdAt, updatedAt, ...item }: any) => item,
-        ),
-      })
-      setSubTotal(sum(currentInvoice.items.map((item: any) => item.subTotal)))
-    }
     if (success === 'Invoice updated successfully') {
       navigate(
         `/${AppRoute.PORTAL}/${AppRoute.INVOICES}/${AppRoute.INVOICE_DETAILS}/${invoice.id}`,
@@ -50,10 +41,17 @@ const InvoiceUpdatePage: React.FC = () => {
         `/${AppRoute.PORTAL}/${AppRoute.INVOICES}/${AppRoute.INVOICE_DETAILS}/${invoiceId}`,
       )
     }
-  }, [success, error, invoice])
+  }, [success, error])
 
   useEffect(() => {
     dispatch(fetchGetInvoiceById(`${invoiceId}`, true))
+    setInvoice({
+      ...currentInvoice,
+      items: currentInvoice.items.map(
+        ({ createdAt, updatedAt, ...item }: any) => item,
+      ),
+    })
+    setSubTotal(sum(currentInvoice.items.map((item: any) => item.subTotal)))
   }, [])
 
   const setNewItem = useCallback(
@@ -71,10 +69,15 @@ const InvoiceUpdatePage: React.FC = () => {
         ? invoice.items.filter((item: any) => newItem.id !== item.id)
         : [...invoice.items, newItem]
       const sumSubTotal = sum(newItems.map((item: any) => item.subTotal)) | 0
-      const total = Math.round((sumSubTotal * (100 - invoice.discount)) / 100) | 0
+      const total =
+        Math.round((sumSubTotal * (100 - invoice.discount)) / 100) | 0
 
       setSubTotal(sumSubTotal)
-      setInvoice({ ...invoice, items: newItems.length > 0? newItems : [], total: total })
+      setInvoice({
+        ...invoice,
+        items: newItems.length > 0 ? newItems : [],
+        total: total,
+      })
     },
     [subTotal, invoice],
   )
@@ -85,7 +88,7 @@ const InvoiceUpdatePage: React.FC = () => {
       const newInvoice = { ...invoice, items }
       const emptyInvoice = invoiceEmpty(newInvoice)
 
-      if (!emptyInvoice){
+      if (!emptyInvoice) {
         dispatch(fetchUpdateInvoice(invoiceId, newInvoice))
       } else {
         dispatch(errorOccurred({ statusCode: 400, message: emptyInvoice }))

@@ -9,6 +9,7 @@ import { InvoiceStatus } from './statics'
 import { fetchSetPagination } from 'redux/slice/pagination/paginationActions'
 import { AppRoute } from 'common/enums/app-route.enum'
 import { currentImagesPath } from '../secondaryFunctions/secondaryFunctions'
+import { Link } from 'react-router-dom'
 
 function convertDate(dateString: string) {
   const date = new Intl.DateTimeFormat('en-GB', {
@@ -60,27 +61,28 @@ export const InvoicesList = (props: any) => {
             key={invoice.id}
             className="container grid grid-cols-12 gap-4 text-left text-sm mb-4 font-medium text-text"
           >
-            <a
+            <div
               className={`col-span-3 mt-2 rounded-xl ${
                 currentUser.email === invoice.billedTo.email
                   ? 'bg-green-ultralight'
                   : 'bg-orange-ultralight'
               }`}
-              href={`${AppRoute.INVOICES}/${AppRoute.INVOICE_DETAILS}/${invoice.id}`}
             >
-              {currentUser.email && (
-                <ClientInfo
-                  client={
-                    currentUser.email !== invoice.billedTo.email
-                      ? invoice.billedTo
-                      : invoice.createdBy
-                  }
-                />
-              )}
-              <p className="text-xs text-text-ultralight font-normal">
-                Inv: MGL {invoice.id}
-              </p>
-            </a>
+              <Link to={`${AppRoute.INVOICE_DETAILS}/${invoice.id}`}>
+                {currentUser.email && (
+                  <ClientInfo
+                    client={
+                      currentUser.email !== invoice.billedTo.email
+                        ? invoice.billedTo
+                        : invoice.createdBy
+                    }
+                  />
+                )}
+                <p className="text-xs text-text-ultralight font-normal">
+                  Inv: MGL {invoice.id}
+                </p>
+              </Link>
+            </div>
             <div className="col-span-2 mt-2">
               {convertDate(invoice.invoiceDate)}
             </div>

@@ -6,6 +6,7 @@ import {
   getCorrectDateFormat,
 } from '../secondaryFunctions/secondaryFunctions'
 import { addMinutes, addMonths } from 'date-fns'
+import { Link } from 'react-router-dom'
 
 const minInputDate = addMinutes(new Date(), 30).toISOString()
 const maxInputDate = addMonths(new Date(), 2).toISOString()
@@ -93,13 +94,13 @@ export function BasicInfo(props: any) {
         {props.invoice ? (
           props.invoice.createdBy.email === currentUser.email &&
           !props.invoice.paid && (
-            <a
-              href={`/${AppRoute.PORTAL}/${AppRoute.INVOICES}/${AppRoute.INVOICE_UPDATE}/${props.invoice.id}`}
+            <Link
+              to={`/${AppRoute.PORTAL}/${AppRoute.INVOICES}/${AppRoute.INVOICE_UPDATE}/${props.invoice.id}`}
             >
               <div className="bg-green-light rounded-xl w-full font-semibold text-base py-4 my-4 hover:bg-green-hover text-center">
                 Update Invoice
               </div>
-            </a>
+            </Link>
           )
         ) : (
           <button
