@@ -1,9 +1,10 @@
 import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { fetchLists, setCursor } from 'redux/slice/todo/todo.slice'
 import { BottomPanel } from './components/BottomPanel'
 import { ToDoList } from './components/ToDoList'
 import { TopPanel } from './components/TopPanel'
+import { Dialogs } from './Dialogs'
 
 export function ToDoWidget() {
   const dispatch = useAppDispatch()
@@ -19,18 +20,21 @@ export function ToDoWidget() {
   const handleDeleteShowedList = () =>
     dispatch(setCursor(cursor - 1 >= 0 ? cursor - 1 : 0))
 
-  const outMessage =
-    loadingStatus === 'loading'
-      ? 'Please wait...'
-      : 'You have no any lists to do'
+  const outMessage = useMemo(
+    () =>
+      loadingStatus === 'loading'
+        ? 'Please wait...'
+        : 'You have no any lists to do',
+    [loadingStatus],
+  )
 
   return (
     <section
-      className="border rounded-lg flex flex-col"
+      className="rounded-lg border shadow-md flex flex-col"
       style={{ maxWidth: 500 }}
     >
       <TopPanel />
-      <div className="p-2">
+      <div>
         {loadingStatus === 'loading' || listCount < 1 ? (
           <div className="text-center text-gray-400">{outMessage}</div>
         ) : (
@@ -38,6 +42,7 @@ export function ToDoWidget() {
         )}
       </div>
       <BottomPanel />
+      <Dialogs />
     </section>
   )
 }

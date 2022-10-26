@@ -61,7 +61,7 @@ export const SideBar: React.FC<SideBarProps> = ({
           {structure.map(({ link, title, icon }) => (
             <MenuItem
               key={'/portal' + link}
-              link={'/portal/' + link}
+              link={link}
               label={title}
               icon={icon}
             />

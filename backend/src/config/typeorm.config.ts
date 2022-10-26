@@ -12,5 +12,5 @@ export default () =>
     autoLoadEntities: true, // models will be loaded automatically
     synchronize: true, // // your entities will be synced with the database(recommended: disable in prod)
     entities: [join(__dirname, '../', '**/*.entity{.ts,.js}')],
-    migrations: [join(__dirname, '../', 'database/migrations/**/*{.ts,.js}')],
+    migrations: [join(__dirname, '../', 'database/migrations/**/*{.ts,.js}')]
   } as TypeOrmModuleOptions);

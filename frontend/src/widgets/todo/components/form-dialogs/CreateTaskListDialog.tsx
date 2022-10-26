@@ -1,6 +1,4 @@
 import React from 'react'
-import IconButton from '@mui/material/IconButton'
-import AddCircleIcon from '@mui/icons-material/AddCircle'
 import { useState } from 'react'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
@@ -12,6 +10,7 @@ import Button from '@mui/material/Button'
 import { Formik, FormikErrors } from 'formik'
 import { createTaskList } from 'redux/slice/todo/todo.slice'
 import { useAppDispatch } from 'hooks/useAppDispatch'
+import { colors } from 'widgets/todo/styles/colors'
 
 interface FormValues {
   title: string
@@ -33,14 +32,12 @@ export default function CreateTaskListDialog() {
 
   return (
     <>
-      <IconButton
-        color="success"
-        aria-label="create task list"
-        component="label"
+      <Button
         onClick={openClickHandler}
+        sx={{ color: colors.green, textTransform: 'capitalize' }}
       >
-        <AddCircleIcon />
-      </IconButton>
+        New List
+      </Button>
 
       <Dialog open={open} onClose={closeHandler}>
         <DialogTitle>New Task List</DialogTitle>

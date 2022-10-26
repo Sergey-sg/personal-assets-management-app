@@ -1,11 +1,13 @@
 import React from 'react'
 import CreateTaskListDialog from './form-dialogs/CreateTaskListDialog'
 import IconButton from '@mui/material/IconButton'
-import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft'
-import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
+import { ReactComponent as ArrowLeftIcon } from 'assets/icons/arrow-left.svg'
+import { ReactComponent as ArrowRightIcon } from 'assets/icons/arrow-right.svg'
 import { useDispatch } from 'react-redux'
 import { useAppSelector } from 'hooks/useAppDispatch'
 import { setCursor } from 'redux/slice/todo/todo.slice'
+import { colors } from 'widgets/todo/styles/colors'
+import { Cursor } from './Cursor'
 
 export function TopPanel() {
   const dispatch = useDispatch()
@@ -24,30 +26,43 @@ export function TopPanel() {
     dispatch(setCursor(prev))
   }
 
+  const listsTwoOrMore = listCount >= 2
+
   return (
-    <header className="flex items-center justify-between border-b p-2">
-      <h4 className="text-h4 font-bold capitalize">Task lists</h4>
-      <div>
-        <IconButton
-          color="primary"
-          aria-label="show prev list"
-          component="label"
-          disabled={listCount < 2}
-          onClick={showPrevList}
-        >
-          <ArrowCircleLeftIcon />
-        </IconButton>
-        <IconButton
-          color="primary"
-          aria-label="show next list"
-          component="label"
-          disabled={listCount < 2}
-          onClick={showNextList}
-        >
-          <ArrowCircleRightIcon />
-        </IconButton>
-        <CreateTaskListDialog />
-      </div>
-    </header>
+    <>
+      <header className="p-6 pb-3">
+        <div className="flex items-center justify-between">
+          <h4 className="text-h4 font-bold capitalize">Task lists</h4>
+          <div>
+            <CreateTaskListDialog />
+            <IconButton
+              color="primary"
+              aria-label="show prev list"
+              component="label"
+              disabled={!listsTwoOrMore}
+              onClick={showPrevList}
+              sx={{ padding: 0, marginRight: 1, marginLeft: 1.4 }}
+            >
+              <ArrowLeftIcon
+                fill={listsTwoOrMore ? colors.green : colors.lightGray}
+              />
+            </IconButton>
+            <IconButton
+              color="primary"
+              aria-label="show next list"
+              component="label"
+              disabled={listCount < 2}
+              onClick={showNextList}
+              sx={{ padding: 0 }}
+            >
+              <ArrowRightIcon
+                fill={listsTwoOrMore ? colors.green : colors.lightGray}
+              />
+            </IconButton>
+          </div>
+        </div>
+        <Cursor listCount={listCount} cursor={cursor} />
+      </header>
+    </>
   )
 }

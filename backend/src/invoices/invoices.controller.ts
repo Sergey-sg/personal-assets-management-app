@@ -49,8 +49,15 @@ export class InvoicesController {
     @User() currentUser: UserEntity,
     @Query() filters: any,
   ): Promise<PageDto<InvoiceDto>> {
-    const pageOptionsDto = new PageOptionsDto({page: filters.page, take: filters.take})
-    return this.invoicesService.getAllInvoicesForUser(currentUser, filters, pageOptionsDto);
+    const pageOptionsDto = new PageOptionsDto({
+      page: filters.page,
+      take: filters.take,
+    });
+    return this.invoicesService.getAllInvoicesForUser(
+      currentUser,
+      filters,
+      pageOptionsDto,
+    );
   }
 
   @Get('/:invoiceId')
@@ -61,7 +68,7 @@ export class InvoicesController {
     @Param('invoiceId', ParseIntPipe) invoiceId: number,
     @Query() queryParam: any,
   ): Promise<InvoiceDto> {
-    const forUpdate = queryParam.forUpdate? true : false
+    const forUpdate = queryParam.forUpdate ? true : false;
     return await this.invoicesService.getOneById(
       forUpdate,
       invoiceId,

@@ -6,7 +6,7 @@ import { Task } from './entities/task.entity';
 import { TaskList } from './entities/task-list.entity';
 
 @Injectable()
-export class ToDoService {
+export class TaskListService {
   constructor(
     @InjectRepository(TaskList)
     private readonly taskListRepository: Repository<TaskList>,
@@ -59,47 +59,5 @@ export class ToDoService {
   async doesListBelongToUser(userId: number, listId: number): Promise<boolean> {
     const list = await this.getList(listId);
     return list.user.id === userId;
-  }
-
-  async getTask(taskId): Promise<Task> {
-    const task = await this.taskRepository
-      .createQueryBuilder('task')
-      .innerJoinAndSelect('task.list', 'list')
-      .where('task.id = :taskId', { taskId })
-      .getOne();
-
-    if (!task) throw new NotFoundException('Task with specified id not found');
-    return task;
-  }
-
-  async addTask(listId: number, taskDescription: string) {
-    const list = await this.getList(listId);
-    const task = new Task();
-    task.description = taskDescription;
-    task.list = list;
-    await this.taskRepository.save(task);
-    return task;
-  }
-
-  async updateTask(
-    taskId: number,
-    description: string,
-    isDone: boolean,
-  ): Promise<Task> {
-    const task = await this.getTask(taskId);
-    task.description = description;
-    task.isDone = isDone;
-    return await this.taskRepository.save(task);
-  }
-
-  async removeTask(taskId: number): Promise<void> {
-    const task = await this.taskRepository.findOneBy({ id: taskId });
-    if (!task) return;
-    await this.taskRepository.remove(task);
-  }
-
-  async doesTaskBelongToUser(userId: number, taskId: number): Promise<boolean> {
-    const task = await this.getTask(taskId);
-    return await this.doesListBelongToUser(userId, task.list.id);
   }
 }

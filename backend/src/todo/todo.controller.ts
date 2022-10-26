@@ -14,23 +14,30 @@ import {
 import { AddTaskDto } from './dto/task/add-task.dto';
 import { TaskViewDto } from './dto/task/task-view.dto';
 import { TaskListViewDto } from './dto/task-list/task-list-view.dto';
-import { ToDoService } from './todo.service';
-import { ApiResponse } from '@nestjs/swagger';
+import { TaskListService } from './task-list.service';
+import { TaskService } from './task.service';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateTaskListDto } from './dto/task-list/create-task-list.dto';
 import { UpdateTaskListDto } from './dto/task-list/update-task-list.dto';
 import { UpdateTaskDto } from './dto/task/update-task.dto';
-import { EntityNotFoundError } from 'typeorm';
 import { User } from 'src/user/decorators/user.decorator';
+import { GoalService } from './goal.service';
+import { GoalViewDto } from './dto/goal/goal-view.dto';
+import { AddGoalDto } from './dto/goal/add-goal.dto';
 
 @SkipThrottle()
 @Controller('todo-lists')
 export class ToDoController {
-  constructor(private readonly todoService: ToDoService) {}
+  constructor(
+    private readonly listService: TaskListService,
+    private readonly taskService: TaskService,
+    private readonly goalService: GoalService,
+  ) {}
 
   @Get()
   @ApiResponse({ type: [TaskListViewDto] })
   async getAllLists(@User('id') userId: number): Promise<TaskListViewDto[]> {
-    return (await this.todoService.getLists(userId)).map((list) =>
+    return (await this.listService.getLists(userId)).map((list) =>
       TaskListViewDto.fromEntity(list),
     );
   }
@@ -41,7 +48,7 @@ export class ToDoController {
     @User('id') userId: number,
     @Body() dto: CreateTaskListDto,
   ): Promise<TaskListViewDto> {
-    const newList = await this.todoService.createList(dto.title, userId);
+    const newList = await this.listService.createList(dto.title, userId);
     return TaskListViewDto.fromEntity(newList);
   }
 
@@ -52,8 +59,8 @@ export class ToDoController {
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateTaskListDto,
   ): Promise<TaskListViewDto> {
-    if (await this.todoService.doesListBelongToUser(userId, id)) {
-      const list = await this.todoService.updateList(dto.title, id);
+    if (await this.listService.doesListBelongToUser(userId, id)) {
+      const list = await this.listService.updateList(dto.title, id);
       return TaskListViewDto.fromEntity(list);
     }
     throw new ForbiddenException(
@@ -68,13 +75,23 @@ export class ToDoController {
     @User('id') userId: number,
     @Param('id', ParseIntPipe) id: number,
   ): Promise<void> {
-    if (await this.todoService.doesListBelongToUser(userId, id)) {
-      await this.todoService.removeList(id);
+    if (await this.listService.doesListBelongToUser(userId, id)) {
+      await this.listService.removeList(id);
       return;
     }
     throw new ForbiddenException(
       'It is forbidden to delete a task list that does not belong to the current user.',
     );
+  }
+
+  @Get('/tasks/:id')
+  @ApiResponse({ type: TaskViewDto })
+  async getTask(
+    @User('id') userId: number,
+    @Param('id', ParseIntPipe) taskId: number,
+  ): Promise<TaskViewDto> {
+    const task = await this.taskService.getTask(taskId);
+    return TaskViewDto.fromEntity(task);
   }
 
   @Post(':listId/tasks')
@@ -84,12 +101,38 @@ export class ToDoController {
     @Body() dto: AddTaskDto,
     @Param('listId', ParseIntPipe) listId: number,
   ): Promise<TaskViewDto> {
-    if (await this.todoService.doesListBelongToUser(userId, listId)) {
-      const newTask = await this.todoService.addTask(listId, dto.description);
+    if (await this.listService.doesListBelongToUser(userId, listId)) {
+      const newTask = await this.taskService.addTask(listId, dto.description);
       return TaskViewDto.fromEntity(newTask);
     }
     throw new ForbiddenException(
       'It is forbidden to add a task to the list that do not belong to the current user.',
+    );
+  }
+
+  @Post('/tasks/:taskId/goals')
+  @ApiResponse({ type: GoalViewDto })
+  async addGoalToTask(
+    @User('id') userId: number,
+    @Param('taskId', ParseIntPipe) taskId: number,
+    @Body() dto: AddGoalDto,
+  ): Promise<GoalViewDto> {
+    if (await this.taskService.doesTaskBelongToUser(userId, taskId)) {
+      const goal = await this.goalService.addGoalToTask(
+        taskId,
+        dto.walletId,
+        dto.goalBalance,
+      );
+      const taskIsDone = await this.goalService.everyGoalAchieved(taskId);
+      return GoalViewDto.fromEntity(
+        goal,
+        taskId,
+        taskIsDone,
+        goal.isAchieved(),
+      );
+    }
+    throw new ForbiddenException(
+      'It is forbidden to add a goal to the task that do not belong to the current user.',
     );
   }
 
@@ -100,8 +143,8 @@ export class ToDoController {
     @Body() dto: UpdateTaskDto,
     @Param('id', ParseIntPipe) id: number,
   ): Promise<TaskViewDto> {
-    if (await this.todoService.doesTaskBelongToUser(userId, id)) {
-      const task = await this.todoService.updateTask(
+    if (await this.taskService.doesTaskBelongToUser(userId, id)) {
+      const task = await this.taskService.updateTask(
         id,
         dto.description,
         dto.isDone,
@@ -120,8 +163,8 @@ export class ToDoController {
     @User('id') userId: number,
     @Param('id', ParseIntPipe) id: number,
   ): Promise<void> {
-    if (await this.todoService.doesTaskBelongToUser(userId, id)) {
-      await this.todoService.removeTask(id);
+    if (await this.taskService.doesTaskBelongToUser(userId, id)) {
+      await this.taskService.removeTask(id);
       return;
     }
     throw new ForbiddenException(
