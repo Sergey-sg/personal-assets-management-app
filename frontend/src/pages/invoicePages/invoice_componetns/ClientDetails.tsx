@@ -16,13 +16,19 @@ export function ClientDetails(props: any) {
   const [client, setClient] = useState(props.client || initialUser)
   const [error, setError] = useState('')
   const [showUserInputModalForm, setShowUserInputModalForm] = useState(false)
-  const [invoiceAlreadyHasUser, setInvoiceAlreadyHasUser] = useState(props.client ? true : false)
+  const [invoiceAlreadyHasUser, setInvoiceAlreadyHasUser] = useState(
+    props.client ? true : false,
+  )
   const userFullName = client.firstName
     ? `${client.firstName} ${client.lastName}`
     : client.email
   const address = client.address ? client.address.split(',') : ''
 
-  async function getUser(params: { [x: string]: any; email?: string; phone?: string }) {
+  async function getUser(params: {
+    [x: string]: any
+    email?: string
+    phone?: string
+  }) {
     let correctParams = {}
 
     Object.keys(params).forEach((key) => {

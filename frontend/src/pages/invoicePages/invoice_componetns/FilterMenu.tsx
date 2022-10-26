@@ -18,9 +18,9 @@ const getCurrentLabel = (label: string) => {
     case 'toUser':
       return 'to My'
     case 'fromUser':
-      return  'from My'
+      return 'from My'
     case 'all':
-      return 'ALL'  
+      return 'ALL'
   }
 }
 
@@ -94,15 +94,21 @@ function FilterMenu(props: any) {
                     </span>
                     <input
                       onChange={(e) => {
-                        const currentDateValue = e.target.value? new Date(e.target.value).toISOString() : ''
-                        
+                        const currentDateValue = e.target.value
+                          ? new Date(e.target.value).toISOString()
+                          : ''
+
                         min
                           ? props.setFilters({ minDate: currentDateValue })
                           : props.setFilters({ maxDate: currentDateValue })
                       }}
                       className="w-min border border-gray-light rounded-xl p-2 focus:outline-none focus:border-green-hover focus:ring-green-hover focus:ring-0"
                       type={'datetime-local'}
-                      value={min ?  getCorrectDateFormat(props.filters.minDate) : getCorrectDateFormat(props.filters.maxDate) }
+                      value={
+                        min
+                          ? getCorrectDateFormat(props.filters.minDate)
+                          : getCorrectDateFormat(props.filters.maxDate)
+                      }
                     />
                   </div>
                 </li>
@@ -129,7 +135,9 @@ function FilterMenu(props: any) {
                       className="w-full border border-gray-light rounded-xl p-2 focus:outline-none focus:border-green-hover focus:ring-green-hover focus:ring-0"
                       type={'number'}
                       value={
-                        min ? props.filters.minPrice / 100 : props.filters.maxPrice / 100
+                        min
+                          ? props.filters.minPrice / 100
+                          : props.filters.maxPrice / 100
                       }
                     />
                   </div>

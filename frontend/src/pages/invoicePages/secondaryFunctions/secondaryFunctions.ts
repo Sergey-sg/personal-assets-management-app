@@ -52,7 +52,7 @@ export function currentImagesPath(path: string) {
   return currentPath
 }
 
-export function invoiceEmpty(invoice: IInvoice) {
+export function invoiceNotValid(invoice: IInvoice) {
   if (!invoice.billedTo || Object.keys(invoice.billedTo).length < 1) {
     return 'the customer field cannot be empty'
   }

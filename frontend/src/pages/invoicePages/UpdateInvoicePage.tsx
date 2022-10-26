@@ -18,7 +18,7 @@ import {
   InvoiceInfoBaner,
   MagloBaner,
 } from './invoice_componetns/statics'
-import { sum, invoiceEmpty } from './secondaryFunctions/secondaryFunctions'
+import { sum, invoiceNotValid } from './secondaryFunctions/secondaryFunctions'
 
 const InvoiceUpdatePage: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -86,12 +86,12 @@ const InvoiceUpdatePage: React.FC = () => {
     if (invoiceId && invoice.id === parseInt(invoiceId)) {
       const items = invoice.items.map(({ id, ...item }: any) => item)
       const newInvoice = { ...invoice, items }
-      const emptyInvoice = invoiceEmpty(newInvoice)
+      const messageValidation = invoiceNotValid(newInvoice)
 
-      if (!emptyInvoice) {
+      if (!messageValidation) {
         dispatch(fetchUpdateInvoice(invoiceId, newInvoice))
       } else {
-        dispatch(errorOccurred({ statusCode: 400, message: emptyInvoice }))
+        dispatch(errorOccurred({ statusCode: 400, message: messageValidation }))
       }
     }
   }, [invoice])
