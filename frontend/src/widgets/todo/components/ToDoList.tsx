@@ -37,7 +37,10 @@ export function ToDoList(props: ToDoListProps) {
           delete list
         </Button>
       </div>
-      <ul style={{ minHeight: 200, overflowY: 'auto' }} className="px-6">
+      <ul
+        style={{ minHeight: 200, overflowY: 'auto', height: 20 }}
+        className="px-6"
+      >
         {list.tasks.map((t) => (
           <ToDoItem key={t.id} id={t.id} />
         ))}

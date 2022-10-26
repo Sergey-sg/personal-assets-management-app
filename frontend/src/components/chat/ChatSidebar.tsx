@@ -19,8 +19,6 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState('')
 
-  console.log(user, conversations)
-
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value
 

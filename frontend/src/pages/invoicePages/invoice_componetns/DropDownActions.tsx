@@ -31,8 +31,8 @@ export default function DropDownActions(props: any) {
             {!props.paid && props.createdByEmail === currentUser.email && (
               <Menu.Item>
                 {({ active }) => (
-                  <Link
-                    to={`${AppRoute.INVOICE_UPDATE}/${props.invoiceId}`}
+                  <a
+                    href={`${AppRoute.INVOICES}/${AppRoute.INVOICE_UPDATE}/${props.invoiceId}`}
                     className={`${
                       active
                         ? 'bg-gray-medium text-gray-default'
@@ -40,7 +40,7 @@ export default function DropDownActions(props: any) {
                     } block px-4 py-2 text-sm`}
                   >
                     Update
-                  </Link>
+                  </a>
                 )}
               </Menu.Item>
             )}

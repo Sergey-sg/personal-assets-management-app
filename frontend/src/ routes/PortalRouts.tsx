@@ -21,13 +21,14 @@ import {
 import Crypto from 'pages/portalPages/Crypto'
 import React from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import { Wallet } from '../components/dashboard/interfaces'
 
 const PortalRouts = () => {
   return (
     <Routes>
       <Route
         path={AppRoute.HOME}
-        element={<Navigate to="portal/dashboard" />}
+        element={<Navigate to={'portal/' + AppRoute.DASHBOARD} />}
       />
       <Route path={AppRoute.PORTAL} element={<PortalPage />}>
         <Route index element={<DashboardOverview />} />
