@@ -14,6 +14,7 @@ import { Base } from 'src/common/dto/base.dto';
 import { IncomeEntity } from 'src/income/entities/income.entity';
 import { CostEntity } from 'src/costs/entities/cost.entity';
 import { Message } from 'src/messages/entities/message.entity';
+import { WidgetEntity } from 'src/widgets/entities/widget.entity';
 import { CryptoPortfolioEntity } from 'src/crypto/cryptoPortfolio/entities/cryptoPortfolio.entity';
 
 @Entity('user')
@@ -130,4 +131,7 @@ export class UserEntity extends Base {
   @OneToMany(() => Message, (message) => message.author)
   @JoinColumn()
   messages: Message[];
+
+  @OneToMany(() => WidgetEntity, (widget) => widget.user)
+  widgets?: WidgetEntity[];
 }

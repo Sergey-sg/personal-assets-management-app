@@ -4,7 +4,7 @@ import {
   ExchangeWidgetView,
   fetchCurrencies,
   setSelectedCurrency,
-} from 'redux/slice/exchangeSlice'
+} from 'redux/slice/widgets/exchangeSlice'
 import CurrencyRatesView from './components/CurrencyRatesView'
 import BankRatesView from './components/BankRatesView'
 import RateHistoryView from './components/RateHistoryView'
@@ -37,12 +37,10 @@ export const ExchangeWidget = () => {
   }, [currencies])
 
   return (
-    <div className="bg-gray-800 text-gray-200 rounded-lg min-h-[400px] basis-[400px] max-h-[400px] flex-1 shadow dark relative">
-      <div className="h-full flex flex-col relative">
-        {view === ExchangeWidgetView.CURRENCY_RATES && <CurrencyRatesView />}
-        {view === ExchangeWidgetView.BANK_RATES && <BankRatesView />}
-        {view === ExchangeWidgetView.HISTORY && <RateHistoryView />}
-      </div>
+    <div className="h-[430px] bg-gray-800 text-gray-200 h-full flex flex-col relative dark">
+      {view === ExchangeWidgetView.CURRENCY_RATES && <CurrencyRatesView />}
+      {view === ExchangeWidgetView.BANK_RATES && <BankRatesView />}
+      {view === ExchangeWidgetView.HISTORY && <RateHistoryView />}
     </div>
   )
 }

@@ -26,6 +26,7 @@ import { CryptoPortfolioModule } from './crypto/cryptoPortfolio/cryptoPortfolio.
 
 import { CryptoStatisticsModule } from './crypto/cryptoStatistics/cryptoStatistics.module';
 import { ReportsModule } from './reports/reports.module';
+import { WidgetsModule } from "./widgets/widgets.module";
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { ReportsModule } from './reports/reports.module';
     CostsModule,
     ConversationsModule,
     MessagesModule,
+    WidgetsModule,
     GatewayModule,
     EventEmitterModule.forRoot(),
     InvoicesModule,

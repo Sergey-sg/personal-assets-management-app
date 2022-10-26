@@ -15,6 +15,7 @@ async function bootstrap() {
   const options = new DocumentBuilder()
     .setTitle('Fintech Manager')
     .setDescription('Assets Manager API Documentation')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('swagger', app, document);

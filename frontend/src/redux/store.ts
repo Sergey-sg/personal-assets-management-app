@@ -13,6 +13,7 @@ import {
   walletsSlice,
   incomeSlice,
   costsSlice,
+  widgetsSlice,
 } from './slice'
 import invoiceSlice from './slice/invoiceServices/invoice.slice'
 import paginationSlice from './slice/pagination/pagination.slice'
@@ -39,6 +40,7 @@ export const store = configureStore({
     messages: messagesSlice,
     conversations: conversationsSlice,
     todo: todoSlice,
+    widgets: widgetsSlice,
     walletLimit: walletLimitSlice,
   },
 })

@@ -19,4 +19,7 @@ export const STYLES = {
 
   delete:
     'flex justify-center items-center  text-center text-base box-border transition  duration-200 cursor-pointer p-4 rounded-lg text-rose-600 w-full hover:scale-110',
+
+  danger:
+    'p-4 rounded-lg bg-rose-500 text-white w-full hover:bg-rose-600 focus:bg-rose-600',
 }
