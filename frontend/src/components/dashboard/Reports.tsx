@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-// import { useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import { format } from 'date-fns'
 
 import { PrimaryInfo, WidgetsBar } from './components'
@@ -22,8 +22,7 @@ const initialPeriod: Period = {
 }
 
 const Reports = () => {
-  // In progress
-  // const [searchParams, setSearchParams] = useSearchParams({})
+  const [searchParams, setSearchParams] = useSearchParams({})
 
   const [period, setPeriod] = useState<Period>(initialPeriod)
   const [wallets, setWallets] = useState<Array<Wallet>>([])
@@ -48,6 +47,10 @@ const Reports = () => {
 
       setWallets(sortedWallets)
       setSelectedWallet(sortedWallets[0])
+
+      setSearchParams((prev) => {
+        return { ...prev, walletId: sortedWallets[0].id, ...period }
+      })
     }
 
     getWallets()
@@ -75,14 +78,24 @@ const Reports = () => {
   }
 
   useEffect(() => {
-    getPeriodData(selectedWallet.id)
-  }, [selectedWallet])
+    const walletId = searchParams.get('walletId')
 
+    if (!walletId) return
+
+    getPeriodData(walletId)
+  }, [searchParams])
+
+  // Period and Wallet Inputs handlers
   const onWalletChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const walletName = e.target.value
     const targetWallet = wallets.find((w) => w.wallet_name === walletName)
 
-    targetWallet && setSelectedWallet(targetWallet)
+    if (!targetWallet) return
+
+    setSelectedWallet(targetWallet)
+    setSearchParams((prev) => {
+      return { ...prev, walletId: targetWallet.id, ...period }
+    })
   }
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -98,7 +111,9 @@ const Reports = () => {
       return { ...prev, ...period }
     })
 
-    getPeriodData(selectedWallet.id)
+    setSearchParams((prev) => {
+      return { ...prev, walletId: selectedWallet.id, ...period }
+    })
   }
 
   return (

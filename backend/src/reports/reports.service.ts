@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { WalletEntity } from 'src/wallet/entities/wallet.entity';
 import { Repository } from 'typeorm';
 import { ReportEntity } from './entities/report.entity';
 
@@ -9,8 +8,6 @@ export class ReportsService {
   constructor(
     @InjectRepository(ReportEntity)
     private reportRepository: Repository<ReportEntity>,
-    @InjectRepository(WalletEntity)
-    private walletRepository: Repository<WalletEntity>,
   ) {}
 
   async getReportOfPeriod(
@@ -50,14 +47,5 @@ export class ReportsService {
 
     // return { periodReport, sums };
     return { periodReport, sums };
-  }
-
-  async getWalletRelatedOperations(walletId: number) {
-    const targetWallet = await this.walletRepository.find({
-      where: { id: walletId },
-      relations: ['costs', 'income'],
-    });
-
-    return targetWallet;
   }
 }

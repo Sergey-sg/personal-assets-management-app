@@ -1,8 +1,10 @@
 import { SkipThrottle } from '@nestjs/throttler';
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { AccessTokenGuard } from 'src/auth/guards/accessToken.guard';
 import { ReportsService } from './reports.service';
 
 @SkipThrottle()
+@UseGuards(AccessTokenGuard)
 @Controller('overview')
 export class ReportsController {
   constructor(private reportsService: ReportsService) {}
@@ -20,13 +22,5 @@ export class ReportsController {
     );
 
     return report;
-  }
-
-  @Get('s?')
-  getLatestOperations(@Query('walletId') walletId: number) {
-    const latestOperations =
-      this.reportsService.getWalletRelatedOperations(walletId);
-
-    return latestOperations;
   }
 }
