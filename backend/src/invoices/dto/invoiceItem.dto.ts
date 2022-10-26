@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsPositive, IsInt, MinLength, MaxLength } from 'class-validator';
+import {
+  IsString,
+  IsPositive,
+  IsInt,
+  MinLength,
+  MaxLength,
+} from 'class-validator';
 
 export class InvoiceItemDto {
   @ApiProperty({

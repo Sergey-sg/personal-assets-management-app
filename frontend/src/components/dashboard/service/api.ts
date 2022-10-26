@@ -11,8 +11,10 @@ export const fetchReportForPeriod = async (
   startDate: string,
   endDate: string,
 ) => {
+  const modifiedEndDate = `${endDate}T23:59`
+
   const res = await api.get(
-    `/overview/search?walletId=${walletId}&startDate=${startDate}&endDate=${endDate}`,
+    `/overview/search?walletId=${walletId}&startDate=${startDate}&endDate=${modifiedEndDate}`,
   )
 
   return res?.data

@@ -22,10 +22,13 @@ export class Task extends Base {
   @ManyToOne((type) => TaskList, (list) => list.tasks, { onDelete: 'CASCADE' })
   list: TaskList;
 
-  @OneToMany(type => Goal, goal => goal.task, { eager: true })
+  @OneToMany((type) => Goal, (goal) => goal.task, { eager: true })
   goals: Goal[];
 
   isDone() {
-    return this.markedAsDone || (this.goals.length > 0 && this.goals.every(g => g.isAchieved()));
+    return (
+      this.markedAsDone ||
+      (this.goals.length > 0 && this.goals.every((g) => g.isAchieved()))
+    );
   }
 }
