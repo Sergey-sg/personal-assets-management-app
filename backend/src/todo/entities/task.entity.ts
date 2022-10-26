@@ -1,6 +1,7 @@
-import { Entity, Column, ManyToOne } from 'typeorm';
+import { Entity, Column, ManyToOne, OneToMany, OneToOne } from 'typeorm';
 import { Base } from 'src/common/dto/base.dto';
 import { TaskList } from './task-list.entity';
+import { Goal } from './goal.entity';
 
 @Entity('task')
 export class Task extends Base {
@@ -12,12 +13,19 @@ export class Task extends Base {
   description: string;
 
   @Column({
-    name: 'is_done',
+    name: 'marked_as_done',
     type: 'boolean',
     default: false,
   })
-  isDone: boolean;
+  markedAsDone: boolean;
 
   @ManyToOne((type) => TaskList, (list) => list.tasks, { onDelete: 'CASCADE' })
   list: TaskList;
+
+  @OneToMany(type => Goal, goal => goal.task, { eager: true })
+  goals: Goal[];
+
+  isDone() {
+    return this.markedAsDone || (this.goals.length > 0 && this.goals.every(g => g.isAchieved()));
+  }
 }

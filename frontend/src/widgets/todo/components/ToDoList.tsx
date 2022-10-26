@@ -2,10 +2,9 @@ import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
 import React from 'react'
 import { TaskListState } from 'redux/slice/todo/todo.slice'
 import { ToDoItem } from './ToDoItem'
-import IconButton from '@mui/material/IconButton'
-import DeleteSweepIcon from '@mui/icons-material/DeleteSweep'
+import Button from '@mui/material/Button'
 import { deleteTaskList } from 'redux/slice/todo/todo.slice'
-import { List } from '@mui/material'
+import { colors } from 'widgets/todo/styles/colors'
 
 interface ToDoListProps {
   onDeleteCallback?(): void
@@ -23,32 +22,26 @@ export function ToDoList(props: ToDoListProps) {
   }
 
   return !list ? null : (
-    <>
-      <div className="flex items-center justify-between">
-        <h5 className="text-h5 font-bold capitalize text-center">
+    <div>
+      <div className="flex items-center justify-between py-2 px-6">
+        <h5
+          className="text-h5 font-bold uppercase text-center"
+          style={{ color: colors.gray }}
+        >
           {list.title}
         </h5>
-        <IconButton onClick={deleteShowedList}>
-          <DeleteSweepIcon fontSize="medium" color="error" />
-        </IconButton>
+        <Button
+          onClick={deleteShowedList}
+          sx={{ color: colors.red, textTransform: 'capitalize', padding: 0.1 }}
+        >
+          delete list
+        </Button>
       </div>
-      <List
-        sx={{
-          width: '100%',
-          height: 200,
-          bgcolor: 'background.paper',
-          overflow: 'auto',
-        }}
-      >
+      <ul style={{ minHeight: 200, overflowY: 'auto' }} className="px-6">
         {list.tasks.map((t) => (
-          <ToDoItem
-            key={t.id}
-            id={t.id}
-            description={t.description}
-            isDone={t.isDone}
-          />
+          <ToDoItem key={t.id} id={t.id} />
         ))}
-      </List>
-    </>
+      </ul>
+    </div>
   )
 }

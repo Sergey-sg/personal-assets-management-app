@@ -1,10 +1,10 @@
 import React from 'react'
-import CreateTaskDialog from './form-dialogs/CreateTaskDialog'
+import { AddTaskForm } from './AddTaskForm'
 
 export function BottomPanel() {
   return (
-    <footer className="border-t text-center p-2 mt-auto">
-      <CreateTaskDialog />
+    <footer className="text-center p-6 mt-auto">
+      <AddTaskForm />
     </footer>
   )
 }

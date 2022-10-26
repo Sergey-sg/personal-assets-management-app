@@ -3,7 +3,7 @@ enum AppRoute {
   SIGN_IN = 'sign-in',
   SIGN_UP = 'sign-up',
   PORTAL = 'portal',
-  DASHBOARD = 'dashboard',
+  DASHBOARD = 'dashboard/overview/search',
   TRANSACTIONS = 'transactions',
   INVOICES = 'invoices',
   WIDGETS = 'widgets',

@@ -80,22 +80,34 @@ const Chart = ({ transactions }: { transactions: Transaction[] }) => {
       <h3 className="text-center p-2">Incomes and Outcomes</h3>
       <div className="w-full h-full py-2 flex justify-between gap-1 sm:items-center md:items-stretch xl:items-stretch sm:flex-col md:flex-col xl:flex-row">
         <div className="sm:basis-11/12 md:basis-11/12 xl:basis-1/2 flex-1 p-2 border">
-          <Pie
-            data-chart-name="income"
-            datasetIdKey="income"
-            data={incomesForChart}
-            options={options}
-            ref={incomeChartRef}
-          />
+          {incomesForChart.labels.length ? (
+            <Pie
+              data-chart-name="income"
+              datasetIdKey="income"
+              data={incomesForChart}
+              options={options}
+              ref={incomeChartRef}
+            />
+          ) : (
+            <p className="text-center text-Ag-16 py-4 text-red-400">
+              No transactions for the Period
+            </p>
+          )}
         </div>
         <div className="sm:basis-11/12 md:basis-11/12 xl:basis-1/2 flex-1  p-2 border">
-          <Pie
-            data-chart-name="outcome"
-            datasetIdKey="outcome"
-            data={outcomesForChart}
-            options={options}
-            ref={outcomeChartRef}
-          />
+          {outcomesForChart.labels.length ? (
+            <Pie
+              data-chart-name="outcome"
+              datasetIdKey="outcome"
+              data={outcomesForChart}
+              options={options}
+              ref={outcomeChartRef}
+            />
+          ) : (
+            <p className="text-center text-Ag-16 py-4 text-red-400">
+              No transactions for the Period
+            </p>
+          )}
         </div>
       </div>
     </div>

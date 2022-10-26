@@ -214,9 +214,7 @@ export class UserController {
 
   @Post('/by-params')
   @ApiOperation({ summary: `get customer user by params` })
-  async getCustomerByParams(
-    @Body() params: any
-  ): Promise<UserEntity> {
+  async getCustomerByParams(@Body() params: any): Promise<UserEntity> {
     return this.userService.findCustomerByParams(params);
   }
 }
