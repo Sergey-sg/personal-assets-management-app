@@ -29,11 +29,6 @@ export const menuStructure = [
     icon: <DashboardIcon />,
   },
   {
-    title: 'Transactions',
-    link: AppRoute.TRANSACTIONS,
-    icon: <TransactionIcon />,
-  },
-  {
     title: 'Invoices',
     link: AppRoute.INVOICES,
     icon: <InvoiceIcon />,
@@ -44,6 +39,11 @@ export const menuStructure = [
     icon: <WalletIcon />,
   },
   {
+    title: 'Moneybox',
+    link: AppRoute.MONEY_BOX,
+    icon: <MoneyBoxIcon />,
+  },
+  {
     title: 'Widgets',
     link: AppRoute.WIDGETS,
     icon: <PluginIcon />,
@@ -52,11 +52,6 @@ export const menuStructure = [
     title: 'Crypto',
     link: AppRoute.CRYPTO,
     icon: <FaEthereum />,
-  },
-  {
-    title: 'Moneybox',
-    link: AppRoute.MONEY_BOX,
-    icon: <MoneyBoxIcon />,
   },
   {
     title: 'Chats',

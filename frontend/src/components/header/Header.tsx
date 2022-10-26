@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { Typography } from 'components/common/Typography'
 import { useLocation } from 'react-router-dom'
 import { Logo } from './Logo/Logo'
-import { ReactComponent as NotificationIcon } from 'assets/icons/notification.svg'
 import { AvatarForm } from './AvatarUploadButton/AvatarForm'
 import { Modal } from 'components/sideBar/Modal/Modal'
 import { SideBar } from 'components/sideBar/SideBar'
@@ -36,7 +35,6 @@ export const Header: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center ml-auto">
-          <NotificationIcon title="Notifications" className="mr-6 h-7 w-7" />
           <AvatarForm />
         </div>
       </header>

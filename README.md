@@ -17,7 +17,7 @@ Project description
 #### 0.1. What's shipped with this boilerplate?
 
 - React (CRA) + NestJS applications
-- Configured sequelize for PostgreSQL
+- Configured TypeORM for PostgreSQL
 - Tailwind
 - React Redux
 - React Router
