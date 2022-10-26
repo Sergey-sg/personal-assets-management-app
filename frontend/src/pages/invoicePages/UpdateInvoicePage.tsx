@@ -31,6 +31,19 @@ const InvoiceUpdatePage: React.FC = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
+    dispatch(fetchGetInvoiceById(`${invoiceId}`, true))
+  }, [])
+
+  useEffect(() => {
+    if (success === 'Invoice loaded successfully') {
+      setInvoice({
+        ...currentInvoice,
+        items: currentInvoice.items.map(
+          ({ createdAt, updatedAt, ...item }: any) => item,
+        ),
+      })
+      setSubTotal(sum(currentInvoice.items.map((item: any) => item.subTotal)))
+    }
     if (success === 'Invoice updated successfully') {
       navigate(
         `/${AppRoute.PORTAL}/${AppRoute.INVOICES}/${AppRoute.INVOICE_DETAILS}/${invoice.id}`,
@@ -42,17 +55,6 @@ const InvoiceUpdatePage: React.FC = () => {
       )
     }
   }, [success, error])
-
-  useEffect(() => {
-    dispatch(fetchGetInvoiceById(`${invoiceId}`, true))
-    setInvoice({
-      ...currentInvoice,
-      items: currentInvoice.items.map(
-        ({ createdAt, updatedAt, ...item }: any) => item,
-      ),
-    })
-    setSubTotal(sum(currentInvoice.items.map((item: any) => item.subTotal)))
-  }, [])
 
   const setNewItem = useCallback(
     (
