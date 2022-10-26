@@ -44,7 +44,7 @@ const InvoiceDetailPage = () => {
 
   return (
     <div className="container mx-auto">
-      {invoice && (
+      {invoice?.id == invoiceId && (
         <div className="container py-4 grid grid-cols-1 lg:grid-cols-10 gap-4">
           <div
             ref={componentRef}

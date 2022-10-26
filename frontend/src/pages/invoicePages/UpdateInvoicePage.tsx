@@ -110,7 +110,7 @@ const InvoiceUpdatePage: React.FC = () => {
   return (
     <div className="container mx-auto mb-10">
       <div className="container py-4 grid grid-cols-1 lg:grid-cols-10 gap-4">
-        {invoice && (
+        {invoice?.id == invoiceId && (
           <>
             <div className="container col-span-1 lg:col-span-7 md:col-span-7 px-10">
               <MagloBaner />
