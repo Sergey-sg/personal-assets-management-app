@@ -44,8 +44,8 @@ export function AddTaskForm() {
     >
       {({ values, errors, handleSubmit, handleChange }) => (
         <form onSubmit={handleSubmit}>
-          <div className="flex">
-            <div className="w-3/4 mr-2">
+          <div className="flex align-stretch">
+            <div className="w-2/3 mr-2">
               <Input
                 placeholder="Enter task description"
                 disabled={noLists}
@@ -55,13 +55,13 @@ export function AddTaskForm() {
                 onChange={handleChange}
               />
             </div>
-            <div className="w-1/4">
+            <div className="w-1/3">
               <Button
                 type="submit"
                 btnName="primary"
                 disabled={noLists}
                 label="Add task"
-                className="m-0"
+                className="m-0 h-full"
               />
             </div>
           </div>

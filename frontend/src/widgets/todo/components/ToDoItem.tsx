@@ -33,48 +33,50 @@ export function ToDoItem(props: ToDoItemProps) {
 
   return (
     <li
-      className="flex items-center rounded-md shadow p-3 mb-2"
       style={{ backgroundColor: task.isDone ? colors.lightGray : 'white' }}
+      className="rounded-md shadow p-3 mb-2"
     >
-      <label
-        onClick={handleClick}
-        className="flex-1 task-label"
-        style={{
-          color: task.isDone ? colors.gray : 'inherit',
-          textDecoration: task.isDone ? 'line-through' : 'none',
-        }}
-        onMouseEnter={() => setDescriptionPaperOpen(true)}
-        onMouseLeave={() => setDescriptionPaperOpen(false)}
-      >
-        <Checkbox
-          edge="start"
-          checked={task.isDone}
-          tabIndex={-1}
-          disableRipple
-          inputProps={{ 'aria-labelledby': labelId }}
-        />
-        {task.description}
+      <div className="flex items-center">
+        <label
+          onClick={handleClick}
+          className="flex-1 task-label"
+          style={{
+            color: task.isDone ? colors.gray : 'inherit',
+            textDecoration: task.isDone ? 'line-through' : 'none',
+          }}
+          onMouseEnter={() => setDescriptionPaperOpen(true)}
+          onMouseLeave={() => setDescriptionPaperOpen(false)}
+        >
+          <Checkbox
+            edge="start"
+            checked={task.isDone}
+            tabIndex={-1}
+            disableRipple
+            inputProps={{ 'aria-labelledby': labelId }}
+          />
+          {task.description}
+        </label>
         {task.goals && task.goals.length > 0 ? (
-          <div
-            className="absolute top-0 right-0 left-0 bg-green-200 p-4 z-50"
-            style={{ display: descriptionPaperOpen ? 'block' : 'none' }}
-          >
-            Goals:{' '}
-            {task.goals.map((g) => (
-              <p key={g.id}>{g.description}</p>
-            ))}
-          </div>
+          <GoalIcon
+            width={16}
+            height={16}
+            fill={colors.green}
+            style={{ marginRight: 8 }}
+          />
         ) : null}
-      </label>
+        <TaskSettings taskId={props.id} />
+      </div>
       {task.goals && task.goals.length > 0 ? (
-        <GoalIcon
-          width={16}
-          height={16}
-          fill={colors.green}
-          style={{ marginRight: 8 }}
-        />
+        <div
+          className="top-0 right-0 left-0 bg-green-200 p-4 z-50"
+          style={{ display: descriptionPaperOpen ? 'block' : 'none' }}
+        >
+          Goals:{' '}
+          {task.goals.map((g) => (
+            <p key={g.id}>{g.description}</p>
+          ))}
+        </div>
       ) : null}
-      <TaskSettings taskId={props.id} />
     </li>
   )
 }

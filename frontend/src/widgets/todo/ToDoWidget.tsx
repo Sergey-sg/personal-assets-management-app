@@ -34,7 +34,7 @@ export function ToDoWidget() {
       style={{ maxWidth: 500 }}
     >
       <TopPanel />
-      <div>
+      <div style={{ minHeight: 200 }}>
         {loadingStatus === 'loading' || listCount < 1 ? (
           <div className="text-center text-gray-400">{outMessage}</div>
         ) : (
