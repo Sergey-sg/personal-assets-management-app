@@ -12,6 +12,7 @@ import { CostsCategories } from 'common/enums/costsCategories.enum'
 import { IncomeCategories } from 'common/enums/incomesCategories.enum'
 import { wordToUpperCase } from '../helpers/wordToUC'
 import { createTransactionValidateSchema } from '../validationSchemas/transactionValidateSchema'
+import { updateMoneyBox } from 'redux/slice/moneyBoxesSlice'
 
 interface IDetails {
   title: string
@@ -82,6 +83,17 @@ export const CreateTransactionForm: React.FC<ICreateTransactionFormProps> = ({
       }
 
       dispatch(submitFunction(forSubmit))
+
+      const forMoneyBox = {
+        walletId: currentWalet.id,
+        type: labelSum,
+        data: {
+          ...values,
+          sum: convertToСoins(tramsactionSum),
+        },
+      }
+
+      dispatch(updateMoneyBox(forMoneyBox))
     }
 
     actions.resetForm({

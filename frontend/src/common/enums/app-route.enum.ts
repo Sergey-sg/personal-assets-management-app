@@ -7,7 +7,7 @@ enum AppRoute {
   TRANSACTIONS = 'transactions',
   INVOICES = 'invoices',
   WIDGETS = 'widgets',
-  MONEY_BOX = 'money-box',
+  MONEY_BOX = 'money-boxes',
   MY_WALLETS = 'my-wallets',
   CHATS = 'chats',
   SETTINGS = 'settings',

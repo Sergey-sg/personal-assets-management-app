@@ -11,6 +11,7 @@ import { ReactComponent as MoneyBoxIcon } from 'assets/icons/money-box.svg'
 import { ReactComponent as PluginIcon } from 'assets/icons/plugins.svg'
 import { ReactComponent as WalletIcon } from 'assets/icons/wallet.svg'
 import { ReactComponent as ChatIcon } from 'assets/icons/chat.svg'
+import { ReactComponent as JarIcon } from 'assets/icons/jar.svg'
 import { Layout } from 'components/common/Layout/Layout'
 import { FaEthereum } from 'react-icons/fa'
 import { fetchUserProfile } from 'redux/slice/userProfile/actionCreators'
@@ -39,9 +40,9 @@ export const menuStructure = [
     icon: <WalletIcon />,
   },
   {
-    title: 'Moneybox',
+    title: 'Money Boxes',
     link: AppRoute.MONEY_BOX,
-    icon: <MoneyBoxIcon />,
+    icon: <JarIcon />,
   },
   {
     title: 'Widgets',

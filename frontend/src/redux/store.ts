@@ -13,6 +13,7 @@ import {
   walletsSlice,
   incomeSlice,
   costsSlice,
+  moneyBoxesSlice,
   widgetsSlice,
 } from './slice'
 import invoiceSlice from './slice/invoiceServices/invoice.slice'
@@ -42,6 +43,7 @@ export const store = configureStore({
     todo: todoSlice,
     widgets: widgetsSlice,
     walletLimit: walletLimitSlice,
+    moneyBoxes: moneyBoxesSlice,
   },
 })
 // Infer the `RootState` and `AppDispatch` types from the store itself
