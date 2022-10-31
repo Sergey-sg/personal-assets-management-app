@@ -32,12 +32,12 @@ export function convertDateTime(dateString: string) {
   }).format(new Date(dateString))
   const dateOut = date.split(',')
 
-  return `${dateOut[0]} at ${dateOut[1].toLocaleUpperCase()}`
+  return `${dateOut[0]} at${dateOut[1].toLocaleUpperCase()}`
 }
 
-export const sum = (obj: any) => {
-  return Object.keys(obj).reduce(
-    (sum, key) => sum + (parseFloat(obj[key] || 0) * 100) / 100,
+export const sum = (obj: number[]) => {
+  return obj.reduce(
+    (sum, numb) => sum + numb * 100 / 100,
     0,
   )
 }
