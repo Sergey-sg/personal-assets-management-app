@@ -8,8 +8,9 @@ import { InvoicesList } from './invoice_componetns/ListInvoices'
 import { HeaderInvoicesTable } from './invoice_componetns/HeaderInvoicesTable'
 import { SearchInvoices } from './invoice_componetns/SearchInvoices'
 import { Link, useLocation, useSearchParams } from 'react-router-dom'
+import { IFiltersInvoice } from './interfaces/filtersInvoice.interface'
 
-const getQueryParams = (currentFilters: any) => {
+const getQueryParams = (currentFilters: IFiltersInvoice) => {
   return Object.keys(currentFilters)
     .map((key: string) =>
       currentFilters[key as keyof typeof currentFilters]
@@ -25,7 +26,7 @@ const InvoicesListPage = () => {
   const pagination = useAppSelector((state) => state.pagination.pagination)
   const queryParamsFromUrl = new URLSearchParams(useLocation().search)
   const loader = useAppSelector((state) => state.loader)
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<IFiltersInvoice>({
     search: queryParamsFromUrl.get('search') || '',
     firstNew: queryParamsFromUrl.get('firstNew') ? true : false,
     minDate: queryParamsFromUrl.get('minDate') || '',
@@ -53,14 +54,14 @@ const InvoicesListPage = () => {
   )
 
   const setNewFilters = useCallback(
-    (newFilters: any) => {
+    (newFilters: IFiltersInvoice) => {
       setFilters({ ...filters, ...newFilters })
     },
     [filters],
   )
 
   const setNewFiltersAndGetInvoices = useCallback(
-    (newFilters: any) => {
+    (newFilters: IFiltersInvoice) => {
       const currentFilters = { ...filters, ...newFilters }
 
       setFilters({ ...filters, ...newFilters })

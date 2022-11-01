@@ -21,7 +21,7 @@ const InvoiceDetailPage = () => {
   const error = useAppSelector((state) => state.error.message)
   const invoice = useAppSelector((state) => state.invoices.invoices[0])
   const subTotal = invoice
-    ? sum(invoice.items?.map((item: any) => item.subTotal))
+    ? sum(invoice.items?.map((item) => item.subTotal))
     : 0
   const navigate = useNavigate()
   const currentUser = useAppSelector((state) => state.userProfile)
@@ -70,7 +70,7 @@ const InvoiceDetailPage = () => {
               <div className="w-full">
                 <HeaderItems detailsPage={true} />
                 <br />
-                {Object.keys(invoice.items[0]).length > 0 && (
+                {invoice.items.length > 0 && (
                   <InvoiceItemsList removeItem={false} items={invoice.items} />
                 )}
               </div>

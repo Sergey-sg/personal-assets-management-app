@@ -8,6 +8,8 @@ import {
   fetchGetInvoiceById,
   fetchUpdateInvoice,
 } from 'redux/slice/invoiceServices/invoiceActions'
+import { IUserProfile } from 'redux/slice/userProfile/userProfile.slice'
+import { IInvoiceItem } from './interfaces/invoiceItem.interface'
 import { BasicInfo } from './invoice_componetns/BasicInfo'
 import { ClientDetails } from './invoice_componetns/ClientDetails'
 import { FooterItems } from './invoice_componetns/FooterItems'
@@ -58,19 +60,13 @@ const InvoiceUpdatePage: React.FC = () => {
 
   const setNewItem = useCallback(
     (
-      newItem: {
-        subTotal: number
-        id: number
-        name: string
-        amount: number
-        price: number
-      },
+      newItem: IInvoiceItem,
       remove = false,
     ) => {
       const newItems = remove
-        ? invoice.items.filter((item: any) => newItem.id !== item.id)
+        ? invoice.items.filter((item) => newItem.id !== item.id)
         : [...invoice.items, newItem]
-      const sumSubTotal = sum(newItems.map((item: any) => item.subTotal)) | 0
+      const sumSubTotal = sum(newItems.map((item) => item.subTotal)) | 0
       const total =
         Math.round((sumSubTotal * (100 - invoice.discount)) / 100) | 0
 
@@ -141,12 +137,12 @@ const InvoiceUpdatePage: React.FC = () => {
                   {invoice.items.length > 0 && (
                     <InvoiceItemsList
                       items={invoice.items}
-                      removeItem={(item: any) => setNewItem(item, true)}
+                      removeItem={(item: IInvoiceItem) => setNewItem(item, true)}
                     />
                   )}
                 </div>
                 <br />
-                <InputItemForm setItem={(item: any) => setNewItem(item)} />
+                <InputItemForm setItem={(item: IInvoiceItem) => setNewItem(item)} />
                 <br />
                 <FooterItems
                   invoice={invoice}
@@ -159,7 +155,7 @@ const InvoiceUpdatePage: React.FC = () => {
             <div className="container lg:col-span-3 col-span-1">
               <ClientDetails
                 client={invoice.billedTo}
-                setCustomer={(customer: any) =>
+                setCustomer={(customer: IUserProfile) =>
                   setInvoice({ ...invoice, billedTo: customer })
                 }
               />

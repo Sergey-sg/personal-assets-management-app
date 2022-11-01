@@ -11,9 +11,11 @@ import {
   removeInvoiceSuccess,
   addNewPageOfInvoices,
   setOneInvoice,
+  IInvoice,
 } from './invoice.slice'
 
 import queryString from 'query-string'
+import { IFiltersInvoice } from 'pages/invoicePages/interfaces/filtersInvoice.interface'
 
 const getAllInvoices = (filters: any) => {
   const parsed = queryString.parse(location.search)
@@ -24,7 +26,7 @@ const getAllInvoices = (filters: any) => {
   return api.get(`/invoices?${queryString.stringify(parsed)}`)
 }
 
-const createInvoice = async (invoice: any) => {
+const createInvoice = async (invoice: IInvoice) => {
   return await api.post('/invoices', invoice)
 }
 
@@ -38,7 +40,7 @@ const getInvoiceById = (invoiceId: string, forUpdate: boolean) => {
   return api.get(`/invoices/${invoiceId}${queryParam}`)
 }
 
-const updateInvoice = (invoiceId: string, invoice: any) => {
+const updateInvoice = (invoiceId: string, invoice: IInvoice) => {
   return api.put(`/invoices/${invoiceId}`, invoice)
 }
 
@@ -48,7 +50,7 @@ export const getUserByParams = async (params: any) => {
     .then((response) => response.data)
 }
 
-export const fetchUpdateInvoice = (invoiceId: string, invoice: any) => {
+export const fetchUpdateInvoice = (invoiceId: string, invoice: IInvoice) => {
   return async (dispatch: AppDispatch) => {
     try {
       dispatch(resetError())
@@ -71,7 +73,7 @@ export const fetchUpdateInvoice = (invoiceId: string, invoice: any) => {
   }
 }
 
-export const fetchCreateInvoice = (invoice: any) => {
+export const fetchCreateInvoice = (invoice: IInvoice) => {
   return async (dispatch: AppDispatch) => {
     try {
       dispatch(resetError())
@@ -94,7 +96,7 @@ export const fetchCreateInvoice = (invoice: any) => {
   }
 }
 
-export const fetchAllInvoices = (filters: any) => {
+export const fetchAllInvoices = (filters: IFiltersInvoice) => {
   return async (dispatch: AppDispatch) => {
     try {
       dispatch(resetError())
@@ -115,7 +117,7 @@ export const fetchAllInvoices = (filters: any) => {
   }
 }
 
-export const fetchLoadNextPageInvoices = (filters: any) => {
+export const fetchLoadNextPageInvoices = (filters: IFiltersInvoice) => {
   return async (dispatch: AppDispatch) => {
     try {
       dispatch(resetError())
