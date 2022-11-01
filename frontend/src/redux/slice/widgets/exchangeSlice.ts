@@ -7,7 +7,7 @@ import {
 import api from 'axios/axios'
 import { stringifyUrl } from 'query-string'
 import { ExchangeCurrenciesEnum } from 'common/enums/exchange-currencies.enum'
-import { LoadingStatus } from '../../common/enums/loading-status'
+import { LoadingStatus } from '../../../common/enums/loading-status'
 
 export interface IExchangeCurrency {
   id: number

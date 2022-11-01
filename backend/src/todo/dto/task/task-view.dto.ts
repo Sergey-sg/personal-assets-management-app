@@ -18,7 +18,7 @@ export class TaskViewDto {
   listId: number;
 
   @ApiProperty()
-  goals: GoalViewDto[]
+  goals: GoalViewDto[];
 
   static fromEntity(task: Task, listId?: number): TaskViewDto {
     const dto = new TaskViewDto();
@@ -26,7 +26,11 @@ export class TaskViewDto {
     dto.description = task.description;
     dto.isDone = task.isDone();
     dto.listId = task.list?.id || listId;
-    dto.goals = !task.goals ? [] : task.goals.map(g => GoalViewDto.fromEntity(g, task.id, task.isDone(), g.isAchieved()));
+    dto.goals = !task.goals
+      ? []
+      : task.goals.map((g) =>
+          GoalViewDto.fromEntity(g, task.id, task.isDone(), g.isAchieved()),
+        );
     return dto;
   }
 }

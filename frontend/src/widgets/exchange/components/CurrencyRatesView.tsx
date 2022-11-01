@@ -10,7 +10,7 @@ import {
   setSelectedCurrency,
   setSelectedRate,
   setView,
-} from 'redux/slice/exchangeSlice'
+} from 'redux/slice/widgets/exchangeSlice'
 import HeaderButton from './HeaderButton'
 import { ExchangeCurrenciesEnum } from 'common/enums/exchange-currencies.enum'
 import { Typography } from 'components/common/Typography'

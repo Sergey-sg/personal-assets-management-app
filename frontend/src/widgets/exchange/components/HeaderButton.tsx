@@ -22,14 +22,14 @@ const HeaderButton = ({
       type="button"
       {...props}
       className={clsx(
-        'flex justify-center items-center text-center text-base box-border transition duration-200 cursor-pointer py-1.5 px-2 text-gray-800 dark:text-gray-200',
+        'flex justify-center items-center text-center text-base text-Ag-14 font-medium box-border transition duration-200 cursor-pointer py-1.5 px-2 text-gray-800 dark:text-gray-200',
         isActive && 'underline cursor-default pointer-events-none',
         isActive || 'cursor-pointer hover:text-green',
         className,
       )}
       onClick={() => (onClick ? onClick() : null)}
     >
-      <Typography type={'Ag-14-medium'}>{children}</Typography>
+      {children}
     </button>
   )
 }

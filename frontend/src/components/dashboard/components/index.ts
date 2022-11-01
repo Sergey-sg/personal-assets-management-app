@@ -1,4 +1,4 @@
 import PrimaryInfo from './PrimaryInfo'
-import WidgetsBar from './WidgetsBar'
+import DashboardSideBar from './DashboardSideBar'
 
-export { PrimaryInfo, WidgetsBar }
+export { PrimaryInfo, DashboardSideBar }

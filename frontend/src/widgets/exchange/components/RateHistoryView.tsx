@@ -18,8 +18,10 @@ import { useAppDispatch, useAppSelector } from 'hooks/useAppDispatch'
 import {
   ExchangeWidgetView,
   fetchRateHistory,
+  setSelectedBank,
+  setSelectedCurrency,
   setView,
-} from 'redux/slice/exchangeSlice'
+} from 'redux/slice/widgets/exchangeSlice'
 import HeaderButton from './HeaderButton'
 
 ChartJS.register(
@@ -146,12 +148,18 @@ const RateHistoryView = () => {
   )
 
   const onCurrencySelect = useCallback(() => {
-    dispatch(setView(ExchangeWidgetView.CURRENCY_RATES))
-  }, [])
+    if (selectedRate) {
+      dispatch(setSelectedCurrency(selectedRate.currency))
+      dispatch(setView(ExchangeWidgetView.CURRENCY_RATES))
+    }
+  }, [selectedRate])
 
   const onBankSelect = useCallback(() => {
-    dispatch(setView(ExchangeWidgetView.BANK_RATES))
-  }, [])
+    if (selectedRate) {
+      dispatch(setSelectedBank(selectedRate.bank))
+      dispatch(setView(ExchangeWidgetView.BANK_RATES))
+    }
+  }, [selectedRate])
 
   return (
     <>

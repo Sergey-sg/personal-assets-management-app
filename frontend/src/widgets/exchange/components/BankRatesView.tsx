@@ -8,7 +8,7 @@ import {
   setSelectedCurrency,
   setSelectedRate,
   setView,
-} from 'redux/slice/exchangeSlice'
+} from 'redux/slice/widgets/exchangeSlice'
 import { Typography } from 'components/common/Typography'
 import HeaderButton from './HeaderButton'
 import CellButton from './CellButton'

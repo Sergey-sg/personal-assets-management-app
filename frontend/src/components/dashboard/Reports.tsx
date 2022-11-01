@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { format } from 'date-fns'
 
-import { PrimaryInfo, WidgetsBar } from './components'
+import { PrimaryInfo, DashboardSideBar } from './components'
 import { Wallet, Transaction, Period } from './interfaces'
 
 import { fetchReportForPeriod, fetchWallets } from './service/api'
@@ -117,7 +117,7 @@ const Reports = () => {
   }
 
   return (
-    <div className="flex gap-2 h-screen flex-1">
+    <div className="flex gap-8 h-screen flex-1">
       {wallets.length ? (
         <PrimaryInfo
           selectedWallet={selectedWallet}
@@ -143,7 +143,7 @@ const Reports = () => {
           </Link>
         </div>
       )}
-      <WidgetsBar />
+      <DashboardSideBar />
     </div>
   )
 }

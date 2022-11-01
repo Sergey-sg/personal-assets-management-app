@@ -15,6 +15,7 @@ interface ButtonProps {
     | 'tertiary2'
     | 'google'
     | 'delete'
+    | 'danger'
   className?: string
   disabled?: boolean
   children?: React.ReactNode | React.ReactNode[]

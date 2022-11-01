@@ -60,7 +60,7 @@ const CryptoModelInput = () => {
           type={'button'}
           btnName={'primary'}
           label={'Add to portfolio'}
-          disabled={amount.length === 0 && true}
+          disabled={amount.length === 0 || (color.length === 0 && true)}
           onClick={pushNewItem}
         />
       </div>

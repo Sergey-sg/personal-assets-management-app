@@ -13,6 +13,8 @@ import {
   walletsSlice,
   incomeSlice,
   costsSlice,
+  moneyBoxesSlice,
+  widgetsSlice,
 } from './slice'
 import invoiceSlice from './slice/invoiceServices/invoice.slice'
 import paginationSlice from './slice/pagination/pagination.slice'
@@ -39,7 +41,9 @@ export const store = configureStore({
     messages: messagesSlice,
     conversations: conversationsSlice,
     todo: todoSlice,
+    widgets: widgetsSlice,
     walletLimit: walletLimitSlice,
+    moneyBoxes: moneyBoxesSlice,
   },
 })
 // Infer the `RootState` and `AppDispatch` types from the store itself

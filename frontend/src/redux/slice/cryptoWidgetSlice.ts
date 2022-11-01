@@ -69,7 +69,6 @@ const cryptoWidgetSlice = createSlice({
       state.currency = action.payload
     },
     addCryptoItemInModal: (state, action) => {
-      console.log(action.payload)
       state.cryptoItemInModal = action.payload
     },
   },

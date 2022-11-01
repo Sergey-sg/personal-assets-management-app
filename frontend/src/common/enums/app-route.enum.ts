@@ -7,7 +7,7 @@ enum AppRoute {
   TRANSACTIONS = 'transactions',
   INVOICES = 'invoices',
   WIDGETS = 'widgets',
-  MONEY_BOX = 'money-box',
+  MONEY_BOX = 'money-boxes',
   MY_WALLETS = 'my-wallets',
   CHATS = 'chats',
   SETTINGS = 'settings',
@@ -17,8 +17,8 @@ enum AppRoute {
   FORGOT_PASSWORD = 'forgotPassword',
   VERIFY_CODE = 'verify-code',
   CRYPTO = 'crypto',
-  COIN_ID = 'get-all_crypto_item/:marker',
-  GET_ALL_CRYPTO_ITEM = 'get-all_crypto_item',
+  COIN_ID = 'all-crypto-item/:marker',
+  GET_ALL_CRYPTO_ITEM = 'all-crypto-item',
 }
 
 export { AppRoute }
