@@ -15,11 +15,11 @@ import { InvoiceDto } from './dto/invoice.dto';
 import { InvoiceEntity } from './entities/invoice.entity';
 import { InvoiceItemEntity } from './entities/invoiceItem.entity';
 import { InvoiceItemDto } from './dto/invoiceItem.dto';
-import { PageOptionsDto } from 'src/pagination/dto/pageOptionsDto';
-import { PageDto } from 'src/pagination/dto/page.dto';
-import { PageMetaDto } from 'src/pagination/dto/page-meta.dto';
+import { PageOptionsDto } from '../pagination/dto/pageOptionsDto';
+import { PageDto } from '../pagination/dto/page.dto';
+import { PageMetaDto } from '../pagination/dto/page-meta.dto';
 import { UpdateInvoiceDto } from './dto/updateInvoice.dto';
-import { IFiltersInvoice } from 'src/interfaces/paramsFilterInvoice.interface';
+import { IFiltersInvoice } from '../interfaces/paramsFilterInvoice.interface';
 
 @Injectable()
 export class InvoicesService {

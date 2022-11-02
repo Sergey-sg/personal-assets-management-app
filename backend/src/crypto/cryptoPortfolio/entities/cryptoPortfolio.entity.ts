@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
 
-import { Base } from 'src/common/dto/base.dto';
-import { CryptoEntity } from 'src/crypto/cryptoItem/entities/crypto.entity';
-import { CryptoStatisticsEntity } from 'src/crypto/cryptoStatistics/entity/cryptoStatistics.entity';
-import { UserEntity } from 'src/user/entities/user.entity';
+import { Base } from '../../../common/dto/base.dto';
+import { CryptoEntity } from '../../../crypto/cryptoItem/entities/crypto.entity';
+import { CryptoStatisticsEntity } from '../../../crypto/cryptoStatistics/entity/cryptoStatistics.entity';
+import { UserEntity } from '../../../user/entities/user.entity';
 import { Column, Entity, JoinColumn, OneToOne, OneToMany } from 'typeorm';
 
 @Entity('cryptoPortfolio')

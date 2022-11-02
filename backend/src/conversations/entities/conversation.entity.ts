@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Base } from 'src/common/dto/base.dto';
+import { Base } from '../../common/dto/base.dto';
 import {
   Column,
   Entity,
@@ -10,7 +10,7 @@ import {
   OneToOne,
 } from 'typeorm';
 
-import { UserEntity } from 'src/user/entities/user.entity';
+import { UserEntity } from '../../user/entities/user.entity';
 import { Message } from '../../messages/entities/message.entity';
 
 @Entity('conversations')

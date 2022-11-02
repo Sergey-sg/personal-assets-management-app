@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, OneToMany } from 'typeorm';
-import { Base } from 'src/common/dto/base.dto';
+import { Base } from '../../../common/dto/base.dto';
 import { RateEntity } from '../../rate/entities/rate.entity';
 
 @Entity('currency')

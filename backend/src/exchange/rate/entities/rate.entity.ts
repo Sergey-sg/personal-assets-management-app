@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, ManyToOne } from 'typeorm';
-import { Base } from 'src/common/dto/base.dto';
+import { Base } from '../../../common/dto/base.dto';
 import { BankEntity } from '../../bank/entities/bank.entity';
 import { CurrencyEntity } from '../../currency/entities/currency.entity';
 

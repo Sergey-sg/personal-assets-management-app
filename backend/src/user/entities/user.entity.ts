@@ -10,12 +10,12 @@ import {
   OneToMany,
 } from 'typeorm';
 import { InvoiceEntity } from '../../invoices/entities/invoice.entity';
-import { Base } from 'src/common/dto/base.dto';
-import { IncomeEntity } from 'src/income/entities/income.entity';
-import { CostEntity } from 'src/costs/entities/cost.entity';
-import { Message } from 'src/messages/entities/message.entity';
-import { WidgetEntity } from 'src/widgets/entities/widget.entity';
-import { CryptoPortfolioEntity } from 'src/crypto/cryptoPortfolio/entities/cryptoPortfolio.entity';
+import { Base } from '../../common/dto/base.dto';
+import { IncomeEntity } from '../../income/entities/income.entity';
+import { CostEntity } from '../../costs/entities/cost.entity';
+import { Message } from '../../messages/entities/message.entity';
+import { WidgetEntity } from '../../widgets/entities/widget.entity';
+import { CryptoPortfolioEntity } from '../../crypto/cryptoPortfolio/entities/cryptoPortfolio.entity';
 
 @Entity('user')
 export class UserEntity extends Base {

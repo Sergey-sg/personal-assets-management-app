@@ -6,7 +6,7 @@ import { IncomeEntity } from '../../income/entities/income.entity';
 import { CostEntity } from '../../costs/entities/cost.entity';
 import { WalletStatus } from '../enums/walletStatus.enum';
 import { WalletCurrency } from '../enums/walletCurrency.enum';
-import { Base } from 'src/common/dto/base.dto';
+import { Base } from '../../common/dto/base.dto';
 
 @Entity('wallet')
 export class WalletEntity extends Base {

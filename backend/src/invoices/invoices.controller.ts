@@ -19,10 +19,10 @@ import { AccessTokenGuard } from '../auth/guards/accessToken.guard';
 import { InvoiceDto } from './dto/invoice.dto';
 import { InvoiceEntity } from './entities/invoice.entity';
 import { InvoicesService } from './invoices.service';
-import { UserEntity } from 'src/user/entities/user.entity';
-import { User } from 'src/user/decorators/user.decorator';
-import { PageDto } from 'src/pagination/dto/page.dto';
-import { PageOptionsDto } from 'src/pagination/dto/pageOptionsDto';
+import { UserEntity } from '../user/entities/user.entity';
+import { User } from '../user/decorators/user.decorator';
+import { PageDto } from '../pagination/dto/page.dto';
+import { PageOptionsDto } from '../pagination/dto/pageOptionsDto';
 import { UpdateInvoiceDto } from './dto/updateInvoice.dto';
 
 @ApiTags('Invoices')

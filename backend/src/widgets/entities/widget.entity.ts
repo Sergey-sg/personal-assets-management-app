@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Base } from 'src/common/dto/base.dto';
+import { Base } from '../../common/dto/base.dto';
 import { Column, Entity, Index, ManyToOne } from 'typeorm';
 
-import { UserEntity } from 'src/user/entities/user.entity';
+import { UserEntity } from '../../user/entities/user.entity';
 
 @Entity('widget')
 @Index(['userId'], { unique: false })

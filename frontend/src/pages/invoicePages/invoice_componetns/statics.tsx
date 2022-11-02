@@ -39,7 +39,7 @@ export function HeaderItems(props: any) {
 }
 
 export function InvoiceInfoBaner(props: any) {
-  const address = props.billedTo?.address.split(',') || ''
+  const address = props.billedTo?.address.split(',') || []
   const customerName = props.billedTo?.firstName
     ? `${props.billedTo.firstName} ${props.billedTo.lastName}`
     : props.billedTo?.email
@@ -67,10 +67,10 @@ export function InvoiceInfoBaner(props: any) {
         <br />
         <div className="font-medium text-text-light">{customerName}</div>
         <div className="font-medium text-text-light">
-          {address && address[0]}
+          {address.length > 0 && address[0]}
         </div>
         <div className="font-medium text-text-light">
-          {address && `${address[1]}, ${address[2]}`}
+          {address.length > 1 && `${address[1]}, ${address[2]}`}
         </div>
       </div>
     </div>

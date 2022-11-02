@@ -7,7 +7,7 @@ import {
   IsNotEmpty,
   IsPositive,
 } from 'class-validator';
-import { UserEntity } from 'src/user/entities/user.entity';
+import { UserEntity } from '../../user/entities/user.entity';
 import { InvoiceDto } from './invoice.dto';
 
 export class UpdateInvoiceDto extends InvoiceDto {

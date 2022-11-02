@@ -22,7 +22,7 @@ export function ClientDetails(props: any) {
   const userFullName = client.firstName
     ? `${client.firstName} ${client.lastName}`
     : client.email
-  const address = client.address ? client.address.split(',') : ''
+  const address = client.address ? client.address.split(',') : [client.address]
 
   async function getUser(params: {
     [x: string]: any
@@ -79,7 +79,10 @@ export function ClientDetails(props: any) {
           <>
             <div className="text-base font-semibold text-lg">{address[1]}</div>
             <div className="text-base font-normal text-text-ultralight">
-              {address[0]}, {address[2]}
+              {address.length > 1
+                ? `${address[0]}, ${address[2]}`
+                : `${address[0]}`
+              }
             </div>
           </>
         )}

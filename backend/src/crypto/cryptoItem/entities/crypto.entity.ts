@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
 
-import { Base } from 'src/common/dto/base.dto';
-import { CryptoPortfolioEntity } from 'src/crypto/cryptoPortfolio/entities/cryptoPortfolio.entity';
+import { Base } from '../../../common/dto/base.dto';
+import { CryptoPortfolioEntity } from '../../../crypto/cryptoPortfolio/entities/cryptoPortfolio.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity('cryptoItem')

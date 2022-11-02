@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { WalletEntity } from '../../wallet/entities/wallet.entity';
 import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { Base } from 'src/common/dto/base.dto';
+import { Base } from '../../common/dto/base.dto';
 
 @Entity('walletLimit')
 export class WalletLimitEntity extends Base {
